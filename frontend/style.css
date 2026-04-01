@@ -1,0 +1,202 @@
+body {
+    background-image: linear-gradient(rgb(225, 57, 166),rgb(154, 119, 230));
+}
+h1{
+    margin-top: 12px;
+    font-size: 30px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    text-align: center;
+    align-items: center;
+    color: blue;
+}
+.logo {
+    display: block;
+    margin: auto;
+    width: 80px;
+    height: 80px;
+}
+form {
+    padding: 20px;
+    border-radius: 8px;
+}
+form h2 {
+    color: chocolate;
+}
+form label {
+    display: block;
+}
+form input {
+    border-radius: 4px;
+}
+.container {
+    position: relative;
+    width: 100%;
+    max-width: 900px;
+    margin: auto;
+    height: 60vh;
+    padding: 10px;
+    overflow-y: auto;
+    margin-bottom: 15px;
+    border-radius: 15px;
+    scroll-behavior: smooth;
+    
+    /* 🔥 soft gradient bg */
+    background: linear-gradient(to bottom, #f0f2f5, #dcd6f7);
+    
+    display: flex;
+    flex-direction: column;
+}
+#typing-indicator {
+    position: absolute;
+    bottom: 5px;
+    left: 10px;
+    font-size: 14px;
+    color: gray;
+    font-style: italic;
+    background: transparent;
+}
+#online-users {
+    position: fixed;
+    left: 10px;
+    top: 50px;
+    background: green;
+    padding: 10px;
+    border-radius: 10px;
+    width: 150px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    font-size: 14px;
+    display: none;
+}
+#toggle-users {
+    position: fixed;
+    left: 10px;
+    top: 10px;
+    background-color: green;
+    color: black;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 12px;
+    cursor: pointer;
+}
+#toggle-users:hover {
+    background-color: #09ed15;
+}
+#logout {
+    position: fixed;
+    right: 10px;
+    top: 10px;
+    background-color: green;
+    color: black;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 12px;
+    cursor: pointer;
+}
+#logout:hover {
+    background-color: red;
+}
+
+
+/* common message */
+.message {
+    max-width: 60%;
+    padding: 10px 15px;
+    margin: 8px 0;
+    border-radius: 15px;
+    font-size: 14px;
+    word-wrap: break-word;
+    position: relative;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.message:hover {
+    transform: scale(1.02);
+}
+
+/* LEFT (other users) */
+.left {
+    background-color: #ffffff;
+    align-self: flex-start;
+    border-bottom-left-radius: 5px;
+}
+/* RIGHT (your messages) */
+.right {
+    background-color: #dcf8c6;
+    align-self: flex-end;
+    border-bottom-right-radius: 5px;
+}
+
+/* center (join/leave msg) */
+.center {
+    align-self: center;
+    background: transparent;
+    font-size: 12px;
+    color: gray;
+    border: none;
+}
+
+button {
+    background-color: #4CAF50;
+    color: white;
+    cursor: pointer;
+}
+button:hover {
+    background-color: #09ed15;
+}
+
+.okbtn {
+    gap: 10px;
+    margin: 0 5px;
+    padding: 10px 15px;
+    cursor: pointer;
+    border: none;
+    border-radius: 10px;
+    height: 34px;
+    width: 20%;
+    background-color: blue;
+    }
+    
+.okbtn:hover {
+    background: green;
+}
+    
+.abt {
+    text-align: center;
+}
+
+/* delete button */
+btn {
+    margin-left: 8px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 10px;
+    color: red;
+}
+
+/* input area */
+#send-container {
+    display: flex;
+    margin: auto;
+    text-align: center;
+    max-width: 900px;
+    width: 90%;
+}
+
+#messageInp {
+    flex: 1;
+    padding: 10px;
+    width: 90%;
+    border: 2px solid black;
+    border-radius: 10px;
+    /* height: 34px; */
+    /* font-family: 22px; */
+}
+/* .btn {
+    margin-left: 10px;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 20px;
+    background: #6c63ff;
+} */
+

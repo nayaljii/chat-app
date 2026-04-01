@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Real-time chat application"> 
+    <link rel="shortcut icon" href="rtca_fevicon.png" type="image/x-icon">
+    <script src="/socket.io/socket.io.js" defer></script>
+    <script src="client.js" defer></script>
+    <link rel="stylesheet" href="style.css">
+    <title>Vish'sUp</title>
+</head>
+<body>
+    <header>
+        <nav><div class="chat-header">
+            <img class="logo" src="rtca_logo.png" alt="RTCA Logo">
+            <h1><b>Welcome to Vish'sUp Chat</b></h1>
+        </div></nav>
+    </header>
+    <main>
+        <button id="logout" onclick="logout()" style="float: right;">Logout</button>
+        <button id="toggle-users">Online (0)</button>
+        <div id="online-users"></div>
+        <div class="container">
+            <div id="typing-indicator"></div>
+        </div>
+        
+        <!-- Input Area -->
+        <div class="send">
+            <form action="#" id="send-container">
+                <input type="text" name="messageInp" id="messageInp" placeholder="Type a message...">
+                <button class="okbtn" type="submit">Send</button>
+            </form>
+        </div>
+    </main>
+    <footer>
+        <p class="abt">© 2026 Vish'sUp. All rights reserved.</p>
+    </footer>
+</body>
+</html>
