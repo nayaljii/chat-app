@@ -1,5 +1,6 @@
 // Node sesrver which will handle socket io connections
 
+require('dotenv').config();
 const express = require('express');
 const app = express();
 const http = require('http');
@@ -11,8 +12,7 @@ const mongoose = require('mongoose');
 app.use(express.json());
 app.use(express.static("frontend"));
 
-mongoose.connect('mongodb://vishalnayal325_db_user:nayaljii123@ac-rkkykdj-shard-00-00.8chfo2u.mongodb.net:27017,ac-rkkykdj-shard-00-01.8chfo2u.mongodb.net:27017,ac-rkkykdj-shard-00-02.8chfo2u.mongodb.net:27017/?ssl=true&replicaSet=atlas-2c8393-shard-0&authSource=admin&appName=GroupChat').then(()=> console.log("MongoDB Connected"))
-.catch((err)=> console.log(err));
+mongoose.connect(process.env.MONGODB_URI).then(() => console.log("Connected to MongoDB")).catch((err)=> console.log(err));
 
 const authRoutes = require("../routes/auth");
 app.use("/api/auth", authRoutes);
