@@ -1,6 +1,7 @@
 // Node sesrver which will handle socket io connections
 
 require('dotenv').config();
+const path = require('path');
 const express = require('express');
 const app = express();
 const http = require('http');
@@ -10,7 +11,7 @@ const io = new Server(server);
 const mongoose = require('mongoose');
 
 app.use(express.json());
-app.use(express.static("../frontend"));
+app.use(express.static(path.join(__dirname, "../frontend")));
 
 mongoose.connect(process.env.MONGODB_URI).then(() => console.log("Connected to MongoDB")).catch((err)=> console.log(err));
 
@@ -25,8 +26,8 @@ app.get('/messages', async (req, res) => {
 });
 
 
-app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/../frontend/index.html');
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, "../frontend", "index.html"));
 });
 
 
