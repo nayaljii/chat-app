@@ -14,10 +14,10 @@ app.use(express.static("frontend"));
 mongoose.connect('mongodb://vishalnayal325_db_user:nayaljii123@ac-rkkykdj-shard-00-00.8chfo2u.mongodb.net:27017,ac-rkkykdj-shard-00-01.8chfo2u.mongodb.net:27017,ac-rkkykdj-shard-00-02.8chfo2u.mongodb.net:27017/?ssl=true&replicaSet=atlas-2c8393-shard-0&authSource=admin&appName=GroupChat').then(()=> console.log("MongoDB Connected"))
 .catch((err)=> console.log(err));
 
-const authRoutes = require("./routes/auth");
+const authRoutes = require("../routes/auth");
 app.use("/api/auth", authRoutes);
 
-const Message = require("./models/Message");
+const Message = require("../models/Message");
 
 app.get('/messages', async (req, res) => {
     const messages = await Message.find().sort({time: 1});
