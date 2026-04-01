@@ -10,14 +10,14 @@ const io = new Server(server);
 const mongoose = require('mongoose');
 
 app.use(express.json());
-app.use(express.static("frontend"));
+app.use(express.static("../frontend"));
 
 mongoose.connect(process.env.MONGODB_URI).then(() => console.log("Connected to MongoDB")).catch((err)=> console.log(err));
 
-const authRoutes = require("../routes/auth");
+const authRoutes = require("./routes/auth");
 app.use("/api/auth", authRoutes);
 
-const Message = require("../models/Message");
+const Message = require("./models/Message");
 
 app.get('/messages', async (req, res) => {
     const messages = await Message.find().sort({time: 1});
@@ -26,7 +26,7 @@ app.get('/messages', async (req, res) => {
 
 
 app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/frontend/index.html');
+    res.sendFile(__dirname + '/../frontend/index.html');
 });
 
 
