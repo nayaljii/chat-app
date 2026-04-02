@@ -13,7 +13,7 @@ if(!name)
     const form = document.getElementById('send-container');
     const messageInput = document.getElementById('messageInp');
     const messageCountainer = document.querySelector('.container');
-    
+    let hasUserInteracted = false;
     var audio = new Audio('astute.mp3');
     var audio2 = new Audio('another_1.mp3');
     audio.preload = "auto";
@@ -83,8 +83,8 @@ const append = (message, position, id) => {
     }
     
     if(position == 'left' && hasUserInteracted){
-        audio.currentTime = 0;
-        audio.play().catch(err => console.log("Audio blocked:", err));
+        audio2.currentTime = 0;
+        audio2.play().catch(err => console.log("Audio blocked:", err));
     }
     messageCountainer.appendChild(typingIndicator);
 };
@@ -146,10 +146,12 @@ toggleUsersBtn.addEventListener('click', () => {
 socket.on('connect', () => {
     socket.emit('new-user-joined', name);
 });
-socket.on('user-joined', name => {
-    append(`${name} joined the chat`,'left');
-    audio.currentTime = 0;
-    audio2.play().catch(err => console.log("Audio blocked:", err));
+socket.on('user-joined', username => {
+    append(`${username} joined the chat`,'left');
+    if(username !== name&& hasUserInteracted){
+        audio2.currentTime = 0;
+        audio2.play().catch(err => console.log("Audio blocked:", err));
+    }
 });
 socket.on('receive', data => {
     if(data.name === name){

@@ -98,6 +98,9 @@ form input {
 
 /* common message */
 .message {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
     max-width: 60%;
     padding: 10px 15px;
     margin: 8px 0;
@@ -172,7 +175,13 @@ form input {
     cursor: pointer;
     font-size: 10px;
     padding: 0;
+    opacity: 0;
+    transition: 0.2s;
     appearance: none;
+    -webkit-appearance: none;
+}
+.message:hover .delete-btn {
+    opacity: 1;
 }
 .delete-btn:focus {
     outline: none;
