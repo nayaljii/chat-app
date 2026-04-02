@@ -18,10 +18,6 @@ app.use(express.json());
 
 // Serve frontend static files
 app.use(express.static(path.join(__dirname, "../frontend")));
-// SPA catch-all (for frontend routing)
-app.get(/^\/.*$/, (req, res) => {
-    res.sendFile(path.join(__dirname, "../frontend", "index.html"));
-});
 
 // API routes
 const authRoutes = require("./routes/auth");
@@ -38,6 +34,10 @@ app.get('/messages', async (req, res) => {
         console.error("Error fetching messages:", err);
         res.status(500).json({ error: 'Failed to fetch messages' });
     }
+});
+// SPA catch-all (for frontend routing)
+app.get(/.*/, (req, res) => {
+    res.sendFile(path.join(__dirname, "../frontend", "index.html"));
 });
 
 const io = new Server(server);
