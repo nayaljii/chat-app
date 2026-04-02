@@ -6,6 +6,12 @@ const app = express();
 const http = require('http');
 const server = http.createServer(app);
 const { Server } = require("socket.io");
+const mongoose = require('mongoose');
+
+// MongoDB connection
+mongoose.connect(process.env.MONGODB_URI)
+.then(() => console.log("Connected to MongoDB"))
+.catch((err) => console.log("MongoDB connection error:", err));
 
 // // CORS setup (if needed)
 // const cors = require('cors');
@@ -17,27 +23,17 @@ const { Server } = require("socket.io");
 //     credentials: true,
 //     allowedHeaders: ['Authorization']
 // }));
-// const io = new Server(server, {
-//     cors: {
-//         origin: ['https://chat-app-r028.onrender.com'],
-//         methods: ['GET', 'POST'],
-//         credentials: true,
-//         allowedHeaders: ['Authorization']
-//     }
-// });
-const mongoose = require('mongoose');
 
-
-// MongoDB connection
-mongoose.connect(process.env.MONGODB_URI)
-.then(() => console.log("Connected to MongoDB"))
-.catch((err) => console.log("MongoDB connection error:", err));
 
 // Middleware
 app.use(express.json());
 
 // Serve frontend static files
 app.use(express.static(path.join(__dirname, "../frontend")));
+// SPA catch-all (for frontend routing)
+app.get(/^\/.*$/, (req, res) => {
+    res.sendFile(path.join(__dirname, "../frontend", "index.html"));
+});
 
 // API routes
 const authRoutes = require("./routes/auth");
@@ -51,10 +47,7 @@ app.get('/messages', async (req, res) => {
     res.json(messages);
 });
 
-// SPA catch-all (for frontend routing)
-app.get(/^\/.*$/, (req, res) => {
-    res.sendFile(path.join(__dirname, "../frontend", "index.html"));
-});
+const io = new Server(server);
 
 // Socket.io logic
 const users = {};
