@@ -7,24 +7,24 @@ const http = require('http');
 const server = http.createServer(app);
 const { Server } = require("socket.io");
 
-// CORS setup (if needed)
-const cors = require('cors');
+// // CORS setup (if needed)
+// const cors = require('cors');
 
-// specify allowed origins:
-app.use(cors({
-    origin: ['https://chat-app-r028.onrender.com'],
-    methods: ['GET', 'POST', 'DELETE'],
-    credentials: true,
-    allowedHeaders: ['Authorization']
-}));
-const io = new Server(server, {
-    cors: {
-        origin: ['https://chat-app-r028.onrender.com'],
-        methods: ['GET', 'POST'],
-        credentials: true,
-        allowedHeaders: ['Authorization']
-    }
-});
+// // specify allowed origins:
+// app.use(cors({
+//     origin: ['https://chat-app-r028.onrender.com'],
+//     methods: ['GET', 'POST', 'DELETE'],
+//     credentials: true,
+//     allowedHeaders: ['Authorization']
+// }));
+// const io = new Server(server, {
+//     cors: {
+//         origin: ['https://chat-app-r028.onrender.com'],
+//         methods: ['GET', 'POST'],
+//         credentials: true,
+//         allowedHeaders: ['Authorization']
+//     }
+// });
 const mongoose = require('mongoose');
 
 
