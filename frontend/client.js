@@ -14,10 +14,10 @@ if(!name)
     const messageInput = document.getElementById('messageInp');
     const messageCountainer = document.querySelector('.container');
     let hasUserInteracted = false;
-    var audio = new Audio('astute.mp3');
+    var audio1 = new Audio('astute.mp3');
     var audio2 = new Audio('another_1.mp3');
-    audio.preload = "auto";
-    audio.volume = 1;
+    audio1.preload = "auto";
+    audio1.volume = 1;
     audio2.preload = "auto";
     audio2.volume = 1;
     
@@ -83,8 +83,7 @@ const append = (message, position, id) => {
     }
     
     if(position == 'left' && hasUserInteracted){
-        audio2.currentTime = 0;
-        audio2.play().catch(err => console.log("Audio blocked:", err));
+        playSound(audio1);
     }
     messageCountainer.appendChild(typingIndicator);
 };
@@ -149,10 +148,16 @@ socket.on('connect', () => {
 socket.on('user-joined', username => {
     append(`${username} joined the chat`,'left');
     if(username !== name&& hasUserInteracted){
-        audio2.currentTime = 0;
-        audio2.play().catch(err => console.log("Audio blocked:", err));
+        playSound(audio2);
     }
 });
+
+// Function to play sound with user interaction check
+function playSound(audio){
+    const sound = audio.cloneNode(); // Clone the audio element to allow overlapping sounds
+    sound.play().catch(err => console.log("Audio blocked:", err));
+}
+
 socket.on('receive', data => {
     if(data.name === name){
         append(`You: ${data.message}`,'right', data.id);
