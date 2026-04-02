@@ -9,7 +9,10 @@ if(!token){
     window.location.href = "/home.html";
 }
 const socket = io('https://chat-app.onrender.com', {
-    withCredentials: true
+    withCredentials: true,
+    extraHeaders: {
+        "Authorization": `Bearer ${token}`
+    }
 });
 
 const form = document.getElementById('send-container');

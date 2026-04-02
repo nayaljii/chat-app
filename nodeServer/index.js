@@ -14,13 +14,15 @@ const cors = require('cors');
 app.use(cors({
     origin: ['https://chat-app-r028.onrender.com'],
     methods: ['GET', 'POST', 'DELETE'],
-    credentials: true
+    credentials: true,
+    allowedHeaders: ['Authorization']
 }));
 const io = new Server(server, {
     cors: {
         origin: ['https://chat-app-r028.onrender.com'],
         methods: ['GET', 'POST'],
-        credentials: true
+        credentials: true,
+        allowedHeaders: ['Authorization']
     }
 });
 const mongoose = require('mongoose');
