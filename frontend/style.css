@@ -1,5 +1,5 @@
 body {
-    background-image: linear-gradient(rgb(225, 57, 166),rgb(154, 119, 230));
+    background-color: rgb(225, 57, 166);
     margin: revert;
     display: inline;
 }
@@ -49,13 +49,10 @@ form input {
     flex-direction: column;
 }
 #typing-indicator {
-    position: absolute;
-    bottom: 5px;
-    left: 10px;
+    margin: 5px 10px;
     font-size: 14px;
     color: gray;
     font-style: italic;
-    background: transparent;
 }
 #online-users {
     position: fixed;
@@ -164,20 +161,22 @@ form input {
     background: green;
 }
     
-.abt {
-    text-align: center;
-}
 
 /* delete button */
-btn {
+.delete-btn {
     margin-left: 8px;
-    background: transparent;
+    background: none;
     border: none;
+    outline: none;
+    box-shadow: none;
     cursor: pointer;
     font-size: 10px;
-    color: red;
+    padding: 0;
+    appearance: none;
 }
-
+.delete-btn:focus {
+    outline: none;
+}
 /* input area */
 #send-container {
     display: flex;
@@ -193,4 +192,7 @@ btn {
     width: 90%;
     border: 2px solid black;
     border-radius: 10px;
+}
+#abt, #back {
+    text-align: center;
 }

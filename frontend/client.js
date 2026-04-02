@@ -1,47 +1,45 @@
 const name = localStorage.getItem("username");
 if(!name)
-{
-    window.location.href = "/home.html";
-}
-const token = localStorage.getItem("token");
-
-if(!token){
-    window.location.href = "/home.html";
-}
-const socket = io();
-
-const form = document.getElementById('send-container');
-const messageInput = document.getElementById('messageInp');
-const messageCountainer = document.querySelector('.container');
-
-var audio = new Audio('astute.mp3');
-audio.preload = "auto";
-audio.volume = 1;
-
-let hasUserInteracted = false;
-
-document.addEventListener('click', () => {
-    hasUserInteracted = true;
-});
-document.addEventListener('click', () => {
-    hasUserInteracted = true;
-});
-
-let userAtBottom = true;
-messageCountainer.addEventListener('scroll', () => {
-    const threshold = 50;
-    if(messageCountainer.scrollTop + messageCountainer.clientHeight >= messageCountainer.scrollHeight - threshold){
-        userAtBottom = true;
+    {
+        window.location.href = "/home.html";
     }
-    else{
-        userAtBottom = false;
+    const token = localStorage.getItem("token");
+    
+    if(!token){
+        window.location.href = "/home.html";
+    }
+    const socket = io();
+    
+    const form = document.getElementById('send-container');
+    const messageInput = document.getElementById('messageInp');
+    const messageCountainer = document.querySelector('.container');
+    
+    var audio = new Audio('astute.mp3');
+    var audio2 = new Audio('another_1.mp3');
+    audio.preload = "auto";
+    audio.volume = 1;
+    audio2.preload = "auto";
+    audio2.volume = 1;
+    
+    document.addEventListener('click', () => {
+        hasUserInteracted = true;
+    });
+    
+    let userAtBottom = true;
+    messageCountainer.addEventListener('scroll', () => {
+        const threshold = 50;
+        if(messageCountainer.scrollTop + messageCountainer.clientHeight >= messageCountainer.scrollHeight - threshold){
+            userAtBottom = true;
+        }
+        else{
+            userAtBottom = false;
     }
 });
 
 const onlineUsersDiv = document.getElementById('online-users');
 socket.on('update-users', (users) => {
     toggleUsersBtn.innerText = `Online (${users.length})`;
-
+    
     // Clear existing users
     onlineUsersDiv.innerHTML = '';
     
@@ -55,6 +53,8 @@ socket.on('update-users', (users) => {
     });
 });
 
+const typingDiv = document.getElementById('typing-indicator');
+
 const append = (message, position, id) => {
     const messageElement = document.createElement('div');
     messageElement.innerText = message;
@@ -63,6 +63,7 @@ const append = (message, position, id) => {
         messageElement.dataset.id = id;
     }
     const btn = document.createElement('button');
+    btn.classList.add('delete-btn');
     btn.innerText = '❌';
     btn.onclick = () => {
         socket.emit('delete-message', id);
@@ -72,7 +73,6 @@ const append = (message, position, id) => {
     }
     messageElement.setAttribute('data-id', id);
     messageCountainer.append(messageElement);
-    messageCountainer.append(typingDiv);
     
     // Auto scroll to bottom of container
     if(position=='right'){
@@ -81,17 +81,18 @@ const append = (message, position, id) => {
     else if(userAtBottom){
         messageCountainer.scrollTop = messageCountainer.scrollHeight;
     }
-
+    
     if(position == 'left' && hasUserInteracted){
         audio.currentTime = 0;
         audio.play().catch(err => console.log("Audio blocked:", err));
     }
+    messageCountainer.appendChild(typingIndicator);
 };
 form.addEventListener('submit', (e) =>{
     e.preventDefault();
-
+    
     const message = messageInput.value.trim();
-
+    
     // empty check
     if(message === ""){
         return;
@@ -101,7 +102,6 @@ form.addEventListener('submit', (e) =>{
     messageInput.value= '';
 });
 
-const typingDiv = document.getElementById('typing-indicator');
 let typingTimeout;
 messageInput.addEventListener('input', () => {
     socket.emit('typing', name);
@@ -148,7 +148,9 @@ socket.on('connect', () => {
 });
 socket.on('user-joined', name => {
     append(`${name} joined the chat`,'left');
-})
+    audio.currentTime = 0;
+    audio2.play().catch(err => console.log("Audio blocked:", err));
+});
 socket.on('receive', data => {
     if(data.name === name){
         append(`You: ${data.message}`,'right', data.id);
@@ -179,9 +181,6 @@ function logout(){
 async function loadMessages(){
     try{
         const res = await fetch("/messages");
-        if(!res.ok){
-            throw new Error("API failed");
-        }
 
         const messages = await res.json();
         messageCountainer.innerHTML = ""; //clear old
