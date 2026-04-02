@@ -6,15 +6,34 @@ const app = express();
 const http = require('http');
 const server = http.createServer(app);
 const { Server } = require("socket.io");
-const io = new Server(server);
+
+// CORS setup (if needed)
+const cors = require('cors');
+
+// Allow all origins (for development). In production, specify your frontend URL.
+app.use(cors());
+
+// specify allowed origins:
+app.use(cors({
+    origin: 'https://chat-app-r028.onrender.com',
+    methods: ['GET', 'POST', 'DELETE'],
+    credentials: true
+}));
+const io = new Server(server, {
+    cors: {
+        origin: 'https://chat-app-r028.onrender.com',
+        methods: ['GET', 'POST', 'DELETE'],
+        credentials: true
+    }
+});
 const mongoose = require('mongoose');
+
 
 // MongoDB connection
 mongoose.connect(process.env.MONGODB_URI)
 .then(() => console.log("Connected to MongoDB"))
 .catch((err) => console.log("MongoDB connection error:", err));
 
-console.log("process.env.MONGODB_URI:", process.env.MONGODB_URI);
 // Middleware
 app.use(express.json());
 
