@@ -8,7 +8,7 @@ const token = localStorage.getItem("token");
 if(!token){
     window.location.href = "/home.html";
 }
-const socket = io();
+const socket = io('https://chat-app.onrender.com');
 
 const form = document.getElementById('send-container');
 const messageInput = document.getElementById('messageInp');
