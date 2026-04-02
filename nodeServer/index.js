@@ -10,19 +10,16 @@ const { Server } = require("socket.io");
 // CORS setup (if needed)
 const cors = require('cors');
 
-// Allow all origins (for development). In production, specify your frontend URL.
-app.use(cors());
-
 // specify allowed origins:
 app.use(cors({
-    origin: 'https://chat-app-r028.onrender.com',
+    origin: ['https://chat-app-r028.onrender.com'],
     methods: ['GET', 'POST', 'DELETE'],
     credentials: true
 }));
 const io = new Server(server, {
     cors: {
-        origin: 'https://chat-app-r028.onrender.com',
-        methods: ['GET', 'POST', 'DELETE'],
+        origin: ['https://chat-app-r028.onrender.com'],
+        methods: ['GET', 'POST'],
         credentials: true
     }
 });
