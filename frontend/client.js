@@ -41,6 +41,10 @@ messageCountainer.addEventListener('scroll', () => {
 const onlineUsersDiv = document.getElementById('online-users');
 socket.on('update-users', (users) => {
     toggleUsersBtn.innerText = `Online (${users.length})`;
+
+    // Clear existing users
+    onlineUsersDiv.innerHTML = '';
+    
     users.forEach(user => {
         if(user.id === socket.id){
             onlineUsersDiv.innerHTML += `<b>${user.name}(You)</b><br>`;
@@ -175,7 +179,6 @@ function logout(){
 async function loadMessages(){
     try{
         const res = await fetch("/messages");
-        console.log("Response status:", res.status);
         if(!res.ok){
             throw new Error("API failed");
         }

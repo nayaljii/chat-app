@@ -56,15 +56,11 @@ io.on('connection', socket => {
 
     socket.on('send', async (message) => {
         try {
-            console.log("User:", users[socket.id]);
-            console.log("Message:", message);
-
         const newMsg = new Message({
             name: users[socket.id],
             message: message
         });
         await newMsg.save();
-        console.log("Message saved with ID:", newMsg._id);
 
         const msgData = {
             message: message,
