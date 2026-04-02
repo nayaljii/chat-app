@@ -14,6 +14,7 @@ mongoose.connect(process.env.MONGODB_URI)
 .then(() => console.log("Connected to MongoDB"))
 .catch((err) => console.log("MongoDB connection error:", err));
 
+console.log("process.env.MONGODB_URI:", process.env.MONGODB_URI);
 // Middleware
 app.use(express.json());
 
