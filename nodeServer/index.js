@@ -96,8 +96,12 @@ io.on('connection', socket => {
 
 // Delete message API
 app.delete('/message/:id', async (req, res) => {
+    const messageId = req.params.id;
+    if(!mongoose.Types.ObjectId.isValid(messageId)){
+        return res.status(400).json({ error: 'Invalid message ID' });
+    }
     try {
-        await Message.findByIdAndDelete(req.params.id);
+        await Message.findByIdAndDelete(messageId);
         res.json({ success: true });
     } catch (err) {
         res.status(500).json({ error: 'Failed to delete message' });
