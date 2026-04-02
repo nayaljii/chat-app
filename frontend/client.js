@@ -55,8 +55,9 @@ const append = (message, position, id) => {
     const messageElement = document.createElement('div');
     messageElement.innerText = message;
     messageElement.classList.add('message', position);
-    
-    messageElement.dataset.id = id;
+    if(id){
+        messageElement.dataset.id = id;
+    }
     const btn = document.createElement('button');
     btn.innerText = '❌';
     btn.onclick = () => {
@@ -138,8 +139,9 @@ toggleUsersBtn.addEventListener('click', () => {
     }
 });
 
-socket.emit('new-user-joined', name);
-
+socket.on('connect', () => {
+    socket.emit('new-user-joined', name);
+});
 socket.on('user-joined', name => {
     append(`${name} joined the chat`,'left');
 })
@@ -173,6 +175,11 @@ function logout(){
 async function loadMessages(){
     try{
         const res = await fetch("/messages");
+        console.log("Response status:", res.status);
+        if(!res.ok){
+            throw new Error("API failed");
+        }
+
         const messages = await res.json();
         messageCountainer.innerHTML = ""; //clear old
 

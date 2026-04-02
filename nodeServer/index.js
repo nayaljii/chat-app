@@ -13,18 +13,6 @@ mongoose.connect(process.env.MONGODB_URI)
 .then(() => console.log("Connected to MongoDB"))
 .catch((err) => console.log("MongoDB connection error:", err));
 
-// // CORS setup (if needed)
-// const cors = require('cors');
-
-// // specify allowed origins:
-// app.use(cors({
-//     origin: ['https://chat-app-r028.onrender.com'],
-//     methods: ['GET', 'POST', 'DELETE'],
-//     credentials: true,
-//     allowedHeaders: ['Authorization']
-// }));
-
-
 // Middleware
 app.use(express.json());
 
@@ -43,8 +31,13 @@ app.use("/api/auth", authRoutes);
 const Message = require("./models/Message");
 
 app.get('/messages', async (req, res) => {
-    const messages = await Message.find().sort({ time: 1 });
-    res.json(messages);
+    try {
+        const messages = await Message.find().sort({ time: 1 });
+        res.json(messages);
+    } catch (err) {
+        console.error("Error fetching messages:", err);
+        res.status(500).json({ error: 'Failed to fetch messages' });
+    }
 });
 
 const io = new Server(server);
@@ -62,11 +55,16 @@ io.on('connection', socket => {
     });
 
     socket.on('send', async (message) => {
+        try {
+            console.log("User:", users[socket.id]);
+            console.log("Message:", message);
+
         const newMsg = new Message({
             name: users[socket.id],
             message: message
         });
         await newMsg.save();
+        console.log("Message saved with ID:", newMsg._id);
 
         const msgData = {
             message: message,
@@ -76,6 +74,9 @@ io.on('connection', socket => {
 
         socket.emit('receive', msgData);
         socket.broadcast.emit('receive', msgData);
+        } catch (err) {
+            console.error("Error saving message:", err);
+        }
     });
 
     socket.on('disconnect', () => {
