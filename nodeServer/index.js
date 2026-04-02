@@ -36,7 +36,7 @@ app.get('/messages', async (req, res) => {
 });
 
 // SPA catch-all (for frontend routing)
-app.get('*', (req, res) => {
+app.get(/^\/.*$/, (req, res) => {
     res.sendFile(path.join(__dirname, "../frontend", "index.html"));
 });
 
