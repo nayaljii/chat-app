@@ -1,41 +1,48 @@
 const name = localStorage.getItem("username");
-if(!name)
-    {
-        window.location.href = "/home.html";
+if(!name) {
+    window.location.href = "/home.html";
+}
+
+const token = localStorage.getItem("token");   
+if(!token) {
+    window.location.href = "/home.html";
+}
+
+const socket = io();
+const form = document.getElementById('send-container');
+const messageCountainer = document.querySelector('.container');
+const messageInput = document.getElementById('messageInp');
+    
+let hasUserInteracted = false;
+
+// Receive msg notification audio
+var audio1 = new Audio('astute.mp3');
+audio1.preload = "auto";
+audio1.volume = 1;
+
+// user joind notification audio
+var audio2 = new Audio('another_1.mp3');
+audio2.preload = "auto";
+audio2.volume = 1;
+
+// User Joined or send msg
+document.addEventListener('click', () => {
+    hasUserInteracted = true;
+});
+
+// Scroll if user already bottom
+let userAtBottom = true;
+messageCountainer.addEventListener('scroll', () => {
+    const threshold = 50;
+    if(messageCountainer.scrollTop + messageCountainer.clientHeight >= messageCountainer.scrollHeight - threshold){
+        userAtBottom = true;
     }
-    const token = localStorage.getItem("token");
-    
-    if(!token){
-        window.location.href = "/home.html";
-    }
-    const socket = io();
-    
-    const form = document.getElementById('send-container');
-    const messageInput = document.getElementById('messageInp');
-    const messageCountainer = document.querySelector('.container');
-    let hasUserInteracted = false;
-    var audio1 = new Audio('astute.mp3');
-    var audio2 = new Audio('another_1.mp3');
-    audio1.preload = "auto";
-    audio1.volume = 1;
-    audio2.preload = "auto";
-    audio2.volume = 1;
-    
-    document.addEventListener('click', () => {
-        hasUserInteracted = true;
-    });
-    
-    let userAtBottom = true;
-    messageCountainer.addEventListener('scroll', () => {
-        const threshold = 50;
-        if(messageCountainer.scrollTop + messageCountainer.clientHeight >= messageCountainer.scrollHeight - threshold){
-            userAtBottom = true;
-        }
-        else{
-            userAtBottom = false;
+    else{
+        userAtBottom = false;
     }
 });
 
+// Online users
 const onlineUsersDiv = document.getElementById('online-users');
 socket.on('update-users', (users) => {
     toggleUsersBtn.innerText = `Online (${users.length})`;
@@ -53,8 +60,7 @@ socket.on('update-users', (users) => {
     });
 });
 
-const typingDiv = document.getElementById('typing-indicator');
-
+// Append msg
 const append = (message, position, id) => {
     const messageElement = document.createElement('div');
     messageElement.innerText = message;
@@ -62,6 +68,8 @@ const append = (message, position, id) => {
     if(id){
         messageElement.dataset.id = id;
     }
+
+    // For delete button
     const btn = document.createElement('button');
     btn.classList.add('delete-btn');
     btn.innerText = '❌';
@@ -75,21 +83,19 @@ const append = (message, position, id) => {
     messageCountainer.append(messageElement);
     
     // Auto scroll to bottom of container
-    if(position=='right'){
-        messageCountainer.scrollTop = messageCountainer.scrollHeight;
-    }
-    else if(userAtBottom){
+    if(position=='right' || userAtBottom){
         messageCountainer.scrollTop = messageCountainer.scrollHeight;
     }
     
     messageCountainer.appendChild(typingIndicator);
 };
+
 form.addEventListener('submit', (e) =>{
     e.preventDefault();
     
-    const message = messageInput.value.trim();
+    const message = messageInput.value.trim();  //remove extra spaces form start and end
     
-    // empty check
+    // msg empty check
     if(message === ""){
         return;
     }
@@ -98,6 +104,21 @@ form.addEventListener('submit', (e) =>{
     messageInput.value= '';
 });
 
+// Receive msg
+socket.on('receive', data => {
+    if(data.name === name){
+        append(`You: ${data.message}`,'right', data.id);
+    }
+    else{
+        append(`${data.name}: ${data.message}`,'left',data.id);
+        // Play sound only for incoming messages and if user has interacted with the page
+        if(hasUserInteracted){
+            playSound(audio1);
+        }
+    }
+})
+
+// Typing Timeout
 let typingTimeout;
 messageInput.addEventListener('input', () => {
     socket.emit('typing', name);
@@ -107,27 +128,20 @@ messageInput.addEventListener('input', () => {
     }, 2000);
 });
 
-socket.on('user-stop-typing', () => {
-    typingIndicator.innerText = '';
-});
-
+// For User is typing... indicator
 const typingIndicator = document.getElementById('typing-indicator');
-socket.on('user-typing', (name) => {
-    typingIndicator.innerText = `${name} is typing...`;
-});
-
-socket.on('user-typing', (typingName) => {
-    if(typingName !== name){
-        typingIndicator.innerText = `${typingName} is typing...`;
+socket.on('user-typing', (typingname) => {
+    if(typingname !== name){
+        typingIndicator.innerText = `${typingname} is typing...`;
     }
 });
-
+// For stop typing... indicator
 socket.on('user-stop-typing', () => {
     typingIndicator.innerText = '';
 });
 
+// Toggle online users list
 const toggleUsersBtn = document.getElementById('toggle-users');
-const onlineUsersList = document.getElementById('online-users');
 let isVisible = false;
 toggleUsersBtn.addEventListener('click', () => {
     isVisible = !isVisible;
@@ -139,6 +153,7 @@ toggleUsersBtn.addEventListener('click', () => {
     }
 });
 
+// Notify server about new user joining
 socket.on('connect', () => {
     socket.emit('new-user-joined', name);
 });
@@ -157,21 +172,15 @@ function playSound(audio){
     sound.play().catch(err => console.log("Audio blocked:", err));
 }
 
-socket.on('receive', data => {
-    if(data.name === name){
-        append(`You: ${data.message}`,'right', data.id);
-    }
-    else{
-        append(`${data.name}: ${data.message}`,'left',data.id);
-        // Play sound only for incoming messages and if user has interacted with the page
-        if(hasUserInteracted){
-            playSound(audio1);
-        }
-    }
-})
+// Notify server about user leaving
 socket.on('left', name => {
     append(`${name} left the chat`,'left')
 })
+
+//  Delete msg function
+function deleteMessage(id){
+    socket.emit('delete-message', id);
+}
 socket.on('message-deleted', id => {
     const msg = document.querySelector(`[data-id="${id}"]`);
     if(msg){
@@ -206,10 +215,6 @@ async function loadMessages(){
     }catch(err){
         console.error("Error loading messages:", err);
     }
-}
-
-function deleteMessage(id){
-    socket.emit('delete-message', id);
 }
 
 window.addEventListener("DOMContentLoaded",loadMessages);
