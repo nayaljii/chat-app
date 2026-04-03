@@ -82,9 +82,6 @@ const append = (message, position, id) => {
         messageCountainer.scrollTop = messageCountainer.scrollHeight;
     }
     
-    if(position == 'left' && hasUserInteracted){
-        playSound(audio1);
-    }
     messageCountainer.appendChild(typingIndicator);
 };
 form.addEventListener('submit', (e) =>{
@@ -147,7 +144,9 @@ socket.on('connect', () => {
 });
 socket.on('user-joined', username => {
     append(`${username} joined the chat`,'left');
-    if(username !== name&& hasUserInteracted){
+
+    // Play sound only for new user joining and if user has interacted with the page
+    if(hasUserInteracted){
         playSound(audio2);
     }
 });
@@ -164,6 +163,10 @@ socket.on('receive', data => {
     }
     else{
         append(`${data.name}: ${data.message}`,'left',data.id);
+        // Play sound only for incoming messages and if user has interacted with the page
+        if(hasUserInteracted){
+            playSound(audio1);
+        }
     }
 })
 socket.on('left', name => {

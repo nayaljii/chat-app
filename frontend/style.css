@@ -28,7 +28,12 @@ form label {
     display: block;
 }
 form input {
-    border-radius: 4px;
+    flex: 1;
+    padding: revert;
+    border: 1px solid black;
+    border-radius: 10px;
+    margin: auto;
+    text-align: center;
 }
 .container {
     position: relative;
@@ -41,10 +46,7 @@ form input {
     margin-bottom: 15px;
     border-radius: 15px;
     scroll-behavior: smooth;
-    
-    /* 🔥 soft gradient bg */
     background: linear-gradient(to bottom, #f0f2f5, #dcd6f7);
-    
     display: flex;
     flex-direction: column;
 }
@@ -140,11 +142,11 @@ form input {
 /* Login and Register form */
 .formbtn {
     background-color: #4CAF50;
-    color: white;
+    color: green;
     cursor: pointer;
 }
 .formbtn:hover {
-    background-color: #09ed15;
+    background-color: yellow;
 }
 
 /* Message Send */
@@ -199,9 +201,10 @@ form input {
     flex: 1;
     padding: revert;
     width: 90%;
-    border: 2px solid black;
+    border: 1px solid black;
     border-radius: 10px;
 }
+
 #abt, #back {
     text-align: center;
 }
