@@ -1,7 +1,8 @@
 body {
     background-color: rgb(225, 57, 166);
     margin: revert;
-    display: inline;
+    display: flex;
+    flex-direction: column;
     align-items: center;
 }
 h1{
@@ -38,12 +39,13 @@ form input {
 }
 .container {
     position: relative;
-    width: 100%;
-    max-width: 500px;
+    width: 90%;
+    max-width: 600px;
     margin: 20px auto;
     height: 60vh;
     padding: 10px;
     overflow-y: auto;
+    scrollbar-width: none;
     margin-bottom: 15px;
     border-radius: 15px;
     scroll-behavior: smooth;
@@ -51,7 +53,25 @@ form input {
     display: flex;
     flex-direction: column;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
 }
+.container::-webkit-scrollbar {
+    width: 0px;
+}
+.container:hover {
+    scrollbar-width: thin;
+}
+.container:hover::-webkit-scrollbar {
+    width: 6px;
+}
+.container:hover::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+}
+.container:hover::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
 #typing-indicator {
     margin: 5px 10px;
     font-size: 14px;
@@ -72,7 +92,6 @@ form input {
 }
 #toggle-users, #logout {
     position: fixed;
-    left: 10px;
     top: 10px;
     background-color: green;
     color: black;
@@ -80,6 +99,12 @@ form input {
     border-radius: 6px;
     padding: 8px 12px;
     cursor: pointer;
+}
+#toggle-users {
+    left: 10px;
+}
+#logout {
+    right: 10px;
 }
 #toggle-users:hover {
     background-color: #09ed15;
@@ -93,9 +118,9 @@ form input {
     display: inline-flex;
     align-items: center;
     gap: 5px;
-    max-width: 60%;
-    padding: 10px 15px;
-    margin: 8px 0;
+    max-width: 70%;
+    padding: 10px;
+    margin: 5px;
     border-radius: 10px;
     font-size: 14px;
     word-wrap: break-word;
@@ -193,6 +218,7 @@ form input {
     width: 90%;
     border: 2px solid black;
     border-radius: 10px;
+    height: stretch;
 }
 
 #abt, #back {
