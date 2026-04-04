@@ -139,10 +139,10 @@ form input {
     justify-content: space-between;
     align-items: flex-end;
     gap: 0px;
-    min-width: 0;
+    min-width: 100px;
     max-width: 70%;
     padding: 10px;
-    margin: 5px 0;
+    margin: 2px 0;
     border-radius: 10px;
     font-size: 14px;
     word-break: break-word;
@@ -160,10 +160,12 @@ form input {
     font-size: 14px;
     margin-bottom: 2px;
     opacity: 0.7;
+    align-items: flex-start;
 }
 .msg-text {
     flex: 1;
     font-size: 14px;
+    align-items: flex-start;
 }
 .msg-time {
     font-size: 10px;
@@ -171,6 +173,7 @@ form input {
     text-align: right;
     margin-top: 3px;
     opacity: 0.6;
+    align-items: flex-end;
 }
 
 /* delete button */
@@ -182,12 +185,13 @@ form input {
     outline: none;
     box-shadow: none;
     cursor: pointer;
-    font-size: 10px;
+    font-size: 8px;
     padding: 0;
     opacity: 0;
     transition: 0.2s;
     appearance: none;
     -webkit-appearance: none;
+    align-items: flex-end;
 }
 .message:hover .delete-btn {
     display: block;
@@ -214,9 +218,12 @@ form input {
 .center {
     align-self: center;
     background: transparent;
-    font-size: 12px;
+    font-size: 10px;
     color: gray;
     border: none;
+    margin: 0;
+    padding: initial;
+    align-items: center;
 }
 
 #typing-indicator {

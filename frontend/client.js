@@ -80,6 +80,17 @@ const append = (data, position, id) => {
     const textDiv = document.createElement('div');
     textDiv.classList.add('msg-text');
     textDiv.innerText = data.message;
+    
+    // For Time Div
+    const timeDiv = document.createElement('div');
+    timeDiv.classList.add('msg-time');
+    timeDiv.innerText = formatTime(data.time);
+    
+    messageElement.appendChild(nameDiv);
+    messageElement.appendChild(textDiv);
+    messageContainer.append(messageElement);
+    messageElement.appendChild(timeDiv);
+    messageElement.setAttribute('data-id', id);
 
     // For delete button
     const btn = document.createElement('button');
@@ -92,16 +103,6 @@ const append = (data, position, id) => {
         messageElement.appendChild(btn);
     }
 
-    // For Time Div
-    const timeDiv = document.createElement('div');
-    timeDiv.classList.add('msg-time');
-    timeDiv.innerText = formatTime(data.time);
-    
-    messageElement.appendChild(nameDiv);
-    messageElement.appendChild(textDiv);
-    messageElement.appendChild(timeDiv);
-    messageElement.setAttribute('data-id', id);
-    messageContainer.append(messageElement);
     
     // Auto scroll to bottom of container
     if(position=='right' || userAtBottom){
@@ -195,9 +196,7 @@ socket.on('connect', () => {
 });
 socket.on('user-joined', username => {
     append({
-        name: 'System',
         message: `${username} joined the chat`,
-        time: new Date()
     }, 'center');
 
     // Play sound only for new user joining and if user has interacted with the page
@@ -216,9 +215,7 @@ function playSound(audio){
 socket.on('left', username => {
     if(username !== name){
         append({
-            name: 'System',
             message: `${username} left the chat`,
-            time: new Date()
         }, 'center');
     }
 });
