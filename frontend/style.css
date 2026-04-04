@@ -150,6 +150,7 @@ form input {
     white-space: pre-wrap;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     animation: fadeIn 0.2s ease;
+    align-items: revert;
 }
 .message:hover {
     transform: scale(1.02);
@@ -179,11 +180,8 @@ form input {
 /* delete button */
 .delete-btn {
     display: none;
-    margin-left: 8px;
     background: transparent;
     border: none;
-    outline: none;
-    box-shadow: none;
     cursor: pointer;
     font-size: 8px;
     padding: 0;
@@ -192,6 +190,8 @@ form input {
     appearance: none;
     -webkit-appearance: none;
     align-items: flex-end;
+    margin-left: auto;
+    width: 15px;
 }
 .message:hover .delete-btn {
     display: block;
@@ -254,6 +254,7 @@ form input {
     border: none;
     border-radius: 10px;
     height: stretch;
+    text-align: left;
 }
 
 /* Message Send */

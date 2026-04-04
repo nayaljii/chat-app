@@ -196,7 +196,9 @@ socket.on('connect', () => {
 });
 socket.on('user-joined', username => {
     append({
+        name: "",
         message: `${username} joined the chat`,
+        time: ""
     }, 'center');
 
     // Play sound only for new user joining and if user has interacted with the page
@@ -215,7 +217,9 @@ function playSound(audio){
 socket.on('left', username => {
     if(username !== name){
         append({
+            name: "",
             message: `${username} left the chat`,
+            time: ""
         }, 'center');
     }
 });
