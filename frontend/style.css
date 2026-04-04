@@ -141,7 +141,7 @@ form input {
     gap: 0px;
     min-width: 100px;
     max-width: 70%;
-    padding: 10px;
+    padding: 5px 7px;
     margin: 2px 0;
     border-radius: 10px;
     font-size: 14px;
@@ -159,7 +159,7 @@ form input {
     color: green;
     font-weight: bold;
     font-size: 14px;
-    margin-bottom: 2px;
+    margin-bottom: 1px;
     opacity: 0.7;
     align-items: flex-start;
 }
@@ -172,7 +172,8 @@ form input {
     font-size: 10px;
     color: gray;
     text-align: right;
-    margin-top: 3px;
+    padding-top: 3px;
+    margin: -4px;
     opacity: 0.6;
     align-items: flex-end;
 }
@@ -191,6 +192,7 @@ form input {
     -webkit-appearance: none;
     align-items: flex-end;
     margin-left: auto;
+    margin: 3px -5px -3px -5px;
     width: 15px;
 }
 .message:hover .delete-btn {
@@ -222,7 +224,7 @@ form input {
     color: gray;
     border: none;
     margin: 0;
-    padding: initial;
+    padding: 2px;
     align-items: center;
 }
 
@@ -236,7 +238,7 @@ form input {
     background: transparent;
     transition: 0.2s;
     opacity: 0.8;
-    margin: -13px 10px 5px 10px;
+    margin: -13px 10px 25px 10px;
     align-items: 10px;
 }
 
