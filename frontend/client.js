@@ -15,6 +15,11 @@ const messageInput = document.getElementById('messageInp');
     
 let hasUserInteracted = false;
 
+// Send msg notification audio
+var audio0 = new Audio('sms.mp3');
+audio0.preload = "auto";
+audio0.volume = 1;
+
 // Receive msg notification audio
 var audio1 = new Audio('astute.mp3');
 audio1.preload = "auto";
@@ -108,6 +113,10 @@ form.addEventListener('submit', (e) =>{
 socket.on('receive', data => {
     if(data.name === name){
         append(`You: ${data.message}`,'right', data.id);
+        // Play sound only for msg send has interacted with the page
+        if(hasUserInteracted){
+            playSound(audio0);
+        }
     }
     else{
         append(`${data.name}: ${data.message}`,'left',data.id);
@@ -146,7 +155,8 @@ let isVisible = false;
 toggleUsersBtn.addEventListener('click', () => {
     isVisible = !isVisible;
     if(isVisible){
-        onlineUsersDiv.style.display = 'block';
+        onlineUsersDiv.style.display = 'flex';
+        onlineUsersDiv.style.flexDirection = 'column';
     }
     else{
         onlineUsersDiv.style.display = 'none';
@@ -192,9 +202,16 @@ socket.on('message-deleted', id => {
 
 // Logout
 function logout(){
-    localStorage.removeItem("token");
-    localStorage.removeItem("username");
-    window.location.href = "/home.html";
+    if(confirm("Are you sure you want to logout?")){
+        if(socket){
+            socket.disconnect();
+        }
+        // clear local storage
+        localStorage.removeItem("token");
+        localStorage.removeItem("username");
+        // Redirect to home page
+        window.location.href = "/home.html";
+    }
 }
 
 

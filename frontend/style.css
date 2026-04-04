@@ -1,5 +1,5 @@
 body {
-    background-color: rgb(225, 57, 166);
+    background-color: cadetblue;
     margin: revert;
     display: flex;
     flex-direction: column;
@@ -19,7 +19,7 @@ h1{
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     text-align: center;
     align-items: center;
-    color: blue;
+    color: darkblue;
 }
 
 form {
@@ -212,7 +212,8 @@ form input {
     border-radius: 10px;
     height: 34px;
     width: 20%;
-    background-color: blue;
+    color: white;
+    background-color: rebeccapurple;
 }
 .okbtn:hover {
     background: green;

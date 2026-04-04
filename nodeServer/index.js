@@ -49,9 +49,9 @@ const onlineUser = {};
 io.on('connection', socket => {
     socket.on('new-user-joined', name => {
         users[socket.id] = name;
-        onlineUser[socket.id] = { name, id: socket.id };
-        socket.broadcast.emit('user-joined', name);
-        io.emit('update-users', Object.values(onlineUser));
+        onlineUser[name] = socket.id; // overwrite
+        const usersList = Object.keys(onlineUser).map(name => ({ name, id: onlineUser[name] }));
+        io.emit('update-users', usersList);
     });
 
     socket.on('send', async (message) => {
@@ -76,16 +76,15 @@ io.on('connection', socket => {
     });
 
     socket.on('disconnect', () => {
-        const username = users[socket.id];
-        setTimeout(() => {
-            if(users[socket.id]) return; // User reconnected within 1 second, do not emit left event
-            if(username){
-                socket.broadcast.emit('left', username);
-            }
-            delete users[socket.id];
-            delete onlineUser[socket.id];
-            io.emit('update-users', Object.values(onlineUser));
-        }, 1000); // 1 sec delay
+        const name = users[socket.id];
+        if(name && onlineUser[name] === socket.id){
+            delete onlineUser[name];
+            socket.broadcast.emit('left', name);
+        }
+        delete users[socket.id];
+        delete onlineUser[name];
+        const usersList = Object.keys(onlineUser).map(name => ({ name, id: onlineUser[name] }));
+        io.emit('update-users', usersList);
     });
 
     socket.on('delete-message', async (id) => {
@@ -119,6 +118,7 @@ app.delete('/message/:id', async (req, res) => {
         res.status(500).json({ error: 'Failed to delete message' });
     }
 });
+
 
 // Server port
 const PORT = process.env.PORT || 3000;
