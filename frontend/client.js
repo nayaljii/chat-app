@@ -102,9 +102,8 @@ const append = (data, position, id) => {
     messageElement.appendChild(timeDiv);
     messageElement.setAttribute('data-id', id);
     messageContainer.append(messageElement);
-    messageContainer.appendChild(typingIndicator);
     
-        // Auto scroll to bottom of container
+    // Auto scroll to bottom of container
     if(position=='right' || userAtBottom){
         messageContainer.scrollTop = messageContainer.scrollHeight;
     }
@@ -129,14 +128,24 @@ form.addEventListener('submit', (e) =>{
 // Receive msg
 socket.on('receive', data => {
     if(data.name === name){
-        append(`<b>You:</b> ${data.message}`,'right', data.id);
+        append({
+            name: 'You',
+            message: data.message,
+            time: new Date()
+        }, 'right', data.id);
+
         // Play sound only for msg send has interacted with the page
         if(hasUserInteracted){
             playSound(audio0);
         }
     }
     else{
-        append(`<b>${data.name}:</b> ${data.message}`,'left',data.id);
+        append({
+            name: data.name,
+            message: data.message,
+            time: new Date()
+        }, 'left', data.id);
+
         // Play sound only for incoming messages and if user has interacted with the page
         if(hasUserInteracted){
             playSound(audio1);
@@ -185,7 +194,11 @@ socket.on('connect', () => {
     socket.emit('new-user-joined', name);
 });
 socket.on('user-joined', username => {
-    append(`${username} joined the chat`,'left');
+    append({
+        name: 'System',
+        message: `${username} joined the chat`,
+        time: new Date()
+    }, 'center');
 
     // Play sound only for new user joining and if user has interacted with the page
     if(hasUserInteracted){
@@ -202,7 +215,11 @@ function playSound(audio){
 // Notify server about user leaving
 socket.on('left', username => {
     if(username !== name){
-        append(`${username} left the chat`,'left')
+        append({
+            name: 'System',
+            message: `${username} left the chat`,
+            time: new Date()
+        }, 'center');
     }
 });
 
