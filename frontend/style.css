@@ -192,7 +192,8 @@ form input {
     align-items: flex-end;
     margin-left: auto;
     margin-bottom: -5px;
-    margin-top: 1px;
+    margin-top: 2px;
+    margin-right: -5px;
     width: 15px;
 }
 .message:hover .delete-btn {
@@ -229,7 +230,7 @@ form input {
 }
 
 #typing-indicator {
-    position: sticky;
+    position: fixed;
     bottom: 0;
     padding: 20px;
     font-size: 14px;
