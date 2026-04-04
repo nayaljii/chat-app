@@ -173,9 +173,11 @@ function playSound(audio){
 }
 
 // Notify server about user leaving
-socket.on('left', name => {
-    append(`${name} left the chat`,'left')
-})
+socket.on('left', username => {
+    if(username !== name){
+        append(`${username} left the chat`,'left')
+    }
+});
 
 //  Delete msg function
 function deleteMessage(id){

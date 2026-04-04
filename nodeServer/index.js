@@ -76,10 +76,16 @@ io.on('connection', socket => {
     });
 
     socket.on('disconnect', () => {
-        socket.broadcast.emit('left', users[socket.id]);
-        delete users[socket.id];
-        delete onlineUser[socket.id];
-        io.emit('update-users', Object.values(onlineUser));
+        const username = users[socket.id];
+        setTimeout(() => {
+            if(users[socket.id]) return; // User reconnected within 1 second, do not emit left event
+            if(username){
+                socket.broadcast.emit('left', username);
+            }
+            delete users[socket.id];
+            delete onlineUser[socket.id];
+            io.emit('update-users', Object.values(onlineUser));
+        }, 1000); // 1 sec delay
     });
 
     socket.on('delete-message', async (id) => {
