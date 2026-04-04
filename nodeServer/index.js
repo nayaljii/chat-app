@@ -52,6 +52,7 @@ io.on('connection', socket => {
         onlineUser[name] = socket.id; // overwrite
         const usersList = Object.keys(onlineUser).map(name => ({ name, id: onlineUser[name] }));
         io.emit('update-users', usersList);
+        socket.broadcast.emit('user-joined', name);
     });
 
     socket.on('send', async (message) => {
@@ -77,12 +78,11 @@ io.on('connection', socket => {
 
     socket.on('disconnect', () => {
         const name = users[socket.id];
-        if(name && onlineUser[name] === socket.id){
-            delete onlineUser[name];
+        if(name){
             socket.broadcast.emit('left', name);
+            delete onlineUser[name];
+            delete users[socket.id];
         }
-        delete users[socket.id];
-        delete onlineUser[name];
         const usersList = Object.keys(onlineUser).map(name => ({ name, id: onlineUser[name] }));
         io.emit('update-users', usersList);
     });

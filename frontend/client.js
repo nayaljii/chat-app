@@ -1,3 +1,4 @@
+
 const name = localStorage.getItem("username");
 if(!name) {
     window.location.href = "/home.html";
@@ -88,8 +89,6 @@ const append = (message, position, id) => {
     if(position=='right' || userAtBottom){
         messageContainer.scrollTop = messageContainer.scrollHeight;
     }
-    
-    // messageContainer.appendChild(typingIndicator);
 };
 
 form.addEventListener('submit', (e) =>{
@@ -221,14 +220,14 @@ async function loadMessages(){
         const res = await fetch("/messages");
 
         const messages = await res.json();
-        messageCountainer.innerHTML = ""; //clear old
+        messageContainer.innerHTML = ""; //clear old
 
     messages.forEach(msg => {
         if(msg.name == name){
-            append(`You: ${msg.message}`, 'right', msg._id);
+            append(`<b>You:</b> ${msg.message}`, 'right', msg._id);
         }
         else{
-        append(`${msg.name}: ${msg.message}`, 'left', msg._id);
+        append(`<b>${msg.name}:</b> ${msg.message}`, 'left', msg._id);
         }
     });
     }catch(err){

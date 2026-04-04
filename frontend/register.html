@@ -31,22 +31,22 @@
                 <td><input type="password" id="password" name="password" placeholder="Enter Password" required></td>
             </tr>
             <tr >
-                <td align="center" colspan="2"><button id="formbtn" type="submit">Ragister</button></td>
+                <td align="center" colspan="2"><button id="formbtn" type="submit">Register</button></td>
             </tr>
         </table>
         <p id="back">If you already have an account, <a href="/login.html">login here</a>.</p>
     </form>
 
     <script>
-        document.getElementById("formbtn").innerText = "Registering...";
         const form = document.getElementById("registerForm");
         form.addEventListener("submit", async (e) => {
             e.preventDefault();
-
+            
+            document.getElementById("formbtn").innerText = "Registering...";
             const username = document.getElementById("username").value;
             const email = document.getElementById("email").value;
             const password = document.getElementById("password").value;
-
+            
             const res = await fetch("/api/auth/register", {
                 method: "POST",
                 headers: {
