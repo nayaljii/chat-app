@@ -10,7 +10,7 @@ if(!token) {
 
 const socket = io();
 const form = document.getElementById('send-container');
-const messageCountainer = document.querySelector('.container');
+const messageContainer = document.querySelector('.container');
 const messageInput = document.getElementById('messageInp');
     
 let hasUserInteracted = false;
@@ -37,9 +37,9 @@ document.addEventListener('click', () => {
 
 // Scroll if user already bottom
 let userAtBottom = true;
-messageCountainer.addEventListener('scroll', () => {
+messageContainer.addEventListener('scroll', () => {
     const threshold = 50;
-    if(messageCountainer.scrollTop + messageCountainer.clientHeight >= messageCountainer.scrollHeight - threshold){
+    if(messageContainer.scrollTop + messageContainer.clientHeight >= messageContainer.scrollHeight - threshold){
         userAtBottom = true;
     }
     else{
@@ -56,19 +56,16 @@ socket.on('update-users', (users) => {
     onlineUsersDiv.innerHTML = '';
     
     users.forEach(user => {
-        if(user.id === socket.id){
-            onlineUsersDiv.innerHTML += `<b>${user.name}(You)</b><br>`;
-        }
-        else{
-            onlineUsersDiv.innerHTML += `<b>${user.name}</b><br>`;
-        }
+        const el = document.createElement('div');
+        el.innerHTML = `<b>${user.name}${user.id === socket.id ? '(You)' : ''}</b>`;
+        onlineUsersDiv.appendChild(el);
     });
 });
 
 // Append msg
 const append = (message, position, id) => {
     const messageElement = document.createElement('div');
-    messageElement.innerText = message;
+    messageElement.innerHTML = message;
     messageElement.classList.add('message', position);
     if(id){
         messageElement.dataset.id = id;
@@ -85,14 +82,14 @@ const append = (message, position, id) => {
         messageElement.appendChild(btn);
     }
     messageElement.setAttribute('data-id', id);
-    messageCountainer.append(messageElement);
+    messageContainer.append(messageElement);
     
     // Auto scroll to bottom of container
     if(position=='right' || userAtBottom){
-        messageCountainer.scrollTop = messageCountainer.scrollHeight;
+        messageContainer.scrollTop = messageContainer.scrollHeight;
     }
     
-    messageCountainer.appendChild(typingIndicator);
+    // messageContainer.appendChild(typingIndicator);
 };
 
 form.addEventListener('submit', (e) =>{
@@ -104,7 +101,9 @@ form.addEventListener('submit', (e) =>{
     if(message === ""){
         return;
     }
-    socket.emit('send', message);
+    if(socket.connected){
+        socket.emit('send', message);
+    }
     socket.emit('stop-typing');
     messageInput.value= '';
 });
@@ -112,14 +111,14 @@ form.addEventListener('submit', (e) =>{
 // Receive msg
 socket.on('receive', data => {
     if(data.name === name){
-        append(`You: ${data.message}`,'right', data.id);
+        append(`<b>You:</b> ${data.message}`,'right', data.id);
         // Play sound only for msg send has interacted with the page
         if(hasUserInteracted){
             playSound(audio0);
         }
     }
     else{
-        append(`${data.name}: ${data.message}`,'left',data.id);
+        append(`<b>${data.name}:</b> ${data.message}`,'left',data.id);
         // Play sound only for incoming messages and if user has interacted with the page
         if(hasUserInteracted){
             playSound(audio1);
@@ -209,6 +208,7 @@ function logout(){
         // clear local storage
         localStorage.removeItem("token");
         localStorage.removeItem("username");
+        socket.removeAllListeners(); // Remove all socket listeners
         // Redirect to home page
         window.location.href = "/home.html";
     }
@@ -225,10 +225,10 @@ async function loadMessages(){
 
     messages.forEach(msg => {
         if(msg.name == name){
-            append(`<b>You</b>: ${msg.message}`, 'right', msg._id);
+            append(`You: ${msg.message}`, 'right', msg._id);
         }
         else{
-        append(`<b>${msg.name}</b>: ${msg.message}`, 'left', msg._id);
+        append(`${msg.name}: ${msg.message}`, 'left', msg._id);
         }
     });
     }catch(err){
@@ -240,6 +240,3 @@ window.addEventListener("DOMContentLoaded",loadMessages);
 window.addEventListener("load", () => {
     socket.emit('stop-typing');
 });
-
-// page load pe call
-loadMessages();
