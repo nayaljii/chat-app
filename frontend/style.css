@@ -14,9 +14,8 @@ body {
 }
 
 h1{
-    margin-top: 12px;
+    margin: 12px 0;
     font-size: 25px;
-    font-weight: bold;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     text-align: center;
     align-items: center;
@@ -94,7 +93,7 @@ form input {
     width: 90%;
     min-width: 350px;
     max-width: 600px;
-    margin: 0 10px;
+    margin: 10px;
     height: 60vh;
     padding: 10px;
     overflow-y: auto;
@@ -141,7 +140,7 @@ form input {
     gap: 0px;
     min-width: 100px;
     max-width: 70%;
-    padding: 5px 7px;
+    padding: 7px;
     margin: 2px 0;
     border-radius: 10px;
     font-size: 14px;
@@ -192,7 +191,7 @@ form input {
     -webkit-appearance: none;
     align-items: flex-end;
     margin-left: auto;
-    margin: 3px -5px -3px -5px;
+    margin-bottom: -5px;
     width: 15px;
 }
 .message:hover .delete-btn {
@@ -223,7 +222,7 @@ form input {
     font-size: 10px;
     color: gray;
     border: none;
-    margin: 0;
+    margin: 2px;
     padding: 2px;
     align-items: center;
 }
@@ -280,4 +279,5 @@ form input {
     
 #abt, #back {
     text-align: center;
+    margin: 20px 0 0;
 }
