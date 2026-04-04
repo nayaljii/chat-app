@@ -72,6 +72,16 @@ const append = (message, position, id) => {
         messageElement.dataset.id = id;
     }
 
+    // For Name Div
+    const nameDiv = document.createElement('div');
+    nameDiv.classList.add('msg-name');
+    nameDiv.innerText = data.name;
+
+    // For message text div
+    const textDiv = document.createElement('div');
+    textDiv.classList.add('msg-text');
+    textDiv.innerText = data.message;
+
     // For delete button
     const btn = document.createElement('button');
     btn.classList.add('delete-btn');
@@ -82,13 +92,23 @@ const append = (message, position, id) => {
     if(position === 'right'){
         messageElement.appendChild(btn);
     }
-    messageElement.setAttribute('data-id', id);
-    messageContainer.append(messageElement);
-    
+
+    // For Time Div
+    const timeDiv = document.createElement('div');
+    timeDiv.classList.add('msg-time');
+    timeDiv.innerText = formatTime(data.time);
+
     // Auto scroll to bottom of container
     if(position=='right' || userAtBottom){
         messageContainer.scrollTop = messageContainer.scrollHeight;
     }
+
+    messageElement.appendChild(nameDiv);
+    messageElement.appendChild(textDiv);
+    messageElement.appendChild(timeDiv);
+    messageElement.setAttribute('data-id', id);
+    messageContainer.append(messageElement);
+    messageContainer.appendChild(typingIndicator);
 };
 
 form.addEventListener('submit', (e) =>{
@@ -135,7 +155,7 @@ messageInput.addEventListener('input', () => {
     }, 2000);
 });
 
-// For User is typing... indicator
+// Typing indicator
 const typingIndicator = document.getElementById('typing-indicator');
 socket.on('user-typing', (typingname) => {
     if(typingname !== name){
@@ -213,7 +233,17 @@ function logout(){
     }
 }
 
+// Time formate function 
+function formatTime(date) {
+    const d = new Date(date);
+    const hours = d.getHours();
+    const minutes = d.getMinutes();
 
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12 || 12;
+    minutes = minutes < 10 ? '0' + minutes : minutes;
+    return `${hours}:${minutes} ${ampm}`;
+}
 
 async function loadMessages(){
     try{
@@ -224,10 +254,10 @@ async function loadMessages(){
 
     messages.forEach(msg => {
         if(msg.name == name){
-            append(`<b>You:</b> ${msg.message}`, 'right', msg._id);
+            append(`You: ${msg.message} ${formatTime(msg.time)}`, 'right', msg._id);
         }
         else{
-        append(`<b>${msg.name}:</b> ${msg.message}`, 'left', msg._id);
+        append(`${msg.name}: ${msg.message} ${formatTime(msg.time)}`, 'left', msg._id);
         }
     });
     }catch(err){

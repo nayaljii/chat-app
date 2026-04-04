@@ -66,7 +66,8 @@ io.on('connection', socket => {
         const msgData = {
             message: message,
             name: users[socket.id],
-            id: newMsg._id
+            id: newMsg._id,
+            time: newMsg.time
         };
 
         socket.emit('receive', msgData);
