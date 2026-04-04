@@ -140,20 +140,27 @@ form input {
 
 /* common message */
 .message {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 0px;
+    min-width: 0;
     max-width: 70%;
     padding: 10px;
-    margin: 5px;
+    margin: 5px 0;
     border-radius: 10px;
     font-size: 14px;
-    word-wrap: break-word;
-    position: relative;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    animation: fadeIn 0.2s ease;
 }
 .message:hover {
     transform: scale(1.02);
+}
+.msg-text {
+    flex: 1;
 }
 
 /* LEFT (other users) */
@@ -214,8 +221,9 @@ form input {
 
 /* delete button */
 .delete-btn {
+    display: none;
     margin-left: 8px;
-    background: none;
+    background: transparent;
     border: none;
     outline: none;
     box-shadow: none;
@@ -228,6 +236,7 @@ form input {
     -webkit-appearance: none;
 }
 .message:hover .delete-btn {
+    display: block;
     opacity: 1;
 }
 .delete-btn:focus {
