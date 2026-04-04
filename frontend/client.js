@@ -64,7 +64,7 @@ socket.on('update-users', (users) => {
 });
 
 // Append msg
-const append = (message, position, id) => {
+const append = (data, position, id) => {
     const messageElement = document.createElement('div');
     messageElement.innerHTML = message;
     messageElement.classList.add('message', position);
@@ -236,8 +236,8 @@ function logout(){
 // Time formate function 
 function formatTime(date) {
     const d = new Date(date);
-    const hours = d.getHours();
-    const minutes = d.getMinutes();
+    let hours = d.getHours();
+    let minutes = d.getMinutes();
 
     const ampm = hours >= 12 ? 'PM' : 'AM';
     hours = hours % 12 || 12;
@@ -254,10 +254,18 @@ async function loadMessages(){
 
     messages.forEach(msg => {
         if(msg.name == name){
-            append(`You: ${msg.message} ${formatTime(msg.time)}`, 'right', msg._id);
+            append({
+                name: "You",
+                message: msg.message,
+                time: msg.time
+            }, 'right', msg._id);
         }
         else{
-        append(`${msg.name}: ${msg.message} ${formatTime(msg.time)}`, 'left', msg._id);
+        append({
+            name: msg.name,
+            message: msg.message,
+            time: msg.time
+        }, 'left', msg._id);
         }
     });
     }catch(err){
