@@ -162,6 +162,33 @@ form input {
 .msg-text {
     flex: 1;
 }
+.message b {
+    color: green;
+}
+
+/* delete button */
+.delete-btn {
+    display: none;
+    margin-left: 8px;
+    background: transparent;
+    border: none;
+    outline: none;
+    box-shadow: none;
+    cursor: pointer;
+    font-size: 10px;
+    padding: 0;
+    opacity: 0;
+    transition: 0.2s;
+    appearance: none;
+    -webkit-appearance: none;
+}
+.message:hover .delete-btn {
+    display: block;
+    opacity: 1;
+}
+.delete-btn:focus {
+    outline: none;
+}
 
 /* LEFT (other users) */
 .left {
@@ -219,30 +246,6 @@ form input {
     background: green;
 }
     
-
-/* delete button */
-.delete-btn {
-    display: none;
-    margin-left: 8px;
-    background: transparent;
-    border: none;
-    outline: none;
-    box-shadow: none;
-    cursor: pointer;
-    font-size: 10px;
-    padding: 0;
-    opacity: 0;
-    transition: 0.2s;
-    appearance: none;
-    -webkit-appearance: none;
-}
-.message:hover .delete-btn {
-    display: block;
-    opacity: 1;
-}
-.delete-btn:focus {
-    outline: none;
-}
 
 #abt, #back {
     text-align: center;

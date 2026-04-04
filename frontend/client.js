@@ -225,10 +225,10 @@ async function loadMessages(){
 
     messages.forEach(msg => {
         if(msg.name == name){
-            append(`You: ${msg.message}`, 'right', msg._id);
+            append(`<b>You</b>: ${msg.message}`, 'right', msg._id);
         }
         else{
-        append(`${msg.name}: ${msg.message}`, 'left', msg._id);
+        append(`<b>${msg.name}</b>: ${msg.message}`, 'left', msg._id);
         }
     });
     }catch(err){
