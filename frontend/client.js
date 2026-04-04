@@ -66,7 +66,6 @@ socket.on('update-users', (users) => {
 // Append msg
 const append = (data, position, id) => {
     const messageElement = document.createElement('div');
-    messageElement.innerHTML = message;
     messageElement.classList.add('message', position);
     if(id){
         messageElement.dataset.id = id;
@@ -97,18 +96,18 @@ const append = (data, position, id) => {
     const timeDiv = document.createElement('div');
     timeDiv.classList.add('msg-time');
     timeDiv.innerText = formatTime(data.time);
-
-    // Auto scroll to bottom of container
-    if(position=='right' || userAtBottom){
-        messageContainer.scrollTop = messageContainer.scrollHeight;
-    }
-
+    
     messageElement.appendChild(nameDiv);
     messageElement.appendChild(textDiv);
     messageElement.appendChild(timeDiv);
     messageElement.setAttribute('data-id', id);
     messageContainer.append(messageElement);
     messageContainer.appendChild(typingIndicator);
+    
+        // Auto scroll to bottom of container
+    if(position=='right' || userAtBottom){
+        messageContainer.scrollTop = messageContainer.scrollHeight;
+    }
 };
 
 form.addEventListener('submit', (e) =>{
