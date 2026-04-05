@@ -35,6 +35,7 @@ app.get('/messages', async (req, res) => {
         res.status(500).json({ error: 'Failed to fetch messages' });
     }
 });
+
 // SPA catch-all (for frontend routing)
 app.get(/.*/, (req, res) => {
     res.sendFile(path.join(__dirname, "../frontend", "index.html"));
@@ -76,18 +77,7 @@ io.on('connection', socket => {
             console.error("Error saving message:", err);
         }
     });
-
-    socket.on('disconnect', () => {
-        const name = users[socket.id];
-        if(name){
-            socket.broadcast.emit('left', name);
-            delete onlineUser[name];
-            delete users[socket.id];
-        }
-        const usersList = Object.keys(onlineUser).map(name => ({ name, id: onlineUser[name] }));
-        io.emit('update-users', usersList);
-    });
-
+    
     socket.on('delete-message', async (id) => {
         if (!id) return;
         try {
@@ -97,12 +87,23 @@ io.on('connection', socket => {
             console.error("Error deleting message:", err);
         }
     });
-
+    
     socket.on('typing', () => {
         socket.broadcast.emit('user-typing', users[socket.id]);
     });
     socket.on('stop-typing', () => {
         socket.broadcast.emit('user-stop-typing');
+    });
+    
+    socket.on('disconnect', () => {
+        const name = users[socket.id];
+        if(name){                                       //  && onlineUser[name]===socket.id
+            socket.broadcast.emit('left', name);
+            delete onlineUser[name];
+            delete users[socket.id];
+        }
+        const usersList = Object.keys(onlineUser).map(name => ({ name, id: onlineUser[name] }));
+        io.emit('update-users', usersList);
     });
 });
 
@@ -119,7 +120,6 @@ app.delete('/message/:id', async (req, res) => {
         res.status(500).json({ error: 'Failed to delete message' });
     }
 });
-
 
 // Server port
 const PORT = process.env.PORT || 3000;

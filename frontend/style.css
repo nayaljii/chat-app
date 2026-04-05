@@ -239,8 +239,7 @@ form input {
     background: transparent;
     transition: 0.2s;
     opacity: 0.8;
-    margin: 0 0 53px 0;
-    align-items: 10px;
+    margin: 0 0 86px 0;
 }
 
 /* input area */
@@ -281,5 +280,5 @@ form input {
     
 #abt, #back {
     text-align: center;
-    margin: 20px 0 0 0;
+    margin: 10px 0 0 0;
 }
