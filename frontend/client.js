@@ -31,6 +31,11 @@ var audio2 = new Audio('another_1.mp3');
 audio2.preload = "auto";
 audio2.volume = 1;
 
+// user leave notification audio
+var audio3 = new Audio('faahh.mp3');
+audio3.preload = "auto";
+audio3.volume = 1;
+
 // User Joined or send msg
 document.addEventListener('click', () => {
     hasUserInteracted = true;
@@ -201,7 +206,7 @@ socket.on('user-joined', username => {
         time: new Date()
     }, 'center');
 
-    // Play sound only for new user joining and if user has interacted with the page
+    // Play sound only for new user joining the page
     if(hasUserInteracted){
         playSound(audio2);
     }
@@ -221,6 +226,11 @@ socket.on('left', username => {
             message: `${username} left the chat`,
             time: new Date()
         }, 'center');
+
+        // Play sound only for user leave the page
+        if(hasUserInteracted){
+            playSound(audio3);
+        }
     }
 });
 
