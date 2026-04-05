@@ -95,13 +95,13 @@ io.on('connection', socket => {
         socket.broadcast.emit('user-stop-typing');
     });
     
-    socket.on('disconnect', () => {
+    socket.on('disconnect', (reason) => {
         const name = users[socket.id];
-        if(name){                                       //  && onlineUser[name]===socket.id
+        if(reason === "transport close" || reason === "ping timeout"){
             socket.broadcast.emit('left', name);
-            delete onlineUser[name];
-            delete users[socket.id];
         }
+        delete onlineUser[name];
+        delete users[socket.id];
         const usersList = Object.keys(onlineUser).map(name => ({ name, id: onlineUser[name] }));
         io.emit('update-users', usersList);
     });

@@ -215,7 +215,7 @@ function playSound(audio){
 
 // Notify server about user leaving
 socket.on('left', username => {
-    if(username !== name){
+    if(username && username !== name){
         append({
             name: "",
             message: `${username} left the chat`,
