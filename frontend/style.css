@@ -264,7 +264,7 @@ form input {
     width: 80%;
     border: none;
     border-radius: 10px;
-    height: stretch;
+    height: 5vh;                /*last*/
     text-align: left;
 }
 
@@ -275,7 +275,7 @@ form input {
     cursor: pointer;
     border: none;
     border-radius: 10px;
-    height: 34px;
+    height: 5vh;                /*last*/
     width: 15%;
     color: white;
     background-color: rebeccapurple;
@@ -286,5 +286,5 @@ form input {
     
 #abt, #back {
     text-align: center;
-    margin: 10px 0 0 0;
+    margin: auto;
 }

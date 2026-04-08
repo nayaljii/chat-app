@@ -1,7 +1,7 @@
 {
   "name": "nodeserver",
   "version": "1.0.0",
-  "description": "This is a node server for our RTCA Project",
+  "description": "chat-app backend",
   "license": "ISC",
   "author": "Vishal Nayal",
   "type": "commonjs",
@@ -17,7 +17,9 @@
     "express": "^5.2.1",
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.3.3",
-    "nodemon": "^3.1.14",
     "socket.io": "^4.8.3"
+  }
+  "devDependencies": {
+    "nodemon": "^3.1.14"
   }
 }
