@@ -80,12 +80,13 @@ form input {
 #online-users {
     position: fixed;
     top: 80px;
-    color: green;
     background: transparent;
+    color: green;
     padding: 10px;
     border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-    font-size: 14px;
+    box-shadow: 0 0 10px rgba(103, 79, 79, 0.3);
+    font-size: 12px;
+    display: none;
 }
 #toggle-users:hover {
     background-color: #09ed15;
