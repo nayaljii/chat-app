@@ -6,13 +6,6 @@ body {
     align-items: center;
 }
 
-.logo {
-    display: block;
-    margin: auto;
-    width: 70px;
-    height: 70px;
-}
-
 h1{
     margin: 12px 0;
     font-size: 25px;
@@ -51,6 +44,39 @@ form input {
     background-color: yellow;
 }
 
+.navbar {
+    width: 90%;
+    min-width: 350px;
+    max-width: 600px;
+    height: 60px;
+    background: #075e54;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    margin: 30px 10px 0 10px;
+    border-radius: 10px;
+    box-sizing: border-box;
+}
+.nav-left h2 {
+    padding: 15px;
+    font-size: 25px;
+}
+.nav-right{
+    display: flex;
+    gap: 10px;
+}
+.nav-right button {
+    background: white;
+    color: #075e54;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
 #online-users {
     position: fixed;
     left: 10px;
@@ -64,17 +90,6 @@ form input {
     display: none;
 }
 
-#toggle-users, #logout {
-    position: fixed;
-    margin: 0 10px;
-    top: 10px;
-    background-color: green;
-    color: black;
-    border: none;
-    border-radius: 6px;
-    padding: 8px 12px;
-    cursor: pointer;
-}
 #toggle-users {
     left: 10px;
 }
@@ -89,18 +104,18 @@ form input {
 }
 
 .container {
-    position: relative;
     width: 90%;
     min-width: 350px;
     max-width: 600px;
     margin: 10px;
-    height: 60vh;
+    margin-top: 0;
+    height: 70vh;
     padding: 10px;
     overflow-y: auto;
     scrollbar-width: none;
     scrollbar-color: transparent transparent;
     margin-bottom: 15px;
-    border-radius: 15px;
+    border-radius: 10px;
     scroll-behavior: smooth;
     background: linear-gradient(to bottom, #f0f2f5, #dcd6f7);
     display: flex;

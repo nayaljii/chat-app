@@ -12,16 +12,17 @@
     <title>Vish'sUp</title>
 </head>
 <body>
-    <header>
-        <nav><div class="chat-header">
-            <img class="logo" src="rtca_logo.png" alt="RTCA Logo">
-            <h1><b>Welcome to Vish'sUp Chat</b></h1>
-        </div></nav>
-    </header>
     <main>
-        <button id="logout" onclick="logout()" style="float: right;">Logout</button>
-        <button id="toggle-users">Online (0)</button>
-        <div id="online-users"></div>
+        <div class="navbar">
+            <div class="nav-left">
+                <h2>Vish'sUp</h2>
+            </div>
+            <div class="nav-right">
+                <button id="toggle-users">Online (0)</button>
+                <div id="online-users"></div>
+                <button id="logout" onclick="logout()">Logout</button>
+            </div>
+        </div>
         <div class="container" id="message-container">
             <!-- Messages will be appended here -->
         </div>
