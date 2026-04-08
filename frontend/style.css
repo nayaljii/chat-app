@@ -1,6 +1,6 @@
 body {
     background-color: cadetblue;
-    margin: revert;
+    margin: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -49,7 +49,7 @@ form input {
     min-width: 350px;
     max-width: 600px;
     height: 60px;
-    background: #075e54;
+    background: linear-gradient(70deg, blue, green);
     color: white;
     display: flex;
     justify-content: space-between;
@@ -249,7 +249,7 @@ form input {
     position: absolute;
     padding: 0 20px;
     font-size: 14px;
-    color: gray;
+    color: darkblue;
     font-style: italic;
     background: transparent;
     transition: 0.2s;
@@ -279,18 +279,21 @@ form input {
     width: 80%;
     border: none;
     border-radius: 10px;
-    height: 5vh;                /*last*/
+    height: 5vh;
     text-align: left;
 }
 
 /* Message Send */
 .okbtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     margin: 0 0 0 5px;
     padding: revert;
     cursor: pointer;
     border: none;
     border-radius: 10px;
-    height: 5vh;                /*last*/
+    height: 5vh;
     width: 15%;
     color: white;
     background-color: rebeccapurple;
