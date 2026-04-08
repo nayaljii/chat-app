@@ -100,7 +100,7 @@ const append = (data, position, id) => {
     // For delete button
     const btn = document.createElement('button');
     btn.classList.add('delete-btn');
-    btn.innerText = '❌';
+    btn.innerText = '🗑️';
     btn.onclick = () => {
         socket.emit('delete-message', id);
     };

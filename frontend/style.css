@@ -79,22 +79,13 @@ form input {
 
 #online-users {
     position: fixed;
-    left: 10px;
-    top: 50px;
-    background: green;
+    top: 80px;
+    color: green;
+    background: transparent;
     padding: 10px;
     border-radius: 10px;
-    width: 150px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
     font-size: 14px;
-    display: none;
-}
-
-#toggle-users {
-    left: 10px;
-}
-#logout {
-    right: 10px;
 }
 #toggle-users:hover {
     background-color: #09ed15;
