@@ -115,6 +115,8 @@ const append = (data, position, id) => {
     }
 };
 
+const anim = document.getElementById("sendAnim");
+
 form.addEventListener('submit', (e) =>{
     e.preventDefault();
     
@@ -126,6 +128,7 @@ form.addEventListener('submit', (e) =>{
     }
     if(socket.connected){
         socket.emit('send', message);
+        anim.play();
     }
     socket.emit('stop-typing');
     messageInput.value= '';
