@@ -46,11 +46,17 @@ const io = new Server(server);
 // Socket.io logic
 const users = {};
 const onlineUser = {};
+const disconnectTimers = {};
 
 io.on('connection', socket => {
     socket.on('new-user-joined', name => {
         users[socket.id] = name;
         onlineUser[name] = socket.id; // overwrite
+
+        // reconnect Timer delete
+        if(disconnectTimers[name]){
+            delete disconnectTimers[name];
+        }
         const usersList = Object.keys(onlineUser).map(name => ({ name, id: onlineUser[name] }));
         io.emit('update-users', usersList);
         socket.broadcast.emit('user-joined', name);
@@ -97,9 +103,10 @@ io.on('connection', socket => {
     
     socket.on('disconnect', (reason) => {
         const name = users[socket.id];
-        if(reason === "transport close" || reason === "ping timeout"){
+        disconnectTimers[name] = setTimeout( () => { 
+        if(!onlineUser[name]) {
             socket.broadcast.emit('left', name);
-        }
+        }},3000); // delay 3sec
         delete onlineUser[name];
         delete users[socket.id];
         const usersList = Object.keys(onlineUser).map(name => ({ name, id: onlineUser[name] }));

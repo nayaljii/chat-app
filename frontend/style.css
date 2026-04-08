@@ -45,7 +45,7 @@ form input {
 }
 
 .navbar {
-    width: 90%;
+    width: 93%;
     min-width: 350px;
     max-width: 600px;
     height: 60px;
@@ -109,7 +109,7 @@ form input {
     max-width: 600px;
     margin: 10px;
     margin-top: 0;
-    height: 70vh;
+    height: 65vh;
     padding: 10px;
     overflow-y: auto;
     scrollbar-width: none;
