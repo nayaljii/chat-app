@@ -68,10 +68,10 @@ form input {
     gap: 10px;
 }
 .nav-right button {
-    background: white;
-    color: #075e54;
+    background: linear-gradient(rgb(27 23 176 / 68%), transparent);
+    color: white;
     border: none;
-    padding: 6px 10px;
+    padding: 8px 10px;
     border-radius: 5px;
     cursor: pointer;
     font-weight: bold;
@@ -85,8 +85,9 @@ form input {
     padding: 10px;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(103, 79, 79, 0.3);
-    font-size: 12px;
+    font-size: 14px;
     display: none;
+    cursor: pointer;
 }
 #toggle-users:hover {
     background-color: #09ed15;
