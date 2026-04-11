@@ -33,6 +33,9 @@ form input {
     margin: auto;
     text-align: center;
 }
+.togglePassword {
+    cursor: pointer;
+}
 
 /* Login and Register form */
 #formbtn {
@@ -49,7 +52,7 @@ form input {
     min-width: 350px;
     max-width: 600px;
     height: 60px;
-    background: linear-gradient(70deg, blue, green);
+    background: radial-gradient(lightblue, darkblue);
     color: white;
     display: flex;
     justify-content: space-between;
@@ -68,7 +71,7 @@ form input {
     gap: 10px;
 }
 .nav-right button {
-    background: linear-gradient(rgb(27 23 176 / 68%), transparent);
+    background: radial-gradient(rgba(12, 8, 113, 0.68), rgba(61, 60, 109, 0.8));
     color: white;
     border: none;
     padding: 8px 10px;
@@ -289,7 +292,7 @@ form input {
     height: 5vh;
     width: 15%;
     color: white;
-    background-color: rebeccapurple;
+    background: radial-gradient(rgb(36, 64, 135), darkblue);
 }
 .okbtn:hover {
     background: green;

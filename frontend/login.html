@@ -23,7 +23,7 @@
             </tr>
             <tr>
                 <td><label for="password">Password: </label></td>
-                <td><input type="password" id="password" name="password" placeholder="Enter Password" required></td>
+                <td><input type="password" id="password" name="password" placeholder="Enter Password" required><span class="togglePassword" id="toggleLoginPassword">👁️</span></td>
             </tr>
         <tr >
             <td align="center" colspan="2"><button id="formbtn" type="submit">Login</button></td>
@@ -33,6 +33,17 @@
     </form>
 
     <script>
+        const loginPassword = document.getElementById("password");
+        const togglePassword = document.getElementById("toggleLoginPassword");
+                togglePassword.addEventListener("click", () => {
+                    if(loginPassword.type === "password") {
+                        loginPassword.setAttribute("type", "text");
+                        togglePassword.innerText = "🙈";
+                    } else {
+                        loginPassword.setAttribute("type", "password");
+                        togglePassword.innerText = "👁️";
+                    }
+                });
         document.getElementById("loginForm").addEventListener("submit", async (e)=>{
         e.preventDefault();
         document.getElementById("formbtn").innerText = "Logging...";
