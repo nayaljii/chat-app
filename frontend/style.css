@@ -48,23 +48,21 @@ form input {
 }
 
 .navbar {
-    width: 93%;
-    min-width: 350px;
-    max-width: 600px;
+    width: 350px;
     height: 60px;
     background: radial-gradient(lightblue, darkblue);
     color: white;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 20px;
+    padding: 0 10px;
     margin: 30px 10px 0 10px;
     border-radius: 10px;
-    box-sizing: border-box;
 }
 .nav-left h2 {
     padding: 15px;
     font-size: 25px;
+    font-weight: bold;
 }
 .nav-right{
     display: flex;
@@ -100,9 +98,7 @@ form input {
 }
 
 .container {
-    width: 90%;
-    min-width: 350px;
-    max-width: 600px;
+    width: 350px;
     margin: 10px;
     margin-top: 0;
     height: 65vh;
@@ -256,23 +252,22 @@ form input {
 /* input area */
 .send {
     margin: 10px;
-    width: 90%;
+    width: 100%;
+    max-width: 350px;
 }
 
 #send-container {
     display: flex;
-    margin: 25px 10px;
-    padding: 0;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
     text-align: center;
-    min-width: 350px;
-    max-width: 600px;
+    max-width: 350px;
     width: 100%;
 }
 
 #messageInp {
-    flex: 1;
     padding: 0 10px;
-    width: 80%;
     border: none;
     border-radius: 10px;
     height: 5vh;
@@ -290,15 +285,36 @@ form input {
     border: none;
     border-radius: 10px;
     height: 5vh;
-    width: 15%;
+    width: 10%;
     color: white;
     background: radial-gradient(rgb(36, 64, 135), darkblue);
-}
-.okbtn:hover {
-    background: green;
 }
     
 #abt, #back {
     text-align: center;
     margin: auto;
+}
+
+@media screen and (width >= 768px) {
+    .navbar {
+        width: 600px;
+    }
+
+    .container {
+        width: 600px;
+    }
+
+    .message {
+        min-width: 150px;
+        max-width: 70%;
+        gap: 5px;
+    }
+
+    #send-container {
+        max-width: 350px;
+    }
+
+    .okbtn {
+        width: 10%;
+    }
 }
