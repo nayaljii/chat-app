@@ -250,12 +250,6 @@ form input {
 }
 
 /* input area */
-.send {
-    margin: 10px;
-    width: 100%;
-    max-width: 350px;
-}
-
 #send-container {
     display: flex;
     flex-direction: row;
