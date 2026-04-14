@@ -272,6 +272,7 @@ form input {
     border-radius: 10px;
     height: 5vh;
     text-align: left;
+    width: 80%;
 }
 
 /* Message Send */
@@ -285,7 +286,7 @@ form input {
     border: none;
     border-radius: 10px;
     height: 5vh;
-    width: 10%;
+    width: 15%;
     color: white;
     background: radial-gradient(rgb(36, 64, 135), darkblue);
 }
@@ -311,10 +312,6 @@ form input {
     }
 
     #send-container {
-        max-width: 350px;
-    }
-
-    .okbtn {
-        width: 10%;
+        max-width: 600px;
     }
 }
