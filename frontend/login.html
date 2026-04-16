@@ -10,28 +10,25 @@
     <title>Vish'sUp</title>
 </head>
 <body>
-    <header>
-        <nav><div class="chat-header">
-            <h1>LogIn to Vish'sUp Chat</h1>
-        </div></nav>
-    </header>
+    <main>
     <form id="loginForm">
-        <table align="center" cellpadding="10">
-            <tr>
-                <td><label for="email">Email: </label></td>
-                <td><input type="email" id="email" name="email" placeholder="Enter Email id" required></td>
-            </tr>
-            <tr>
-                <td><label for="password">Password: </label></td>
-                <td><input type="password" id="password" name="password" placeholder="Enter Password" required><span class="togglePassword" id="toggleLoginPassword">👁️</span></td>
-            </tr>
-        <tr >
-            <td align="center" colspan="2"><button id="formbtn" type="submit">Login</button></td>
-        </tr>
-        </table>
+        <fieldset>
+            <legend>LogIn to Vish'sUp Chat</legend>
+            <div class="field">
+                <div>
+                    <label for="email">Email: </label>
+                    <input class="inputopt" type="email" name="email" id="email" placeholder="youremail@example.com" required>
+                </div>
+                <div>
+                    <label for="password">Password: </label>
+                    <input class="inputopt" type="password" id="password" name="password" placeholder="Enter Password" required><span class="togglePassword" id="toggleLoginPassword">👁️</span>
+                </div>
+            </div>
+                <button type="submit" id="formBtn" class="btn">Login</button>
+        </fieldset>
         <p id="back">If you don't have an account, <a href="/register.html">register here</a>.</p>
     </form>
-
+    </main>
     <script>
         const loginPassword = document.getElementById("password");
         const togglePassword = document.getElementById("toggleLoginPassword");
@@ -46,7 +43,7 @@
                 });
         document.getElementById("loginForm").addEventListener("submit", async (e)=>{
         e.preventDefault();
-        document.getElementById("formbtn").innerText = "Logging...";
+        document.getElementById("formBtn").innerText = "Logging...";
         try{
             const res = await fetch("/api/auth/login", {
                 method:"POST",

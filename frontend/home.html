@@ -9,16 +9,20 @@
     <link rel="stylesheet" href="style.css">
     <title>Vish'sUp</title>
 </head>
-    <header>
-        <nav><div class="chat-header">
-            <h1>Welcome to Vish'sUp Chat</h1>
-        </div></nav>
-    </header>
-    <body>
-        <div align="center">
-            <button onclick="goLogin()" id="formbtn">Login</button>
-            <button onclick="goRegister()" id="formbtn">Register</button>
-        </div>
+<body>
+    <main>
+    <form id="homeForm">
+        <fieldset>
+            <legend>Welcome to Vish'sUp Chat</legend>
+            <p id="welcome">Please login or register to continue.</p>
+            <div class="btnDiv">
+                <button type="button" onclick="goLogin()" class="btn">Login</button>
+                <button type="button" onclick="goRegister()" class="btn">Register</button>
+            </div>
+        </fieldset>
+        <p id="back">New here? Click Register above 👆</p>
+    </form>
+    </main>
     <script>
         function goLogin(){
             window.location.href = "/login.html";
