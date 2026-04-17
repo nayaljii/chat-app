@@ -81,12 +81,26 @@ label {
     opacity: 0.6;
 }
 
-#formBtn {
-    margin: 1rem auto;
+.password-box {
+    position: relative;
+    width: 100%;
 }
 
-.togglePassword {
+.password-box input {
+    width: 100%;
+    padding: 10px 40px 10px 10px;
+}
+
+#toggleLoginPassword, #toggleRegisterPassword {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(50%);
     cursor: pointer;
+}
+
+#formBtn, #sendOtpBtn, #verifyOtpBtn {
+    margin: 1rem auto;
 }
 
 .btn {
@@ -379,6 +393,11 @@ label {
         margin: 25px auto;
         padding: 1rem 0.5rem;
         gap: 1rem;
+    }
+
+    #toggleLoginPassword, #toggleRegisterPassword {
+        position: absolute;
+        right: 40px;
     }
     
     .btn {
