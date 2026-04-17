@@ -21,7 +21,7 @@ app.use(cors({
     origin: [
         "http://localhost:5500",
         "http://127.0.0.1:5500",
-        "https://your-frontend-name.vercel.app"
+        "https://vishsup-nayaljii.vercel.app"
     ],
     credentials: true
 }));
@@ -48,7 +48,7 @@ const io = new Server(server, {
     origin: [
       "http://localhost:5500",
       "http://127.0.0.1:5500",
-      "https://your-frontend-name.vercel.app"
+      "https://vishsup-nayaljii.vercel.app"
     ],
     methods: ["GET", "POST"]
   }
