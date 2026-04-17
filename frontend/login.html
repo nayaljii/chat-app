@@ -30,6 +30,7 @@
     </form>
     </main>
     <script>
+        const BASE_URL = "https://groupchat-app-fut2.onrender.com";
         const loginPassword = document.getElementById("password");
         const togglePassword = document.getElementById("toggleLoginPassword");
                 togglePassword.addEventListener("click", () => {
@@ -45,7 +46,7 @@
         e.preventDefault();
         document.getElementById("formBtn").innerText = "Logging...";
         try{
-            const res = await fetch("/api/auth/login", {
+            const res = await fetch("BASE_URL/api/auth/login", {
                 method:"POST",
                 headers:{"Content-Type":"application/json"},
                 body: JSON.stringify({

@@ -1,4 +1,4 @@
-
+const BASE_URL = "https://groupchat-app-fut2.onrender.com";
 const name = localStorage.getItem("username");
 if(!name) {
     window.location.href = "/home.html";
@@ -9,7 +9,7 @@ if(!token) {
     window.location.href = "/home.html";
 }
 
-const socket = io();
+const socket = io(BASE_URL);
 const form = document.getElementById('send-container');
 const messageContainer = document.querySelector('.container');
 const messageInput = document.getElementById('messageInp');
@@ -277,7 +277,7 @@ function formatTime(date) {
 
 async function loadMessages(){
     try{
-        const res = await fetch("/messages");
+        const res = await fetch("BASE_URL/messages");
 
         const messages = await res.json();
         messageContainer.innerHTML = ""; //clear old
