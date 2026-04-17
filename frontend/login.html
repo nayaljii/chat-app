@@ -46,7 +46,7 @@
         e.preventDefault();
         document.getElementById("formBtn").innerText = "Logging...";
         try{
-            const res = await fetch("BASE_URL/api/auth/login", {
+            const res = await fetch(`${BASE_URL}/api/auth/login`, {
                 method:"POST",
                 headers:{"Content-Type":"application/json"},
                 body: JSON.stringify({

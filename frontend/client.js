@@ -277,7 +277,7 @@ function formatTime(date) {
 
 async function loadMessages(){
     try{
-        const res = await fetch("BASE_URL/messages");
+        const res = await fetch(`${BASE_URL}/messages`);
 
         const messages = await res.json();
         messageContainer.innerHTML = ""; //clear old
