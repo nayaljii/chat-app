@@ -598,15 +598,13 @@ footer {
     .sidebar {
         display: flex;
         position: fixed;
-        top: 12px;
-        right: 12px;
+        top: 0;
+        right: 0;
         width: 200px;
         max-width: calc(100% - 24px);
-        height: calc(100vh - 24px);
-        border-radius: 15px;
+        height: calc(100vh - 50%);
+        border-bottom-left-radius: 15px;
         z-index: 1500;
-        transform: translateX(calc(100% + 20px)) scale(0.98);
-        opacity: 0;
         transition:
         transform 0.34s cubic-bezier(.2,.8,.2,1),
         opacity 0.28s ease;
