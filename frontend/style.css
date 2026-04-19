@@ -32,7 +32,7 @@ html, body {
 /* ---------- APP LAYOUT ---------- */
 .app-shell {
     width: 100%;
-    min-height: 100vh;
+    min-height: 100dvh;
     display: grid;
     grid-template-columns: 260px 1fr;
     background: var(--bg);
@@ -141,11 +141,11 @@ html, body {
     display: flex;
     flex-direction: column;
     min-width: 0;
-    height: 100vh;
+    height: 100dvh;
 }
 
 .mobile-topbar {
-    min-height: 72px;
+    min-height: 60px;
     border-bottom: 1px solid var(--border);
     background: rgba(33,33,33,0.96);
     backdrop-filter: blur(8px);
@@ -163,6 +163,11 @@ html, body {
     font-size: 0.88rem;
     color: var(--muted);
     margin-top: 4px;
+}
+
+.chat-header {
+    display: none;
+    background: rgba(33,33,33,0.96);
 }
 
 /* ---------- MESSAGES ---------- */
@@ -189,7 +194,7 @@ html, body {
 }
 
 .message {
-    min-width: 100px;
+    min-width: 30%;
     max-width: 70%;
     margin: 5px 0;
     padding: 7px;
@@ -226,7 +231,6 @@ html, body {
 
 .center {
     width: fit-content;
-    margin: 10px auto 16px;
     padding: 8px 14px;
     background: transparent;
     color: var(--muted);
@@ -235,6 +239,7 @@ html, body {
     border: 1px solid var(--border);
     text-align: center;
     box-shadow: none;
+    align-self: center;
 }
 
 .msg-name {
@@ -255,7 +260,7 @@ html, body {
 .msg-time {
     color: #c4c4c4;
     text-align: right;
-    margin-top: 4px;
+    margin-top: -10px;
     opacity: 0.85;
 }
 
@@ -294,14 +299,14 @@ html, body {
     color: var(--muted);
     font-style: italic;
     font-size: 0.9rem;
-    padding: 0 4px 8px;
+    padding: 10px 20px 5px 20px;
 }
 
 /* ---------- INPUT ---------- */
 .send-wrapper {
     position: sticky;
-    bottom: 0;
-    padding: 16px 20px 22px;
+    bottom: 5px;
+    padding: 10px;
     background: linear-gradient(to top, #212121 70%, rgba(33,33,33,0.3));
 }
 
@@ -602,11 +607,6 @@ footer {
         visibility: visible;
     }
 
-    .chat-header {
-        display: none;
-        background: rgba(33,33,33,0.96);
-    }
-
     .chat-header p {
         font-size: 0.88rem;
         color: var(--muted);
@@ -632,6 +632,8 @@ footer {
     }
 
     .send-wrapper {
+        position: fixed;
+        bottom: 0;
         padding: 10px 10px 16px;
     }
 
