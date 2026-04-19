@@ -651,6 +651,7 @@ footer {
     }
 
     .message {
+        width: calc(100% - 16px);
         margin: 3px;
         gap: 0;
         
