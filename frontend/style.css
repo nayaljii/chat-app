@@ -186,13 +186,15 @@ html, body {
 }
 
 .message {
-    width: min(900px, calc(100% - 24px));
-    margin: 0 auto 16px;
-    padding: 14px 18px;
+    min-width: 100px;
+    max-width: 70%;
+    margin: 2px 0;
+    padding: 7px;
     border-radius: 18px;
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    justify-content: space-between;
+    gap: 5px;
     word-break: break-word;
     overflow-wrap: anywhere;
     white-space: pre-wrap;
@@ -203,19 +205,27 @@ html, body {
     box-shadow: var(--shadow);
 }
 
+.message:hover {
+    transform: scale(1.02);
+}
+
 .left {
     background: var(--bot-msg);
+    align-self: flex-start;
+    border-bottom-left-radius: 5px;
 }
 
 .right {
     background: var(--user-msg);
+    align-self: flex-end;
+    border-bottom-right-radius: 5px;
 }
 
 .center {
     width: fit-content;
     margin: 10px auto 16px;
     padding: 8px 14px;
-    background: rgba(255,255,255,0.05);
+    background: transparent;
     color: var(--muted);
     font-size: 0.78rem;
     border-radius: 999px;
@@ -225,8 +235,10 @@ html, body {
 }
 
 .msg-name {
-    font-size: 0.86rem;
-    font-weight: 700;
+    font-weight: bold;
+    font-size: 14px;
+    margin-bottom: 1px;
+    opacity: 0.7;
     color: #7dd3fc;
 }
 
@@ -235,12 +247,12 @@ html, body {
 }
 
 .msg-text {
-    font-size: 0.97rem;
+    flex: 1;
+    font-size: 14px;
     color: var(--text);
 }
 
 .msg-time {
-    font-size: 0.74rem;
     color: #c4c4c4;
     text-align: right;
     margin-top: 4px;
@@ -250,18 +262,18 @@ html, body {
 /* delete button */
 .delete-btn {
     position: absolute;
-    top: 8px;
+    bottom: 8px;
     right: 10px;
     display: none;
-    width: 28px;
-    height: 28px;
+    width: 15px;
     border: none;
-    border-radius: 8px;
-    background: rgba(255,255,255,0.06);
-    color: #fca5a5;
+    background: transparent;
     cursor: pointer;
     font-size: 0.8rem;
     transition: 0.2s ease;
+    padding: 0;
+    opacity: 0;
+    margin-left: auto;
 }
 
 .message:hover .delete-btn {
@@ -592,6 +604,7 @@ footer {
 
     .chat-header {
         display: none;
+        background: rgba(33,33,33,0.96);
     }
 
     .chat-header p {
