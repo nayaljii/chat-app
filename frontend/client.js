@@ -9,6 +9,14 @@ if(!token) {
     window.location.href = "/home.html";
 }
 
+const toggle = document.getElementById('menu-toggle');
+
+if(toggle) {
+    toggle.addEventListener('change', () => {
+        document.body.classList.toggle("no-scroll", toggle.checked);
+    });
+}
+
 const socket = io(BASE_URL);
 const form = document.getElementById('send-container');
 const messageContainer = document.querySelector('.container');
