@@ -1,3 +1,4 @@
+const API_BASE_URL = "https://groupchat-app-fut2.onrender.com";
 const chatForm = document.getElementById("bot-chatForm");
 const messageInput = document.getElementById("bot-messageInput");
 const chatBox = document.getElementById("bot-chatBox");
@@ -51,7 +52,7 @@ async function loadHistory() {
             return;
         }
 
-            const res = await fetch(`/ai/history/${encodeURIComponent(username)}`);
+            const res = await fetch(`${API_BASE_URL}/ai/history/${encodeURIComponent(username)}`);
             const data = await res.json();
 
 
@@ -86,7 +87,7 @@ chatForm.addEventListener("submit", async (e) => {
     addTypingMessage();
 
     try {
-        const response = await fetch("/ai/chat", {
+        const response = await fetch("${API_BASE_URL}/ai/chat", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
