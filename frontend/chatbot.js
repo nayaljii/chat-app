@@ -19,9 +19,11 @@ function addMessage(text, sender) {
 }
 
 function addTypingMessage() {
+    removeTypingMessage();
+    
     const typingDiv = document.createElement("div");
     typingDiv.classList.add("bot-message", "bot");
-    typingDiv.id = "typingMessage";
+    typingDiv.id = "bot-typingMessage";
 
     const bubble = document.createElement("div");
     bubble.classList.add("bot-bubble", "typing");
@@ -96,18 +98,19 @@ chatForm.addEventListener("submit", async (e) => {
         });
 
         const data = await response.json();
-        removeTypingMessage();
 
         if (data.reply) {
             addMessage(data.reply, "bot");
         } else {
             addMessage(data.error || "Something went wrong", "bot");
         }
-      } catch (error) {
+        } catch (error) {
           removeTypingMessage();
           addMessage("Not connect to the Server.", "bot");
           console.error("Chat error:", error);
-      }
+        } finally {
+            removeTypingMessage();
+        }
 });
 
 loadHistory();
