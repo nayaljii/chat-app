@@ -83,9 +83,6 @@ html, body {
     display: grid;
     place-items: center;
     background: linear-gradient(135deg, var(--accent), #0b6b54);
-    color: white;
-    font-weight: 700;
-    font-size: 1.1rem;
 }
 
 .brand h2 {
@@ -154,12 +151,12 @@ html, body {
     padding: 16px 24px;
 }
 
-.mobile-topbar h2 {
+.chat-header h2 {
     font-size: 1.1rem;
-    font-weight: 700;
+    font-weight: 800;
 }
 
-.mobile-topbar p {
+.chat-header p {
     font-size: 0.88rem;
     color: var(--muted);
     margin-top: 4px;
@@ -520,6 +517,10 @@ footer {
         display: block;
     }
 
+    .chat-header {
+        display: none;
+    }
+
     .mobile-menu-btn {
         display: none;
     }
@@ -557,15 +558,12 @@ footer {
         width: 42px;
         height: 42px;
         border-radius: 12px;
-        background: rgba(47,47,47,0.92);
-        border: 1px solid rgba(255,255,255,0.08);
         color: var(--text);
-        display: none;
+        display: inline-flex;
         align-items: center;
         justify-content: center;
         position: relative;
         cursor: pointer;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.25);
     }
 
     .mobile-topbar-menu i {
@@ -634,12 +632,6 @@ footer {
     #menu-toggle:checked ~ .sidebar-overlay {
         opacity: 1;
         visibility: visible;
-    }
-
-    .chat-header p {
-        font-size: 0.88rem;
-        color: var(--muted);
-        margin-top: 4px;
     }
 
     .chat-layout {
