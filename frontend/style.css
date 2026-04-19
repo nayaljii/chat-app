@@ -233,6 +233,7 @@ html, body {
 }
 
 .msg-name {
+    font-size: 1.2rem;
     font-weight: bold;
     opacity: 0.7;
     color: #7dd3fc;
@@ -243,11 +244,13 @@ html, body {
 }
 
 .msg-text {
+    font-size: 1rem;
     flex: 1;
     color: var(--text);
 }
 
 .msg-time {
+    font-size: 0.6rem;
     color: #c4c4c4;
     text-align: right;
     margin-top: -10px;
@@ -285,7 +288,7 @@ html, body {
 /* ---------- TYPING ---------- */
 #typing-indicator {
     width: min(900px, calc(100% - 24px));
-    margin: 0 auto;
+    margin: 0 auto 90px;
     min-height: 24px;
     color: var(--muted);
     font-style: italic;
@@ -641,6 +644,22 @@ footer {
         margin: 3px;
         gap: 0;
         
+    }
+
+    .msg-name {
+        font-size: 1rem;
+    }
+
+    .msg-text {
+        font-size: .8rem;
+    }
+
+    .msg-time {
+        font-size: 0.4rem;
+    }
+
+    .center {
+        font-size: 0.58rem;
     }
 
     .send-wrapper {
