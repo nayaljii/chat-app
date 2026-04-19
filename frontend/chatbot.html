@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vish AI Chatbot</title>
+    <link rel="stylesheet" href="chatbot.css" />
+</head>
+<body class="bot-body">
+    <main class="bot-chat-app">
+        <div class="bot-chat-card">
+            <div class="bot-chat-header">
+                <button onclick="goBack()">← Back</button>
+                <h1>Vish'sUp AI</h1>
+                <p>Ask anything and get instant AI replies</p>
+            </div>
+
+            <div class="bot-chat-box" id="bot-chatBox"></div>
+
+            <form class="bot-chat-form" id="bot-chatForm">
+                <input
+                    type="text"
+                    id="bot-messageInput"
+                    placeholder="Type your message..."
+                    autocomplete="off"
+                    required
+                />
+                <button type="submit">Send</button>
+            </form>
+        </div>
+    </main>
+
+    <script src="chatbot.js"></script>
+</body>
+</html>

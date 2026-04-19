@@ -256,6 +256,10 @@ socket.on('message-deleted', id => {
     }
 });
 
+function openChatBot() {
+    window.location.href = "/chatbot.html";
+}
+
 // Logout
 function logout(){
     if(confirm("Are you sure you want to logout?")){

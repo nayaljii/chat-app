@@ -8,6 +8,14 @@ const server = http.createServer(app);
 const { Server } = require("socket.io");
 const mongoose = require('mongoose');
 const cors = require("cors");
+const OpenAI = require("openai");
+
+// Models
+const Message = require("./models/Message");
+const Chat = require("./models/Chat");
+
+// Routes
+const authRoutes = require("./routes/auth");
 
 // MongoDB connection
 mongoose.connect(process.env.MONGODB_URI)
@@ -19,20 +27,29 @@ app.use(express.json());
 
 app.use(cors({
     origin: [
-        "http://localhost:5500",
-        "http://127.0.0.1:5500",
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
         "https://vishsup-nayaljii.vercel.app"
     ],
     credentials: true
 }));
 
-// API routes
-const authRoutes = require("./routes/auth");
+app.use(express.static(path.join(__dirname, "../frontend")));
+
+// Auth Routes
 app.use("/api/auth", authRoutes);
 
-// Messages API
-const Message = require("./models/Message");
+// OpenRouter Client
+const client = new OpenAI({
+    baseURL: "https://openrouter.ai/api/v1",
+    apiKey: process.env.OPENROUTER_API_KEY,
+    defaultHeaders: {
+        "HTTP-Referer": "http://localhost:3000",
+        "X-Title": "Vish AI Chatbot",
+    },
+});
 
+// Messages API
 app.get('/messages', async (req, res) => {
     try {
         const messages = await Message.find().sort({ time: 1 });
@@ -43,11 +60,100 @@ app.get('/messages', async (req, res) => {
     }
 });
 
+// Delete message API
+app.delete('/message/:id', async (req, res) => {
+    const messageId = req.params.id;
+    if(!mongoose.Types.ObjectId.isValid(messageId)){
+        return res.status(400).json({ error: 'Invalid message ID' });
+    }
+    try {
+        await Message.findByIdAndDelete(messageId);
+        res.json({ success: true });
+    } catch (err) {
+        console.error("Error deleting message:", err);
+        res.status(500).json({ error: 'Failed to delete message' });
+    }
+});
+
+// AI Chat APIs
+
+// User-wise AI history
+app.get("/ai/history/:username", async (req, res) => {
+    const { username } = req.params;
+
+    if (!username) {
+        return res.status(400).json({ error: "Username is required" });
+    }
+
+    try {
+        const chats = await Chat.find({ username }).sort({ createdAt: 1 });
+        res.json(chats);
+    } catch (error) {
+        console.error("AI history fetch error:", error);
+        res.status(500).json({ error: "Failed to fetch AI history" });
+    }
+});
+
+// AI chat message save + reply
+app.post("/ai/chat", async (req, res) => {
+    const { username, message } = req.body;
+
+    if (!username || !message) {
+        return res.status(400).json({ error: "Username and message are required" });
+    }
+
+    try {
+        const previousChats = await Chat.find({ username })
+        .sort({ createdAt: -1 })
+        .limit(6);
+
+        const historyMessages = previousChats
+        .reverse()
+        .flatMap((chat) => [
+            { role: "user", content: chat.message },
+            { role: "assistant", content: chat.reply }
+        ]);
+
+        const completion = await client.chat.completions.create({
+            model: "openrouter/free",
+            messages: [
+                {
+                role: "system",
+                content:
+                    "You are Vish'sUp AI assistant. Reply in a helpful, short, friendly way. Prefer simple language."
+                },
+                ...historyMessages,
+                { role: "user", content: message }
+            ]
+        });
+
+        const aiReply = completion.choices?.[0]?.message?.content || "No response";
+
+        const savedChat = await Chat.create({
+            username,
+            message,
+            reply: aiReply
+        });
+
+        res.json({
+            reply: aiReply,
+            id: savedChat._id,
+            createdAt: savedChat.createdAt
+        });
+        } catch (err) {
+            console.error("AI chat route error:", err);
+            res.status(500).json({
+                error: err.message || "Something went wrong"
+        });
+    }
+});
+
+// Socket.io
 const io = new Server(server, {
   cors: {
     origin: [
-      "http://localhost:5500",
-      "http://127.0.0.1:5500",
+      "http://localhost:3000",
+      "http://127.0.0.1:3000",
       "https://vishsup-nayaljii.vercel.app"
     ],
     methods: ["GET", "POST"]
@@ -114,29 +220,22 @@ io.on('connection', socket => {
     
     socket.on('disconnect', (reason) => {
         const name = users[socket.id];
-        disconnectTimers[name] = setTimeout( () => { 
-        if(!onlineUser[name]) {
-            socket.broadcast.emit('left', name);
-        }},3000); // delay 3sec
-        delete onlineUser[name];
-        delete users[socket.id];
-        const usersList = Object.keys(onlineUser).map(name => ({ name, id: onlineUser[name] }));
-        io.emit('update-users', usersList);
+        if(name) {
+            disconnectTimers[name] = setTimeout( () => { 
+            if(!onlineUser[name]) {
+                socket.broadcast.emit('left', name);
+            }},3000); // delay 3sec
+            delete onlineUser[name];
+            delete users[socket.id];
+            const usersList = Object.keys(onlineUser).map(name => ({ name, id: onlineUser[name] }));
+            io.emit('update-users', usersList);
+        }
     });
 });
 
-// Delete message API
-app.delete('/message/:id', async (req, res) => {
-    const messageId = req.params.id;
-    if(!mongoose.Types.ObjectId.isValid(messageId)){
-        return res.status(400).json({ error: 'Invalid message ID' });
-    }
-    try {
-        await Message.findByIdAndDelete(messageId);
-        res.json({ success: true });
-    } catch (err) {
-        res.status(500).json({ error: 'Failed to delete message' });
-    }
+// SPA fallback
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "../frontend/index.html"));
 });
 
 // Server port

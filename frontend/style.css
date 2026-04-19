@@ -94,7 +94,7 @@ html, body {
     margin-top: 2px;
 }
 
-.sidebar-btn, .logout-btn {
+.sidebar-btn, .logout-btn, .chatbot-btn {
     width: 100%;
     border: 1px solid var(--border);
     background: var(--panel-2);
@@ -111,7 +111,7 @@ html, body {
     background: #3a3a3a;
 }
 
-.logout-btn:hover {
+.logout-btn:hover, .chatbot-btn  {
     background: rgba(239, 68, 68, 0.12);
     border-color: rgba(239, 68, 68, 0.4);
     color: #ffd6d6;
