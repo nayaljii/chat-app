@@ -26,7 +26,7 @@ html, body {
     min-height: 100%;
     background: var(--bg);
     color: var(--text);
-    overflow: hidden;
+    overflow: auto;
 }
 
 /* ---------- APP LAYOUT ---------- */
@@ -300,9 +300,12 @@ html, body {
 
 /* ---------- INPUT ---------- */
 .send-wrapper {
-    position: sticky;
+    position: fixed;
     bottom: 5px;
+    left: 5px;
+    right: 5px;
     padding: 10px;
+    z-index: 1000;
     background: linear-gradient(to top, #212121 70%, rgba(33,33,33,0.3));
 }
 
