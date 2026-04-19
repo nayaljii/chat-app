@@ -291,6 +291,7 @@ html, body {
     background: rgba(239,68,68,0.16);
 }
 
+
 /* ---------- TYPING ---------- */
 #typing-indicator {
     width: min(900px, calc(100% - 24px));
@@ -623,17 +624,12 @@ footer {
 
     .message {
         width: calc(100% - 16px);
-        margin-bottom: 12px;
-        padding: 12px 14px;
-    }
-
-    #typing-indicator {
-        width: calc(100% - 16px);
+        margin: 3px;
+        gap: 0;
+        
     }
 
     .send-wrapper {
-        position: fixed;
-        bottom: 0;
         padding: 10px 10px 16px;
     }
 
