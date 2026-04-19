@@ -87,7 +87,7 @@ chatForm.addEventListener("submit", async (e) => {
     addTypingMessage();
 
     try {
-        const response = await fetch("${API_BASE_URL}/ai/chat", {
+        const response = await fetch(`${API_BASE_URL}/ai/chat`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

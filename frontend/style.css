@@ -94,6 +94,10 @@ html, body {
     margin-top: 2px;
 }
 
+sidebar-bottom {
+    gap: 1rem;
+}
+
 .sidebar-btn, .logout-btn, .chatbot-btn {
     width: 100%;
     border: 1px solid var(--border);

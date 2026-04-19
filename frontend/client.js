@@ -25,22 +25,22 @@ const messageInput = document.getElementById('messageInp');
 let hasUserInteracted = false;
 
 // Send msg notification audio
-var audio0 = new Audio('sms.mp3');
+var audio0 = new Audio('Upload/sms.mp3');
 audio0.preload = "auto";
 audio0.volume = 1;
 
 // Receive msg notification audio
-var audio1 = new Audio('astute.mp3');
+var audio1 = new Audio('Upload/astute.mp3');
 audio1.preload = "auto";
 audio1.volume = 1;
 
 // user joind notification audio
-var audio2 = new Audio('another_1.mp3');
+var audio2 = new Audio('Upload/another_1.mp3');
 audio2.preload = "auto";
 audio2.volume = 1;
 
 // user leave notification audio
-var audio3 = new Audio('faahh.mp3');
+var audio3 = new Audio('Upload/faahh.mp3');
 audio3.preload = "auto";
 audio3.volume = 1;
 
