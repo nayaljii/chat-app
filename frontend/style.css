@@ -165,11 +165,6 @@ html, body {
     margin-top: 4px;
 }
 
-.chat-header {
-    display: none;
-    background: rgba(33,33,33,0.96);
-}
-
 /* ---------- MESSAGES ---------- */
 .container {
     display: flex;
@@ -493,6 +488,30 @@ footer {
 }
 
 /* ---------- RESPONSIVE ---------- */
+@media (max-width: 435px) {
+    #registerForm, #loginForm, #homeForm {
+        margin: 25px auto;
+        padding: 1rem 0.5rem;
+        gap: 1rem;
+    }
+
+    #toggleLoginPassword, #toggleRegisterPassword {
+        position: absolute;
+        right: 20px;
+    }
+    
+    .btn {
+        width: 8rem;
+        padding: 0.6rem 0;
+        font-size: 1rem;
+    }
+
+    .btnDiv {
+        gap: .5rem;
+    }
+}
+
+
 @media (max-width: 900px) {
     .app-shell {
         display: block;
@@ -566,6 +585,12 @@ footer {
         opacity: 1;
         transform: rotate(0) scale(1);
     }
+    
+    .chat-header {
+        display: none;
+        background: rgba(33,33,33,0.96);
+    }
+
 
     .sidebar {
         display: flex;
