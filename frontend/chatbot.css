@@ -62,6 +62,10 @@
   background: #1d4ed8;
 }
 
+.bot-brand {
+    margin: auto;
+}
+
 .bot-brand h1 {
   color: #ffffff;
   font-size: 34px;
