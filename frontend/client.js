@@ -139,7 +139,6 @@ form.addEventListener('submit', (e) =>{
         anim.play();
     }
     socket.emit('stop-typing');
-    typingIndicator.innerHTML = '';
     messageInput.value= '';
 });
 
@@ -184,15 +183,8 @@ messageInput.addEventListener('input', () => {
 // Typing indicator
 const typingIndicator = document.getElementById('typing-indicator');
 socket.on('user-typing', (typingname) => {
-    if (typingname !== name) {
-        typingIndicator.innerHTML = `
-            <span class="typing-label">${typingname} is typing</span>
-            <span class="typing-dots">
-                <span></span>
-                <span></span>
-                <span></span>
-            </span>
-        `;
+    if(typingname !== name){
+        typingIndicator.innerText = `${typingname} is typing...`;
     }
 });
 // For stop typing... indicator
