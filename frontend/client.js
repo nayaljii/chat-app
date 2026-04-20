@@ -138,10 +138,9 @@ form.addEventListener('submit', (e) =>{
         socket.emit('send', message);
         anim.play();
     }
-    socket.emit("stop-typing");
-    hideTypingBubble();
-
-    messageInput.value = "";
+    socket.emit('stop-typing');
+    typingIndicator.innerHTML = '';
+    messageInput.value= '';
 });
 
 // Receive msg
@@ -159,7 +158,6 @@ socket.on('receive', data => {
         }
     }
     else{
-        hideTypingBubble();
         append({
             name: data.name,
             message: data.message,
@@ -173,48 +171,33 @@ socket.on('receive', data => {
     }
 })
 
-// TYping Indicator
-messageInput.addEventListener("input", () => {
-    socket.emit("typing", name);
-
+// Typing Timeout
+let typingTimeout;
+messageInput.addEventListener('input', () => {
+    socket.emit('typing', name);
     clearTimeout(typingTimeout);
     typingTimeout = setTimeout(() => {
-        socket.emit("stop-typing");
-    }, 1500);
+        socket.emit('stop-typing');
+    }, 2000);
 });
 
-function showTypingBubble(name) {    
-    typingIndicator.style.display = "block";
-    typingIndicator.innerHTML = `
-    <div class="typing-bubble">
-    <span class="typing-text">${name.split(" ")[0]} is typing</span>
-    <span class="typing-dots">
-    <span></span>
-    <span></span>
-    <span></span>
-    </span>
-    </div>
-    `;
-
-    messageContainer.scrollTop = messageContainer.scrollHeight;
-}
-
-const typingIndicator = document.getElementById("typing-indicator");
-
-let typingTimeout;
-
-function hideTypingBubble() {
-    typingIndicator.style.display = "none";
-    typingIndicator.innerHTML = "";
-}
-
-
-socket.on("user-typing", (name) => {
-    showTypingBubble(name);
+// Typing indicator
+const typingIndicator = document.getElementById('typing-indicator');
+socket.on('user-typing', (typingname) => {
+    if (typingname !== name) {
+        typingIndicator.innerHTML = `
+            <span class="typing-label">${typingname} is typing</span>
+            <span class="typing-dots">
+                <span></span>
+                <span></span>
+                <span></span>
+            </span>
+        `;
+    }
 });
-
-socket.on("user-stop-typing", () => {
-    hideTypingBubble();
+// For stop typing... indicator
+socket.on('user-stop-typing', () => {
+    typingIndicator.innerText = '';
 });
 
 // Toggle online users list
@@ -317,7 +300,7 @@ async function loadMessages(){
         const res = await fetch(`${BASE_URL}/messages`);
 
         const messages = await res.json();
-        messageContainer.innerHTML = '<div id="typing-indicator"></div>';
+        messageContainer.innerHTML = ""; //clear old
 
     messages.forEach(msg => {
         if(msg.name == name){
