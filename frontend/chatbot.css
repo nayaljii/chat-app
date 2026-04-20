@@ -34,7 +34,7 @@
 }
 
 .bot-header {
-  padding: 5px;
+  padding: 5px 20px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   background: rgba(20, 29, 45, 0.5);
 }
@@ -60,10 +60,6 @@
 
 .back-btn:hover, .clear-btn:hover {
   background: #dc2626;
-}
-
-.clear-btn {
-  margin-left: auto;
 }
 
 .bot-brand {
@@ -246,7 +242,7 @@
   }
 
   .bot-header {
-    padding: 5px;
+    padding: 5px 10px;
   }
 
   .bot-header-top {

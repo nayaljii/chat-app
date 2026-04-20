@@ -273,7 +273,7 @@ html, body {
     border: none;
     background: transparent;
     cursor: pointer;
-    font-size: 0.8rem;
+    font-size: 0.6rem;
     transition: 0.2s ease;
     padding: 0;
     margin-left: auto;
@@ -293,13 +293,59 @@ html, body {
 
 /* ---------- TYPING ---------- */
 #typing-indicator {
-    width: min(900px, calc(100% - 24px));
-    margin: 0 auto;
-    min-height: 24px;
-    color: var(--muted);
+  display: none;
+  margin: 8px 10px;
+}
+
+.typing-bubble {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #e2e8f0;
+    color: #0f172a;
+    padding: 10px 14px;
+    border-radius: 16px;
+    border-bottom-left-radius: 4px;
+    max-width: fit-content;
+    font-size: 14px;
+    line-height: 1.4;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+.typing-text {
     font-style: italic;
-    font-size: 0.9rem;
-    padding: 10px 20px 5px 20px;
+}
+
+.typing-dots {
+    display: inline-flex;
+    gap: 4px;
+}
+
+.typing-dots span {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #64748b;
+    animation: typingBounce 1.2s infinite ease-in-out;
+}
+
+.typing-dots span:nth-child(2) {
+    animation-delay: 0.15s;
+}
+
+.typing-dots span:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+@keyframes typingBounce {
+    0%, 80%, 100% {
+        transform: translateY(0);
+        opacity: 0.4;
+    }
+    40% {
+        transform: translateY(-4px);
+        opacity: 1;
+    }
 }
 
 /* ---------- INPUT ---------- */
@@ -665,6 +711,10 @@ footer {
 
     .center {
         font-size: 0.7rem;
+    }
+
+    .delete-btn {
+        font-size: .5rem;
     }
 
     #typing-indicator {
