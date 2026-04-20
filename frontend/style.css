@@ -145,22 +145,23 @@ html, body {
     height: 100dvh;
 }
 
-.mobile-topbar {
+.chat-header {
     min-height: 60px;
     border-bottom: 1px solid var(--border);
     background: rgba(33,33,33,0.96);
     backdrop-filter: blur(8px);
     display: flex;
     align-items: center;
+    text-align: center;
     padding: 16px 24px;
 }
 
-.chat-header h2 {
+.chat-header-title h2 {
     font-size: 1.1rem;
     font-weight: 800;
 }
 
-.chat-header p {
+.chat-header-title p {
     font-size: 0.88rem;
     color: var(--muted);
     margin-top: 4px;
@@ -522,10 +523,6 @@ footer {
         display: block;
     }
 
-    .chat-header {
-        display: none;
-    }
-
     .mobile-menu-btn {
         display: none;
     }
@@ -537,6 +534,7 @@ footer {
         height: 64px;
         display: flex;
         align-items: center;
+        text-align: center;
         justify-content: space-between;
         padding: 10px 14px;
         background: rgba(23,23,23,0.92);
