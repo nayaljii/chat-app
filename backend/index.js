@@ -118,9 +118,8 @@ app.post("/ai/chat", async (req, res) => {
             model: "openrouter/free",
             messages: [
                 {
-                role: "system",
-                content:
-                    "You are Vish'sUp AI assistant. Reply in a helpful, short, friendly way. Prefer simple language."
+                    role: "system",
+                    content: "You are Vish'sUp AI assistant. Reply in a clean, friendly, modern chat style. Keep answers readable, well-spaced, and not too long unless asked. Use short paragraphs and simple formatting where useful."
                 },
                 ...historyMessages,
                 { role: "user", content: message }

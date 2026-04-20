@@ -64,7 +64,7 @@ messageContainer.addEventListener('scroll', () => {
 // Online users
 const onlineUsersDiv = document.getElementById('online-users');
 socket.on('update-users', (users) => {
-    toggleUsersBtn.innerText = `Online (${users.length})`;
+    toggleUsersBtn.innerText = `Online(${users.length})`;
     
     // Clear existing users
     onlineUsersDiv.innerHTML = '';
