@@ -34,7 +34,7 @@
 }
 
 .bot-header {
-  padding: 18px 20px;
+  padding: 5px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   background: rgba(20, 29, 45, 0.5);
 }
@@ -42,13 +42,13 @@
 .bot-header-top {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 0;
 }
 
-.back-btn {
+.back-btn, .clear-btn {
   border: none;
   outline: none;
-  background: #2563eb;
+  background: #ef4444;
   color: #fff;
   padding: 10px 16px;
   border-radius: 12px;
@@ -58,8 +58,12 @@
   flex-shrink: 0;
 }
 
-.back-btn:hover {
-  background: #1d4ed8;
+.back-btn:hover, .clear-btn:hover {
+  background: #dc2626;
+}
+
+.clear-btn {
+  margin-left: auto;
 }
 
 .bot-brand {
@@ -242,12 +246,12 @@
   }
 
   .bot-header {
-    padding: 16px;
+    padding: 5px;
   }
 
   .bot-header-top {
-    align-items: flex-start;
-    gap: 10px;
+    align-items: center;
+    gap: 0;
   }
 
   .bot-brand h1 {
@@ -258,8 +262,8 @@
     font-size: 14px;
   }
 
-  .back-btn {
-    padding: 9px 14px;
+  .back-btn, .clear-btn {
+    padding: 9px 12px;
     font-size: 14px;
   }
 

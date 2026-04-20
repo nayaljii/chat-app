@@ -102,6 +102,37 @@ async function loadHistory() {
   }
 }
 
+async function clearChat() {
+  if (!username) {
+    addMessage("User not found. Please login again.", "bot");
+    return;
+  }
+
+  const confirmClear = confirm("Are you sure you want to clear AI chat history?");
+  if (!confirmClear) return;
+
+  try {
+    const response = await fetch(
+      `${API_BASE_URL}/ai/history/${encodeURIComponent(username)}`,
+      {
+        method: "DELETE"
+      }
+    );
+
+    const data = await response.json();
+
+    if (data.success) {
+      chatBox.innerHTML = "";
+      addMessage("Chat cleared successfully. How can I help you now?", "bot");
+    } else {
+      addMessage(data.error || "Failed to clear chat.", "bot");
+    }
+  } catch (error) {
+    console.error("Clear chat error:", error);
+    addMessage("Unable to clear chat right now.", "bot");
+  }
+}
+
 chatForm.addEventListener("submit", async (e) => {
   e.preventDefault();
 

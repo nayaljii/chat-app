@@ -146,6 +146,18 @@ app.post("/ai/chat", async (req, res) => {
         });
     }
 });
+// User wise Delete message API
+app.delete("/ai/history/:username", async (req, res) => {
+    const { username } = req.params;
+
+    try {
+        await Chat.deleteMany({ username });
+        res.json({ success: true, message: "AI history cleared" });
+    } catch (error) {
+        console.error("AI history delete error:", error);
+        res.status(500).json({ error: "Failed to clear AI history" });
+    }
+});
 
 // Socket.io
 const io = new Server(server, {
