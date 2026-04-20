@@ -183,9 +183,7 @@ messageInput.addEventListener("input", () => {
     }, 1500);
 });
 
-function showTypingBubble(name) {
-    if (typingIndicator.style.display === "block") return;
-    
+function showTypingBubble(name) {    
     typingIndicator.style.display = "block";
     typingIndicator.innerHTML = `
     <div class="typing-bubble">
@@ -319,7 +317,7 @@ async function loadMessages(){
         const res = await fetch(`${BASE_URL}/messages`);
 
         const messages = await res.json();
-        messageContainer.innerHTML = ""; //clear old
+        messageContainer.innerHTML = '<div id="typing-indicator"></div>';
 
     messages.forEach(msg => {
         if(msg.name == name){

@@ -294,7 +294,7 @@ html, body {
 /* ---------- TYPING ---------- */
 #typing-indicator {
   display: none;
-  margin: 8px 10px;
+  margin: 0 14px 10px;
 }
 
 .typing-bubble {
@@ -310,6 +310,10 @@ html, body {
     font-size: 14px;
     line-height: 1.4;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+#typing-indicator .typing-bubble {
+    margin-left: 0;
 }
 
 .typing-text {
@@ -686,6 +690,10 @@ footer {
 
     .chat-layout {
         height: 100dvh;
+    }
+
+    .container {
+        padding: 10px 5px 100px;
     }
 
     .message {
