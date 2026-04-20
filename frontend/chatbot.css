@@ -42,7 +42,6 @@
   height: 92dvh;
   max-height: 820px;
   background: rgba(20, 29, 45, 0.5);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 24px;
   overflow: hidden;
   display: flex;
@@ -53,14 +52,13 @@
 
 .bot-header {
   padding: 5px 20px;
+  background: transparent;
 }
 
 .bot-header-top {
   display: flex;
   align-items: center;
   gap: 0;
-  border-bottom: 1px solid var(--border);
-  background: rgba(33,33,33,0.96);
 }
 
 .back-btn, .clear-btn {
@@ -84,10 +82,11 @@
 
 .bot-brand {
     margin: auto;
+    text-align: center;
 }
 
 .bot-brand h1 {
-  color: #ffffff;
+  color: var(--text);
   font-size: 34px;
   line-height: 1.1;
   margin-bottom: 4px;
@@ -179,7 +178,7 @@
 .bot-input-area {
   display: flex;
   gap: 12px;
-  padding: 16px;
+  padding: 5px 20px;
   background: #2f2f2f;
   border: 1px solid var(--border);
   box-shadow: var(--shadow);
@@ -187,10 +186,10 @@
 
 .bot-input-area input {
   flex: 1;
-  border: none;
+  border: 3px solid var(--border);;
   outline: none;
   border-radius: 16px;
-  padding: 16px 18px;
+  padding: 10px 20px;
   font-size: 16px;
   color: var(--text);
   background: transparent;
@@ -204,7 +203,7 @@
   border: none;
   outline: none;
   border-radius: 16px;
-  padding: 16px 22px;
+  padding: 16px;
   font-size: 16px;
   cursor: pointer;
   background: var(--accent);
@@ -276,11 +275,11 @@
   }
 
   .bot-brand h1 {
-    font-size: 28px;
+    font-size: 20px;
   }
 
   .bot-brand p {
-    font-size: 14px;
+    font-size: 10px;
   }
 
   .back-btn, .clear-btn {
@@ -302,11 +301,5 @@
   .bot-input-area {
     padding: 12px;
     gap: 10px;
-  }
-
-  .bot-input-area input,
-  .send-btn {
-    padding: 14px;
-    font-size: 15px;
   }
 }
