@@ -41,8 +41,8 @@
   width: 100%;
   height: 92dvh;
   max-height: 820px;
-  background: rgba(36, 50, 74, 0.86);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(20, 29, 45, 0.5);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 24px;
   overflow: hidden;
   display: flex;
@@ -53,8 +53,6 @@
 
 .bot-header {
   padding: 5px 20px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(20, 29, 45, 0.5);
 }
 
 .bot-header-top {
@@ -195,6 +193,7 @@
   padding: 16px 18px;
   font-size: 16px;
   color: var(--text);
+  background: transparent;
 }
 
 .bot-input-area input::placeholder {
