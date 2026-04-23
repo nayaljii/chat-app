@@ -253,7 +253,7 @@
 @media (max-width: 768px) {
   .bot-body {
     padding: 0;
-    min-height: 100dvh;
+    min-height: 95dvh;
   }
 
   .bot-app {
@@ -261,7 +261,7 @@
   }
 
   .bot-card {
-    height: 100dvh;
+    min-height: 95dvh;
     max-height: 100dvh;
     border-radius: 0;
   }
