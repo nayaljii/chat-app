@@ -51,7 +51,7 @@
 }
 
 .bot-header {
-  padding: 5px 20px;
+  padding: 10px 20px;
   background: transparent;
 }
 
@@ -253,6 +253,7 @@
 @media (max-width: 768px) {
   .bot-body {
     padding: 0;
+    min-height: 100dvh;
   }
 
   .bot-app {
@@ -266,7 +267,12 @@
   }
 
   .bot-header {
+    position: fixed;
+    width: stretch;
     padding: 5px 10px;
+    background: rgba(23,23,23,0.92);
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(12px);
   }
 
   .bot-header-top {
@@ -299,7 +305,22 @@
   }
 
   .bot-input-area {
-    padding: 12px;
-    gap: 10px;
+    position: fixed;
+    bottom: 5px;
+    left: 5px;
+    right: 5px;
+    padding: 10px 10px 16px;
+    z-index: 1000;
   }
+  .bot-input-area input {
+    font-size: 0.95rem;
+    padding: 10px 12px;
+  }
+
+  .send-btn {
+    width: 44px;
+    height: 44px;
+    font-size: 10px;
+  }
+
 }

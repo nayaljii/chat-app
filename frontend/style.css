@@ -527,7 +527,8 @@ footer {
     }
 
     .mobile-topbar {
-        position: sticky;
+        position: fixed;
+        width: stretch;
         top: 0;
         z-index: 1200;
         height: 64px;
@@ -648,7 +649,6 @@ footer {
         max-width: 70%;
         margin: 3px;
         gap: 0;
-        
     }
 
     .msg-name {
