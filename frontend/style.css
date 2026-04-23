@@ -640,6 +640,10 @@ footer {
         visibility: visible;
     }
 
+    .container {
+        padding: 78px 5px 10px;
+    }
+
     .chat-layout {
         height: 100dvh;
     }
