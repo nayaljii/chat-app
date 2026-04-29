@@ -110,7 +110,7 @@
             verifyOtpBtn.innerText = "Verifying...";
 
             try {
-                const res = await fetch("https://groupchat-app-fut2.onrender.com/api/auth/verify-otp-register", {
+                const res = await fetch(`${BASE_URL}/api/auth/verify-otp-register`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
