@@ -5,6 +5,9 @@ const Otp = require("../models/Otp");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
+const { OAuth2Client } = require("google-auth-library");
+const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
 const generateOtp = require("../utils/generateOtp");
 const sendOtpEmail = require("../utils/sendOtpEmail");
 
@@ -107,6 +110,68 @@ email: user.email,
 console.error("verify-otp-register error:", error);
 res.status(500).json({ message: "Registration failed" });
 }
+});
+
+// GOOGLE LOGIN
+router.post("/google-login", async (req, res) => {
+    try {
+        const { credential } = req.body;
+
+        if (!credential) {
+            return res.status(400).json({ msg: "Google credential is required" });
+        }
+
+        const ticket = await googleClient.verifyIdToken({
+            idToken: credential,
+            audience: process.env.GOOGLE_CLIENT_ID,
+        });
+
+        const payload = ticket.getPayload();
+
+        const googleId = payload.sub;
+        const email = payload.email;
+        const username = payload.name || email.split("@")[0];
+
+        if (!email) {
+            return res.status(400).json({ msg: "Email not found from Google account" });
+        }
+
+        let user = await User.findOne({ email: email.toLowerCase() });
+
+        if (!user) {
+            user = await User.create({
+                username,
+                email: email.toLowerCase(),
+                isVerified: true,
+                authProvider: "google",
+                googleId,
+            });
+        } else {
+            user.isVerified = true;
+            user.authProvider = user.authProvider || "google";
+            user.googleId = user.googleId || googleId;
+            await user.save();
+        }
+
+        const token = jwt.sign(
+            { id: user._id, email: user.email },
+            process.env.JWT_SECRET,
+            { expiresIn: "7d" }
+        );
+
+        res.json({
+            token,
+            user: {
+                id: user._id,
+                username: user.username,
+                email: user.email,
+            },
+        });
+
+    } catch (err) {
+        console.error("Google login error:", err);
+        res.status(500).json({ msg: "Google login failed" });
+    }
 });
 
 // LOGIN

@@ -28,7 +28,6 @@ app.use(express.json());
 app.use(cors({
     origin: [
         "http://localhost:3000",
-        "http://127.0.0.1:3000",
         "https://vishsup-nayaljii.vercel.app"
     ],
     credentials: true
@@ -44,7 +43,7 @@ const client = new OpenAI({
     baseURL: "https://openrouter.ai/api/v1",
     apiKey: process.env.OPENROUTER_API_KEY,
     defaultHeaders: {
-        "HTTP-Referer": "http://localhost:3000",
+        "HTTP-Referer": "https://vishsup-nayaljii.vercel.app",
         "X-Title": "Vish AI Chatbot",
     },
 });
@@ -164,7 +163,6 @@ const io = new Server(server, {
   cors: {
     origin: [
       "http://localhost:3000",
-      "http://127.0.0.1:3000",
       "https://vishsup-nayaljii.vercel.app"
     ],
     methods: ["GET", "POST"]
@@ -173,19 +171,19 @@ const io = new Server(server, {
 
 // Socket.io logic
 const users = {};
-const onlineUser = {};
+const onlineUsers = {};
 const disconnectTimers = {};
 
 io.on('connection', socket => {
     socket.on('new-user-joined', name => {
         users[socket.id] = name;
-        onlineUser[name] = socket.id; // overwrite
+        onlineUsers[name] = socket.id; // overwrite
 
         // reconnect Timer delete
         if(disconnectTimers[name]){
             delete disconnectTimers[name];
         }
-        const usersList = Object.keys(onlineUser).map(name => ({ name, id: onlineUser[name] }));
+        const usersList = Object.keys(onlineUsers).map(name => ({ name, id: onlineUsers[name] }));
         io.emit('update-users', usersList);
         socket.broadcast.emit('user-joined', name);
     });
@@ -233,20 +231,23 @@ io.on('connection', socket => {
         const name = users[socket.id];
         if(name) {
             disconnectTimers[name] = setTimeout( () => { 
-            if(!onlineUser[name]) {
-                socket.broadcast.emit('left', name);
-            }},3000); // delay 3sec
-            delete onlineUser[name];
+                if (!onlineUsers[name]) {
+                    io.emit('left', name);
+                }
+            },3000); // delay 3sec
+
+            delete onlineUsers[name];
             delete users[socket.id];
-            const usersList = Object.keys(onlineUser).map(name => ({ name, id: onlineUser[name] }));
+
+            const usersList = Object.keys(onlineUsers).map(name => ({ name, id: onlineUsers[name] }));
             io.emit('update-users', usersList);
         }
     });
 });
 
 // SPA fallback
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "../frontend/index.html"));
+app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "../frontend/index.html"));
 });
 
 // Server port

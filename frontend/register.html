@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Real-time chat application"> 
     <link rel="shortcut icon" href="Upload/chatapp_favicon.ico" type="image/x-icon">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <link rel="stylesheet" href="style.css">
     <title>Vish'sUp</title>
 </head>
@@ -14,6 +15,21 @@
     <form id="registerForm">
         <fieldset>
             <legend>Register to Vish'sUp</legend>
+            <div id="g_id_onload"
+                data-client_id="753074870781-vono8bdo7a3obht3d6tpigg2aj6uaus3.apps.googleusercontent.com"
+                data-callback="handleGoogleLogin">
+            </div>
+
+            <div class="g_id_signin"
+                data-type="standard"
+                data-size="large"
+                data-theme="outline"
+                data-text="signup_with"
+                data-shape="rectangular"
+                data-logo_alignment="left">
+            </div>
+            <hr style="margin: 15px 0;">
+            <p style="text-align:center;">OR</p>
             <div class="field">
                 <div>
                     <label for="username">Username: </label>
@@ -40,6 +56,29 @@
     </main>
     <script>
         const BASE_URL = "https://groupchat-app-fut2.onrender.com";
+
+        async function handleGoogleLogin(response) {
+            const res = await fetch(`${BASE_URL}/api/auth/google-login`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    credential: response.credential,
+                }),
+            });
+
+            const data = await res.json();
+
+            if (res.ok && data.token) {
+                localStorage.setItem("token", data.token);
+                localStorage.setItem("username", data.user.username);
+                window.location.href = "/index.html";
+            } else {
+                alert(data.msg || "Google signup failed");
+            }
+        }
+
         const sendOtpBtn = document.getElementById("sendOtpBtn");
         const verifyOtpBtn = document.getElementById("verifyOtpBtn");
         const otpSection = document.getElementById("otpSection");
@@ -57,6 +96,7 @@
                 togglePassword.innerText = "👁️";
             }
         });
+
 
         // SEND OTP
         sendOtpBtn.addEventListener("click", async () => {
