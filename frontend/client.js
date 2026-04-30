@@ -77,6 +77,11 @@ async function loadRegisteredUsers() {
 
             userEl.innerHTML = `<b>${user.username}</b>`;
 
+            // Private Chat Console
+            userEl.addEventListener("click", () => {
+                console.log("Selected user:", user.username);
+            });
+
             registeredUsersDiv.appendChild(userEl);
         });
 
@@ -102,6 +107,7 @@ toggleRegisteredUsersBtn.addEventListener("click", () => {
 
 // Online users
 const onlineUsersDiv = document.getElementById('online-users');
+const toggleUsersBtn = document.getElementById('toggle-users');
 socket.on('update-users', (users) => {
     toggleUsersBtn.innerText = `Online(${users.length})`;
     
@@ -231,13 +237,7 @@ socket.on('user-stop-typing', () => {
     typingIndicator.innerText = '';
 });
 
-// Private Chat Console
-userEl.addEventListener("click", () => {
-    console.log("Selected user:", user.username);
-});
-
 // Toggle online users list
-const toggleUsersBtn = document.getElementById('toggle-users');
 let isVisible = false;
 toggleUsersBtn.addEventListener('click', () => {
     isVisible = !isVisible;
