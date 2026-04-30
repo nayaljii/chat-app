@@ -1,19 +1,11 @@
-const nodemailer = require("nodemailer");
+const { Resend } = require("resend");
 
-const transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",
-    port: 587,
-    secure: false, // TLS
-    auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-    },
-});
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 async function sendOtpEmail(to, otp) {
-    const mailOptions = {
-        from: `"Vish'sUp" <${process.env.EMAIL_USER}>`,
-        to: to,
+    const { data, error } = await resend.emails.send({
+        from: process.env.EMAIL_FROM || "Vish'sUp <onboarding@resend.dev>",
+        to: [to],
         subject: "Your OTP for Vish'sUp",
         html: `
             <div style="font-family: Arial, sans-serif; padding: 20px;">
@@ -22,9 +14,15 @@ async function sendOtpEmail(to, otp) {
                 <h1 style="letter-spacing: 5px;">${otp}</h1>
                 <p>This OTP will expire in 5 minutes.</p>
             </div>
-            `,
-    };
-    await transporter.sendMail(mailOptions);
+        `,
+    });
+
+    if (error) {
+        console.error("Resend email error:", error);
+        throw new Error(error.message || "Failed to send email");
+    }
+
+    return data;
 }
 
 module.exports = sendOtpEmail;
