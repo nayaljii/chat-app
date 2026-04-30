@@ -112,6 +112,18 @@ res.status(500).json({ message: "Registration failed" });
 }
 });
 
+// GET REGISTERED USERS
+router.get("/users", async (req, res) => {
+    try {
+        const users = await User.find({}, "username email").sort({ username: 1 });
+
+        res.json(users);
+    } catch (error) {
+        console.error("Users fetch error:", error);
+        res.status(500).json({ msg: "Failed to fetch users" });
+    }
+});
+
 // GOOGLE LOGIN
 router.post("/google-login", async (req, res) => {
     try {

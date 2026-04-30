@@ -61,6 +61,45 @@ messageContainer.addEventListener('scroll', () => {
     }
 });
 
+// Register users
+const registeredUsersDiv = document.getElementById("registered-users");
+const toggleRegisteredUsersBtn = document.getElementById("toggle-registered-users");
+async function loadRegisteredUsers() {
+    try {
+        const res = await fetch(`${BASE_URL}/api/auth/users`);
+        const users = await res.json();
+
+        registeredUsersDiv.innerHTML = "";
+
+        users.forEach(user => {
+            const userEl = document.createElement("div");
+            userEl.classList.add("registered-user");
+
+            userEl.innerHTML = `<b>${user.username}</b>`;
+
+            registeredUsersDiv.appendChild(userEl);
+        });
+
+    } catch (error) {
+        console.error("Error loading registered users:", error);
+    }
+}
+
+// Register users show
+let registeredVisible = false;
+
+toggleRegisteredUsersBtn.addEventListener("click", () => {
+    registeredVisible = !registeredVisible;
+
+    if (registeredVisible) {
+        registeredUsersDiv.style.display = "flex";
+        registeredUsersDiv.style.flexDirection = "column";
+        loadRegisteredUsers();
+    } else {
+        registeredUsersDiv.style.display = "none";
+    }
+});
+
 // Online users
 const onlineUsersDiv = document.getElementById('online-users');
 socket.on('update-users', (users) => {
@@ -192,6 +231,11 @@ socket.on('user-stop-typing', () => {
     typingIndicator.innerText = '';
 });
 
+// Private Chat Console
+userEl.addEventListener("click", () => {
+    console.log("Selected user:", user.username);
+});
+
 // Toggle online users list
 const toggleUsersBtn = document.getElementById('toggle-users');
 let isVisible = false;
@@ -315,7 +359,10 @@ async function loadMessages(){
     }
 }
 
-window.addEventListener("DOMContentLoaded",loadMessages);
+window.addEventListener("DOMContentLoaded", () => {
+    loadMessages();
+    loadRegisteredUsers();
+});
 window.addEventListener("load", () => {
     socket.emit('stop-typing');
 });
