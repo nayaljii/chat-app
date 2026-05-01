@@ -229,24 +229,33 @@ io.on('connection', socket => {
         socket.broadcast.emit('user-stop-typing');
     });
     
-    socket.on('disconnect', (reason) => {
+    socket.on('disconnect', async (reason) => {
         const name = users[socket.id];
-        if(name) {
-            disconnectTimers[name] = setTimeout( () => { 
-                if (!onlineUsers[name]) {
-                    io.emit('left', name);
-                }
-            },3000); // delay 3sec
 
-            await User.findOneAndUpdate(
-                { username: name },
-                { lastSeen: new Date() }
-            );
-            
+        if (name) {
             delete onlineUsers[name];
             delete users[socket.id];
 
-            const usersList = Object.keys(onlineUsers).map(name => ({ name, id: onlineUsers[name] }));
+            try {
+                await User.findOneAndUpdate(
+                    { username: name },
+                    { lastSeen: new Date() }
+                );
+            } catch (err) {
+                console.error("Last seen update error:", err);
+            }
+
+            disconnectTimers[name] = setTimeout(() => {
+                if (!onlineUsers[name]) {
+                    io.emit('left', name);
+                }
+            }, 3000);
+
+            const usersList = Object.keys(onlineUsers).map(username => ({
+                name: username,
+                id: onlineUsers[username]
+            }));
+
             io.emit('update-users', usersList);
         }
     });
