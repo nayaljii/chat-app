@@ -78,9 +78,13 @@ async function loadRegisteredUsers() {
             const isOnline = currentOnlineUsers.includes(user.username);
 
             userEl.innerHTML = `
-                <b>${user.username}</b>
+                <b>${user.username}${user.id === socket.id ? '(You)' : ''}</b>
                 <small>${isOnline ? "Online" : formatLastSeen(user.lastSeen)}</small>
             `;
+            // userEl.innerHTML = `
+            //     <b>${user.username}</b>
+            //     <small>${isOnline ? "Online" : formatLastSeen(user.lastSeen)}</small>
+            // `;
 
             // Private Chat Console
             userEl.addEventListener("click", () => {
