@@ -128,13 +128,14 @@ html, body {
     background: var(--panel-2);
     border: 1px solid var(--border);
     border-radius: 12px;
-    padding: 12px;
+    padding: 2px 12px;
     color: #86efac;
     font-size: 0.9rem;
-    line-height: 1.5;
+    line-height: 2;
     box-shadow: var(--shadow);
-    max-height: 200px;
+    max-height: 150px;
     overflow-y: auto;
+    cursor: pointer;
 }
 
 /* ---------- CHAT AREA ---------- */
@@ -207,7 +208,6 @@ html, body {
     position: relative;
     border: 1px solid var(--border);
     animation: fadeIn 0.22s ease;
-    box-shadow: var(--shadow);
 }
 
 .message:hover {
@@ -617,6 +617,10 @@ footer {
         box-shadow: 0 25px 60px rgba(0,0,0,0.45);
         border: 1px solid rgba(255,255,255,0.08);
         overflow: hidden;
+    }
+
+    .sidebar-top {
+        gap: 10px;
     }
 
     #menu-toggle:checked ~ .sidebar {

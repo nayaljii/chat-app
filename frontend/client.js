@@ -90,7 +90,6 @@ async function loadRegisteredUsers() {
     }
 }
 
-// Register users show
 let registeredVisible = false;
 
 toggleRegisteredUsersBtn.addEventListener("click", () => {
