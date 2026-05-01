@@ -138,10 +138,21 @@ socket.on('update-users', (users) => {
     
     users.forEach(user => {
         const el = document.createElement('div');
+
         el.innerHTML = `<b>${user.name}${user.id === socket.id ? '(You)' : ''}</b>`;
+
+        el.addEventListener("click", () => {
+            if (user.name === name) return;
+
+            openPrivateChat({
+                username: user.name,
+                lastSeen: null
+            });
+        });
+
         onlineUsersDiv.appendChild(el);
     });
-
+    
     currentOnlineUsers = users.map(user => user.name);
     loadRegisteredUsers();
 });
@@ -153,6 +164,8 @@ let selectedUser = null;
 async function openPrivateChat(user) {
     chatMode = "private";
     selectedUser = user.username;
+
+    document.getElementById("groupChatBtn").style.display = "block";
 
     const isOnline = currentOnlineUsers.includes(user.username);
     const statusText = isOnline ? "Online" : formatLastSeen(user.lastSeen);
@@ -280,7 +293,7 @@ form.addEventListener('submit', (e) =>{
 // Receive msg
 socket.on('receive', data => {
     if (chatMode !== "group") return;
-    
+
     if(data.name === name){
         append({
             name: 'You',
@@ -341,6 +354,8 @@ socket.on("receive-private-message", (data) => {
 document.getElementById("groupChatBtn").addEventListener("click", () => {
     chatMode = "group";
     selectedUser = null;
+
+    document.getElementById("groupChatBtn").style.display = "none";
 
     document.getElementById("chatTitle").innerText = "Vish'sUp";
     document.getElementById("chatStatus").innerText = "Group Chat";
