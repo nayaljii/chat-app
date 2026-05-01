@@ -21,7 +21,7 @@ const socket = io(BASE_URL);
 const form = document.getElementById('send-container');
 const messageContainer = document.querySelector('.container');
 const messageInput = document.getElementById('messageInp');
-    
+
 let hasUserInteracted = false;
 
 // Send msg notification audio
@@ -78,17 +78,14 @@ async function loadRegisteredUsers() {
             const isOnline = currentOnlineUsers.includes(user.username);
 
             userEl.innerHTML = `
-                <b>${user.username}${user.id === socket.id ? '(You)' : ''}</b>
+                <b>${user.username}</b>
                 <small>${isOnline ? "Online" : formatLastSeen(user.lastSeen)}</small>
             `;
-            // userEl.innerHTML = `
-            //     <b>${user.username}</b>
-            //     <small>${isOnline ? "Online" : formatLastSeen(user.lastSeen)}</small>
-            // `;
 
             // Private Chat Console
             userEl.addEventListener("click", () => {
-                console.log("Selected user:", user.username);
+                if (user.username === name) return;
+                openPrivateChat(user);
             });
 
             registeredUsersDiv.appendChild(userEl);
@@ -149,6 +146,62 @@ socket.on('update-users', (users) => {
     loadRegisteredUsers();
 });
 
+// Private Chat  
+let chatMode = "group";
+let selectedUser = null;
+
+async function openPrivateChat(user) {
+    chatMode = "private";
+    selectedUser = user.username;
+
+    const isOnline = currentOnlineUsers.includes(user.username);
+    const statusText = isOnline ? "Online" : formatLastSeen(user.lastSeen);
+
+    document.getElementById("chatTitle").innerText = user.username;
+    document.getElementById("chatStatus").innerText = statusText;
+
+    document.getElementById("mobileChatTitle").innerText = user.username;
+    document.getElementById("mobileChatStatus").innerText = statusText;
+
+    messageContainer.innerHTML = "";
+
+    socket.emit("join-private-room", {
+        sender: name,
+        receiver: selectedUser
+    });
+
+    await loadPrivateMessages(name, selectedUser);
+}
+
+// Private Chat Load
+async function loadPrivateMessages(sender, receiver) {
+    try {
+        const res = await fetch(`${BASE_URL}/private/messages/${sender}/${receiver}`);
+        const messages = await res.json();
+
+        messageContainer.innerHTML = "";
+
+        messages.forEach(msg => {
+            if (msg.sender === name) {
+                append({
+                    name: "You",
+                    message: msg.message,
+                    time: msg.time
+                }, "right", msg._id);
+            } else {
+                append({
+                    name: msg.sender,
+                    message: msg.message,
+                    time: msg.time
+                }, "left", msg._id);
+            }
+        });
+
+    } catch (err) {
+        console.error("Private messages load error:", err);
+    }
+}
+
 // Append msg
 const append = (data, position, id) => {
     const messageElement = document.createElement('div');
@@ -207,8 +260,17 @@ form.addEventListener('submit', (e) =>{
     if(message === ""){
         return;
     }
-    if(socket.connected){
-        socket.emit('send', message);
+    if (socket.connected) {
+        if (chatMode === "private" && selectedUser) {
+            socket.emit("private-message", {
+                sender: name,
+                receiver: selectedUser,
+                message
+            });
+        } else {
+            socket.emit("send", message);
+        }
+
         anim.play();
     }
     socket.emit('stop-typing');
@@ -217,6 +279,8 @@ form.addEventListener('submit', (e) =>{
 
 // Receive msg
 socket.on('receive', data => {
+    if (chatMode !== "group") return;
+    
     if(data.name === name){
         append({
             name: 'You',
@@ -242,6 +306,51 @@ socket.on('receive', data => {
         }
     }
 })
+
+// Receive Private Chat
+socket.on("receive-private-message", (data) => {
+    if (chatMode !== "private") return;
+    if (data.sender !== selectedUser && data.sender !== name) return;
+
+    if (data.sender === name) {
+        append({
+            name: "You",
+            message: data.message,
+            time: data.time
+        }, "right", data.id);
+
+        // Play sound only for msg send has interacted with the page
+        if(hasUserInteracted){
+            playSound(audio0);
+        }
+    } else {
+        append({
+            name: data.sender,
+            message: data.message,
+            time: data.time
+        }, "left", data.id);
+
+        // Play sound only for incoming messages and if user has interacted with the page
+        if(hasUserInteracted){
+            playSound(audio1);
+        }
+    }
+});
+
+// Go to Group Chat Back btn
+document.getElementById("groupChatBtn").addEventListener("click", () => {
+    chatMode = "group";
+    selectedUser = null;
+
+    document.getElementById("chatTitle").innerText = "Vish'sUp";
+    document.getElementById("chatStatus").innerText = "Group Chat";
+
+    document.getElementById("mobileChatTitle").innerText = "Vish'sUp";
+    document.getElementById("mobileChatStatus").innerText = "Group Chat";
+
+    messageContainer.innerHTML = "";
+    loadMessages();
+});
 
 // Typing Timeout
 let typingTimeout;

@@ -14,6 +14,7 @@ const OpenAI = require("openai");
 const Message = require("./models/Message");
 const Chat = require("./models/Chat");
 const User = require("./models/User");
+const PrivateMessage = require("./models/PrivateMessage");
 
 // Routes
 const authRoutes = require("./routes/auth");
@@ -160,6 +161,26 @@ app.delete("/ai/history/:username", async (req, res) => {
     }
 });
 
+// Private Message Room ID
+function getPrivateRoom(user1, user2) {
+    return [user1, user2].sort().join("_");
+}
+
+// Private Message API
+app.get("/private/messages/:user1/:user2", async (req, res) => {
+    try {
+        const { user1, user2 } = req.params;
+        const roomId = getPrivateRoom(user1, user2);
+
+        const messages = await PrivateMessage.find({ roomId }).sort({ time: 1 });
+
+        res.json(messages);
+    } catch (err) {
+        console.error("Private messages fetch error:", err);
+        res.status(500).json({ error: "Failed to fetch private messages" });
+    }
+});
+
 // Socket.io
 const io = new Server(server, {
   cors: {
@@ -259,6 +280,36 @@ io.on('connection', socket => {
                 io.emit('left', name);
             }
         }, 3000);
+    });
+
+    socket.on("join-private-room", ({ sender, receiver }) => {
+        const roomId = getPrivateRoom(sender, receiver);
+        socket.join(roomId);
+    });
+
+    socket.on("private-message", async ({ sender, receiver, message }) => {
+        try {
+            const roomId = getPrivateRoom(sender, receiver);
+
+            const savedMsg = await PrivateMessage.create({
+                roomId,
+                sender,
+                receiver,
+                message,
+            });
+
+            io.to(roomId).emit("receive-private-message", {
+                id: savedMsg._id,
+                roomId,
+                sender,
+                receiver,
+                message,
+                time: savedMsg.time,
+            });
+
+        } catch (err) {
+            console.error("Private message error:", err);
+        }
     });
 });
 
