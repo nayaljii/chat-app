@@ -112,7 +112,7 @@ toggleRegisteredUsersBtn.addEventListener("click", () => {
 // User LastSeen
 let currentOnlineUsers = [];
 function formatLastSeen(lastSeen) {
-    if (!lastSeen) return "Last seen recently";
+    if (!lastSeen) return "Not seen yet";
 
     const diff = Date.now() - new Date(lastSeen).getTime();
     const minutes = Math.floor(diff / 60000);

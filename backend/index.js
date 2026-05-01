@@ -183,6 +183,7 @@ io.on('connection', socket => {
 
         // reconnect Timer delete
         if(disconnectTimers[name]){
+            clearTimeout(disconnectTimers[name]);
             delete disconnectTimers[name];
         }
         const usersList = Object.keys(onlineUsers).map(name => ({ name, id: onlineUsers[name] }));
@@ -232,32 +233,32 @@ io.on('connection', socket => {
     socket.on('disconnect', async (reason) => {
         const name = users[socket.id];
 
-        if (name) {
-            delete onlineUsers[name];
-            delete users[socket.id];
+        if(!name) return;
 
-            try {
-                await User.findOneAndUpdate(
-                    { username: name },
-                    { lastSeen: new Date() }
-                );
-            } catch (err) {
-                console.error("Last seen update error:", err);
-            }
+        delete onlineUsers[name];
+        delete users[socket.id];
 
-            disconnectTimers[name] = setTimeout(() => {
-                if (!onlineUsers[name]) {
-                    io.emit('left', name);
-                }
-            }, 3000);
-
-            const usersList = Object.keys(onlineUsers).map(username => ({
-                name: username,
-                id: onlineUsers[username]
-            }));
-
-            io.emit('update-users', usersList);
+        try {
+            await User.findOneAndUpdate(
+                { username: name },
+                { lastSeen: new Date() }
+            );
+        } catch (err) {
+            console.error("Last seen update error:", err);
         }
+        
+        const usersList = Object.keys(onlineUsers).map(username => ({
+            name: username,
+            id: onlineUsers[username]
+        }));
+
+        io.emit('update-users', usersList);
+
+        disconnectTimers[name] = setTimeout(() => {
+            if (!onlineUsers[name]) {
+                io.emit('left', name);
+            }
+        }, 3000);
     });
 });
 

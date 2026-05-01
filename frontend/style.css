@@ -141,12 +141,13 @@ html, body {
 .registered-user {
     display: flex;
     flex-direction: column;
-    gap: 3px;
+    gap: 0px;
 }
 
 .registered-user small {
-    font-size: 12px;
+    font-size: 10px;
     opacity: 0.75;
+    margin-top: -5px;
 }
 
 /* ---------- CHAT AREA ---------- */
