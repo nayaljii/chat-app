@@ -27,6 +27,10 @@ const userSchema = new mongoose.Schema({
     },
     googleId: {
         type: String,
+    },
+    lastSeen: {
+        type: Date,
+        default: Date.now
     }
 });
 

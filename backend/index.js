@@ -13,6 +13,7 @@ const OpenAI = require("openai");
 // Models
 const Message = require("./models/Message");
 const Chat = require("./models/Chat");
+const User = require("./models/User");
 
 // Routes
 const authRoutes = require("./routes/auth");
@@ -145,6 +146,7 @@ app.post("/ai/chat", async (req, res) => {
         });
     }
 });
+
 // User wise Delete message API
 app.delete("/ai/history/:username", async (req, res) => {
     const { username } = req.params;
@@ -236,6 +238,11 @@ io.on('connection', socket => {
                 }
             },3000); // delay 3sec
 
+            await User.findOneAndUpdate(
+                { username: name },
+                { lastSeen: new Date() }
+            );
+            
             delete onlineUsers[name];
             delete users[socket.id];
 

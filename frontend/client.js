@@ -75,7 +75,12 @@ async function loadRegisteredUsers() {
             const userEl = document.createElement("div");
             userEl.classList.add("registered-user");
 
-            userEl.innerHTML = `<b>${user.username}</b>`;
+            const isOnline = currentOnlineUsers.includes(user.username);
+
+            userEl.innerHTML = `
+                <b>${user.username}</b>
+                <small>${isOnline ? "Online" : formatLastSeen(user.lastSeen)}</small>
+            `;
 
             // Private Chat Console
             userEl.addEventListener("click", () => {
@@ -104,6 +109,23 @@ toggleRegisteredUsersBtn.addEventListener("click", () => {
     }
 });
 
+// User LastSeen
+let currentOnlineUsers = [];
+function formatLastSeen(lastSeen) {
+    if (!lastSeen) return "Last seen recently";
+
+    const diff = Date.now() - new Date(lastSeen).getTime();
+    const minutes = Math.floor(diff / 60000);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+
+    if (minutes < 1) return "Last seen just now";
+    if (minutes < 60) return `Last seen ${minutes} min ago`;
+    if (hours < 24) return `Last seen ${hours} hr ago`;
+
+    return `Last seen ${days} day ago`;
+}
+
 // Online users
 const onlineUsersDiv = document.getElementById('online-users');
 const toggleUsersBtn = document.getElementById('toggle-users');
@@ -118,6 +140,9 @@ socket.on('update-users', (users) => {
         el.innerHTML = `<b>${user.name}${user.id === socket.id ? '(You)' : ''}</b>`;
         onlineUsersDiv.appendChild(el);
     });
+
+    currentOnlineUsers = users.map(user => user.name);
+    loadRegisteredUsers();
 });
 
 // Append msg

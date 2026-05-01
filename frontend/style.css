@@ -138,6 +138,17 @@ html, body {
     cursor: pointer;
 }
 
+.registered-user {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.registered-user small {
+    font-size: 12px;
+    opacity: 0.75;
+}
+
 /* ---------- CHAT AREA ---------- */
 .chat-layout {
     display: flex;
