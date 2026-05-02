@@ -127,6 +127,9 @@ function formatLastSeen(lastSeen) {
     return `Last seen ${days} day ago`;
 }
 
+const chatUsersDiv = document.getElementById("chat-users");
+const toggleChatsBtn = document.getElementById("toggle-chats");
+
 // Update User
 socket.on('update-users', (users) => {
     currentOnlineUsers = users.map(user => user.name);
