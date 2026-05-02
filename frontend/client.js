@@ -279,7 +279,11 @@ const append = (data, position, id) => {
     btn.classList.add('delete-btn');
     btn.innerText = '🗑️';
     btn.onclick = () => {
-        socket.emit('delete-message', id);
+        if (chatMode === "private") {
+            socket.emit("delete-private-message", id);
+        } else {
+            socket.emit("delete-message", id);
+        }
     };
     if(position === 'right'){
         messageElement.appendChild(btn);
@@ -378,6 +382,16 @@ socket.on("receive-private-message", (data) => {
             playSound(audio1);
         }
     }
+    loadChatUsers();
+});
+
+// Private msg delete
+socket.on("private-message-deleted", id => {
+    const msg = document.querySelector(`[data-id="${id}"]`);
+    if (msg) {
+        msg.remove();
+    }
+
     loadChatUsers();
 });
 

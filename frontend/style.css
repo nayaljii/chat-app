@@ -138,16 +138,20 @@ html, body {
     cursor: pointer;
 }
 
-.registered-user, .chat-users {
+.registered-user, .chat-user {
     display: flex;
     flex-direction: column;
     gap: 0px;
 }
 
-.registered-user small, .chat-users small {
+.registered-user small, .chat-user small {
     font-size: 10px;
     opacity: 0.75;
     margin-top: -5px;
+}
+
+.chat-user b, .registered-user b {
+    color: #86efac;
 }
 
 /* ---------- CHAT AREA ---------- */

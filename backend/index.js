@@ -216,9 +216,9 @@ app.get("/private/messages/:user1/:user2", async (req, res) => {
 
 // Socket.io
 const io = new Server(server, {
-  cors: {
-    origin: [
-      "http://localhost:3000",
+    cors: {
+        origin: [
+            "http://localhost:3000",
       "https://vishsup-nayaljii.vercel.app"
     ],
     methods: ["GET", "POST"]
@@ -234,7 +234,7 @@ io.on('connection', socket => {
     socket.on('new-user-joined', name => {
         users[socket.id] = name;
         onlineUsers[name] = socket.id; // overwrite
-
+        
         // reconnect Timer delete
         if(disconnectTimers[name]){
             clearTimeout(disconnectTimers[name]);
@@ -244,24 +244,24 @@ io.on('connection', socket => {
         io.emit('update-users', usersList);
         socket.broadcast.emit('user-joined', name);
     });
-
+    
     socket.on('send', async (message) => {
         try {
-        const newMsg = new Message({
-            name: users[socket.id],
-            message: message
-        });
-        await newMsg.save();
-
-        const msgData = {
-            message: message,
-            name: users[socket.id],
-            id: newMsg._id,
-            time: newMsg.time
-        };
-
-        socket.emit('receive', msgData);
-        socket.broadcast.emit('receive', msgData);
+            const newMsg = new Message({
+                name: users[socket.id],
+                message: message
+            });
+            await newMsg.save();
+            
+            const msgData = {
+                message: message,
+                name: users[socket.id],
+                id: newMsg._id,
+                time: newMsg.time
+            };
+            
+            socket.emit('receive', msgData);
+            socket.broadcast.emit('receive', msgData);
         } catch (err) {
             console.error("Error saving message:", err);
         }
@@ -286,12 +286,12 @@ io.on('connection', socket => {
     
     socket.on('disconnect', async (reason) => {
         const name = users[socket.id];
-
+        
         if(!name) return;
-
+        
         delete onlineUsers[name];
         delete users[socket.id];
-
+        
         try {
             await User.findOneAndUpdate(
                 { username: name },
@@ -305,32 +305,32 @@ io.on('connection', socket => {
             name: username,
             id: onlineUsers[username]
         }));
-
+        
         io.emit('update-users', usersList);
-
+        
         disconnectTimers[name] = setTimeout(() => {
             if (!onlineUsers[name]) {
                 io.emit('left', name);
             }
         }, 3000);
     });
-
+    
     socket.on("join-private-room", ({ sender, receiver }) => {
         const roomId = getPrivateRoom(sender, receiver);
         socket.join(roomId);
     });
-
+    
     socket.on("private-message", async ({ sender, receiver, message }) => {
         try {
             const roomId = getPrivateRoom(sender, receiver);
-
+            
             const savedMsg = await PrivateMessage.create({
                 roomId,
                 sender,
                 receiver,
                 message,
             });
-
+            
             io.to(roomId).emit("receive-private-message", {
                 id: savedMsg._id,
                 roomId,
@@ -339,9 +339,21 @@ io.on('connection', socket => {
                 message,
                 time: savedMsg.time,
             });
-
+            
         } catch (err) {
             console.error("Private message error:", err);
+        }
+    });
+    
+    // Private chat delete msg
+    socket.on("delete-private-message", async (id) => {
+        if (!id) return;
+    
+        try {
+            await PrivateMessage.findByIdAndDelete(id);
+            io.emit("private-message-deleted", id);
+        } catch (err) {
+            console.error("Private message delete error:", err);
         }
     });
 });
