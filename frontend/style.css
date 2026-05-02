@@ -242,7 +242,7 @@ html, body {
     border-bottom-right-radius: 5px;
 }
 
-.center {
+.system-message {
     width: fit-content;
     padding: 8px 14px;
     background: transparent;
@@ -253,6 +253,15 @@ html, body {
     text-align: center;
     box-shadow: none;
     align-self: center;
+}
+
+.system-message .msg-name, .system-message .msg-time {
+    display: none;
+}
+
+.system-message .msg-text {
+    font-size: 0.78rem;
+    color: var(--muted);
 }
 
 .msg-name {

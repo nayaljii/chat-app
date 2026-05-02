@@ -284,6 +284,16 @@ io.on('connection', socket => {
         socket.broadcast.emit('user-stop-typing');
     });
     
+    socket.on("private-typing", ({ sender, receiver }) => {
+        const roomId = getPrivateRoom(sender, receiver);
+        socket.to(roomId).emit("private-user-typing", { sender });
+    });
+
+    socket.on("private-stop-typing", ({ sender, receiver }) => {
+        const roomId = getPrivateRoom(sender, receiver);
+        socket.to(roomId).emit("private-user-stop-typing", { sender });
+    });
+
     socket.on('disconnect', async (reason) => {
         const name = users[socket.id];
         

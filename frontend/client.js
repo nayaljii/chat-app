@@ -158,6 +158,8 @@ async function openPrivateChat(user) {
     chatMode = "private";
     selectedUser = user.username;
 
+    typingIndicator.innerText = "";
+    
     document.getElementById("groupChatBtn").style.display = "block";
 
     const isOnline = currentOnlineUsers.includes(user.username);
@@ -252,6 +254,9 @@ const append = (data, position, id) => {
     if(id){
         messageElement.dataset.id = id;
     }
+    if (position === "system") {
+        messageElement.classList.add("system-message");
+    }
 
     // For Name Div
     const nameDiv = document.createElement('div');
@@ -285,7 +290,7 @@ const append = (data, position, id) => {
             socket.emit("delete-message", id);
         }
     };
-    if(position === 'right'){
+    if(position === 'right' && id){
         messageElement.appendChild(btn);
     }
 
@@ -400,6 +405,8 @@ document.getElementById("groupChatBtn").addEventListener("click", () => {
     chatMode = "group";
     selectedUser = null;
 
+    typingIndicator.innerText = "";
+
     document.getElementById("groupChatBtn").style.display = "none";
 
     document.getElementById("chatTitle").innerText = "Vish'sUp";
@@ -414,40 +421,93 @@ document.getElementById("groupChatBtn").addEventListener("click", () => {
 
 // Typing Timeout
 let typingTimeout;
+
 messageInput.addEventListener('input', () => {
-    socket.emit('typing', name);
+    if (chatMode === "private" && selectedUser) {
+        socket.emit("private-typing", {
+            sender: name,
+            receiver: selectedUser
+        });
+    } else {
+        socket.emit("typing", name);
+    }
+
     clearTimeout(typingTimeout);
+
     typingTimeout = setTimeout(() => {
-        socket.emit('stop-typing');
+        if (chatMode === "private" && selectedUser) {
+            socket.emit("private-stop-typing", {
+                sender: name,
+                receiver: selectedUser
+            });
+        } else {
+            socket.emit("stop-typing");
+        }
     }, 2000);
 });
 
 // Typing indicator
 const typingIndicator = document.getElementById('typing-indicator');
 socket.on('user-typing', (typingname) => {
-    if(typingname !== name){
+    if (chatMode !== "group") return;
+
+    if (typingname !== name) {
         typingIndicator.innerText = `${typingname} is typing...`;
     }
 });
-// For stop typing... indicator
+
 socket.on('user-stop-typing', () => {
+    if (chatMode !== "group") return;
     typingIndicator.innerText = '';
+});
+
+socket.on("private-user-typing", ({ sender }) => {
+    if (chatMode !== "private") return;
+    if (sender !== selectedUser) return;
+
+    typingIndicator.innerText = `${sender} is typing...`;
+});
+
+socket.on("private-user-stop-typing", ({ sender }) => {
+    if (chatMode !== "private") return;
+    if (sender !== selectedUser) return;
+
+    typingIndicator.innerText = "";
 });
 
 // Notify server about new user joining
 socket.on('connect', () => {
     socket.emit('new-user-joined', name);
 });
+
 socket.on('user-joined', username => {
+    if (chatMode !== "group") return;
+
     append({
         name: "",
         message: `${username} joined the chat`,
         time: new Date()
-    }, 'center');
+    }, 'system');
 
-    // Play sound only for new user joining the page
-    if(hasUserInteracted){
+    if (hasUserInteracted) {
         playSound(audio2);
+    }
+});
+
+// Notify server about user leaving
+socket.on('left', username => {
+    if (chatMode !== "group") return;
+
+    if (username && username !== name) {
+        append({
+            name: "",
+            message: `${username} left the chat`,
+            time: new Date()
+        }, 'system');
+
+        if (hasUserInteracted) {
+            playSound(audio3);
+        }
     }
 });
 
@@ -456,22 +516,6 @@ function playSound(audio){
     const sound = audio.cloneNode(); // Clone the audio element to allow overlapping sounds
     sound.play().catch(err => console.log("Audio blocked:", err));
 }
-
-// Notify server about user leaving
-socket.on('left', username => {
-    if(username && username !== name){
-        append({
-            name: "",
-            message: `${username} left the chat`,
-            time: new Date()
-        }, 'center');
-
-        // Play sound only for user leave the page
-        if(hasUserInteracted){
-            playSound(audio3);
-        }
-    }
-});
 
 //  Delete msg function
 function deleteMessage(id){
