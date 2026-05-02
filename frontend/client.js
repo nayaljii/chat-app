@@ -127,34 +127,24 @@ function formatLastSeen(lastSeen) {
     return `Last seen ${days} day ago`;
 }
 
-// Online users
-const onlineUsersDiv = document.getElementById('online-users');
-const toggleUsersBtn = document.getElementById('toggle-users');
+// Update User
 socket.on('update-users', (users) => {
-    toggleUsersBtn.innerText = `Online(${users.length})`;
-    
-    // Clear existing users
-    onlineUsersDiv.innerHTML = '';
-    
-    users.forEach(user => {
-        const el = document.createElement('div');
-
-        el.innerHTML = `<b>${user.name}${user.id === socket.id ? '(You)' : ''}</b>`;
-
-        el.addEventListener("click", () => {
-            if (user.name === name) return;
-
-            openPrivateChat({
-                username: user.name,
-                lastSeen: null
-            });
-        });
-
-        onlineUsersDiv.appendChild(el);
-    });
-    
     currentOnlineUsers = users.map(user => user.name);
     loadRegisteredUsers();
+});
+
+let chatsVisible = false;
+
+toggleChatsBtn.addEventListener("click", () => {
+    chatsVisible = !chatsVisible;
+
+    if (chatsVisible) {
+        chatUsersDiv.style.display = "flex";
+        chatUsersDiv.style.flexDirection = "column";
+        loadChatUsers();
+    } else {
+        chatUsersDiv.style.display = "none";
+    }
 });
 
 // Private Chat  
@@ -184,6 +174,43 @@ async function openPrivateChat(user) {
     });
 
     await loadPrivateMessages(name, selectedUser);
+}
+
+// Private Chat User Load
+async function loadChatUsers() {
+    try {
+        const res = await fetch(`${BASE_URL}/private/chats/${name}`);
+        const chatUsers = await res.json();
+
+        chatUsersDiv.innerHTML = "";
+
+        if (chatUsers.length === 0) {
+            chatUsersDiv.innerHTML = `<small>No private chats yet</small>`;
+            return;
+        }
+
+        chatUsers.forEach(chat => {
+            const userEl = document.createElement("div");
+            userEl.classList.add("chat-user");
+
+            userEl.innerHTML = `
+                <b>${chat.username}</b>
+                <small>${chat.lastMessage}</small>
+            `;
+
+            userEl.addEventListener("click", () => {
+                openPrivateChat({
+                    username: chat.username,
+                    lastSeen: null
+                });
+            });
+
+            chatUsersDiv.appendChild(userEl);
+        });
+
+    } catch (err) {
+        console.error("Error loading chat users:", err);
+    }
 }
 
 // Private Chat Load
@@ -348,6 +375,7 @@ socket.on("receive-private-message", (data) => {
             playSound(audio1);
         }
     }
+    loadChatUsers();
 });
 
 // Go to Group Chat Back btn
@@ -387,19 +415,6 @@ socket.on('user-typing', (typingname) => {
 // For stop typing... indicator
 socket.on('user-stop-typing', () => {
     typingIndicator.innerText = '';
-});
-
-// Toggle online users list
-let isVisible = false;
-toggleUsersBtn.addEventListener('click', () => {
-    isVisible = !isVisible;
-    if(isVisible){
-        onlineUsersDiv.style.display = 'flex';
-        onlineUsersDiv.style.flexDirection = 'column';
-    }
-    else{
-        onlineUsersDiv.style.display = 'none';
-    }
 });
 
 // Notify server about new user joining
@@ -514,6 +529,7 @@ async function loadMessages(){
 window.addEventListener("DOMContentLoaded", () => {
     loadMessages();
     loadRegisteredUsers();
+    loadChatUsers();
 });
 window.addEventListener("load", () => {
     socket.emit('stop-typing');

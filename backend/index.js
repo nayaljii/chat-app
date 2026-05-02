@@ -166,6 +166,39 @@ function getPrivateRoom(user1, user2) {
     return [user1, user2].sort().join("_");
 }
 
+// Private Chat
+app.get("/private/chats/:username", async (req, res) => {
+    try {
+        const { username } = req.params;
+
+        const messages = await PrivateMessage.find({
+            $or: [
+                { sender: username },
+                { receiver: username }
+            ]
+        }).sort({ time: -1 });
+
+        const chatUsersMap = new Map();
+
+        messages.forEach(msg => {
+            const otherUser = msg.sender === username ? msg.receiver : msg.sender;
+
+            if (!chatUsersMap.has(otherUser)) {
+                chatUsersMap.set(otherUser, {
+                    username: otherUser,
+                    lastMessage: msg.message,
+                    time: msg.time
+                });
+            }
+        });
+
+        res.json(Array.from(chatUsersMap.values()));
+    } catch (err) {
+        console.error("Private chat users fetch error:", err);
+        res.status(500).json({ error: "Failed to fetch private chats" });
+    }
+});
+
 // Private Message API
 app.get("/private/messages/:user1/:user2", async (req, res) => {
     try {

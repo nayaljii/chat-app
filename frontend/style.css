@@ -123,7 +123,7 @@ html, body {
     color: #ffd6d6;
 }
 
-#online-users, #registered-users {
+#chat-users, #registered-users {
     display: none;
     background: var(--panel-2);
     border: 1px solid var(--border);
@@ -138,13 +138,13 @@ html, body {
     cursor: pointer;
 }
 
-.registered-user {
+.registered-user, .chat-users {
     display: flex;
     flex-direction: column;
     gap: 0px;
 }
 
-.registered-user small {
+.registered-user small, .chat-users small {
     font-size: 10px;
     opacity: 0.75;
     margin-top: -5px;
