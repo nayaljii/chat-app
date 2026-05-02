@@ -61,6 +61,10 @@ messageContainer.addEventListener('scroll', () => {
     }
 });
 
+// Message count
+let allUsers = [];
+let unreadCounts = {};
+
 // Register users
 const registeredUsersDiv = document.getElementById("registered-users");
 const toggleRegisteredUsersBtn = document.getElementById("toggle-registered-users");
@@ -68,6 +72,7 @@ async function loadRegisteredUsers() {
     try {
         const res = await fetch(`${BASE_URL}/api/auth/users`);
         const users = await res.json();
+        allUsers = users;
 
         registeredUsersDiv.innerHTML = "";
 
@@ -127,6 +132,20 @@ function formatLastSeen(lastSeen) {
     return `Last seen ${days} day ago`;
 }
 
+function refreshSelectedUserStatus() {
+    if (chatMode !== "private" || !selectedUser) return;
+
+    const selectedUserData = allUsers.find(u => u.username === selectedUser);
+    const isOnline = currentOnlineUsers.includes(selectedUser);
+
+    const statusText = isOnline
+        ? "Online"
+        : formatLastSeen(selectedUserData?.lastSeen);
+
+    document.getElementById("chatStatus").innerText = statusText;
+    document.getElementById("mobileChatStatus").innerText = statusText;
+}
+
 async function getUserDetails(username) {
     try {
         const res = await fetch(`${BASE_URL}/api/auth/users`);
@@ -146,6 +165,7 @@ const toggleChatsBtn = document.getElementById("toggle-chats");
 socket.on('update-users', (users) => {
     currentOnlineUsers = users.map(user => user.name);
     loadRegisteredUsers();
+    refreshSelectedUserStatus();
 });
 
 let chatsVisible = false;
@@ -161,10 +181,6 @@ toggleChatsBtn.addEventListener("click", () => {
         chatUsersDiv.style.display = "none";
     }
 });
-
-// Message count
-let unreadCounts = {};
-
 
 // Private Chat  
 let chatMode = "group";
@@ -231,8 +247,8 @@ async function loadChatUsers() {
                 <small>${chat.lastMessage}</small>
             `;
 
-            userEl.addEventListener("click", () => {
-                const fullUser = await getUserDetails(chat.username);
+            userEl.addEventListener("click", async () => {
+                const fullUser = allUsers.find(u => u.username === chat.username);
 
                 openPrivateChat({
                     username: chat.username,
