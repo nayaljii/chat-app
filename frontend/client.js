@@ -127,6 +127,18 @@ function formatLastSeen(lastSeen) {
     return `Last seen ${days} day ago`;
 }
 
+async function getUserDetails(username) {
+    try {
+        const res = await fetch(`${BASE_URL}/api/auth/users`);
+        const users = await res.json();
+
+        return users.find(user => user.username === username);
+    } catch (err) {
+        console.error("User details fetch error:", err);
+        return null;
+    }
+}
+
 const chatUsersDiv = document.getElementById("chat-users");
 const toggleChatsBtn = document.getElementById("toggle-chats");
 
@@ -150,6 +162,10 @@ toggleChatsBtn.addEventListener("click", () => {
     }
 });
 
+// Message count
+let unreadCounts = {};
+
+
 // Private Chat  
 let chatMode = "group";
 let selectedUser = null;
@@ -158,26 +174,33 @@ async function openPrivateChat(user) {
     chatMode = "private";
     selectedUser = user.username;
 
-    typingIndicator.innerText = "";
+    const menuToggle = document.getElementById("menu-toggle");
+    if (menuToggle) {
+        menuToggle.checked = false;
+        document.body.classList.remove("no-scroll");
+    }
     
     document.getElementById("groupChatBtn").style.display = "block";
-
+    
     const isOnline = currentOnlineUsers.includes(user.username);
     const statusText = isOnline ? "Online" : formatLastSeen(user.lastSeen);
-
+    
     document.getElementById("chatTitle").innerText = user.username;
     document.getElementById("chatStatus").innerText = statusText;
-
+    
     document.getElementById("mobileChatTitle").innerText = user.username;
     document.getElementById("mobileChatStatus").innerText = statusText;
-
+    
     messageContainer.innerHTML = "";
+    typingIndicator.innerText = "";
 
     socket.emit("join-private-room", {
         sender: name,
         receiver: selectedUser
     });
 
+    unreadCounts[user.username] = 0;
+    loadChatUsers();
     await loadPrivateMessages(name, selectedUser);
 }
 
@@ -198,15 +221,22 @@ async function loadChatUsers() {
             const userEl = document.createElement("div");
             userEl.classList.add("chat-user");
 
+            const unread = unreadCounts[chat.username] || 0;
+
             userEl.innerHTML = `
-                <b>${chat.username}</b>
+                <div style="display:flex; justify-content:space-between;">
+                    <b>${chat.username}</b>
+                    ${unread > 0 ? `<span class="unread-badge">${unread}</span>` : ""}
+                </div>
                 <small>${chat.lastMessage}</small>
             `;
 
             userEl.addEventListener("click", () => {
+                const fullUser = await getUserDetails(chat.username);
+
                 openPrivateChat({
                     username: chat.username,
-                    lastSeen: null
+                    lastSeen: fullUser?.lastSeen || null
                 });
             });
 
@@ -361,6 +391,13 @@ socket.on('receive', data => {
 
 // Receive Private Chat
 socket.on("receive-private-message", (data) => {
+
+    if (data.sender !== name) {
+        if (chatMode !== "private" || data.sender !== selectedUser) {
+            unreadCounts[data.sender] = (unreadCounts[data.sender] || 0) + 1;
+        }
+    }
+
     if (chatMode !== "private") return;
     if (data.sender !== selectedUser && data.sender !== name) return;
 
@@ -404,6 +441,12 @@ socket.on("private-message-deleted", id => {
 document.getElementById("groupChatBtn").addEventListener("click", () => {
     chatMode = "group";
     selectedUser = null;
+
+    const menuToggle = document.getElementById("menu-toggle");
+    if (menuToggle) {
+        menuToggle.checked = false;
+        document.body.classList.remove("no-scroll");
+    }
 
     typingIndicator.innerText = "";
 
@@ -575,11 +618,11 @@ async function loadMessages(){
             }, 'right', msg._id);
         }
         else{
-        append({
-            name: msg.name,
-            message: msg.message,
-            time: msg.time
-        }, 'left', msg._id);
+            append({
+                name: msg.name,
+                message: msg.message,
+                time: msg.time
+            }, 'left', msg._id);
         }
     });
     }catch(err){
