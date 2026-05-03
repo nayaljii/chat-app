@@ -458,9 +458,25 @@ html, body {
     transform: translateY(5px);
 }
 
-.message-wrapper:hover .msg-actions {
+/* Desktop */
+@media (hover: hover) {
+    .message-wrapper:hover .msg-actions {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Mobile (default hidden) */
+.msg-actions {
+    opacity: 0;
+    pointer-events: none;
+    transition: 0.2s;
+}
+
+/* Active (long press) */
+.message-wrapper.active .msg-actions {
     opacity: 1;
-    transform: translateY(0);
+    pointer-events: auto;
 }
 
 /* buttons */
@@ -840,17 +856,6 @@ footer {
 
     .center {
         font-size: 0.7rem;
-    }
-
-    .msg-actions {
-        opacity: 0;
-        pointer-events: none;
-        transition: 0.2s;
-    }
-
-    .message-wrapper.active .msg-actions {
-        opacity: 1;
-        pointer-events: auto;
     }
 
     #typing-indicator {
