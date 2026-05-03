@@ -278,13 +278,15 @@ async function loadPrivateMessages(sender, receiver) {
                 append({
                     name: "You",
                     message: msg.message,
-                    time: msg.time
+                    time: msg.time,
+                    replyTo: msg.replyTo
                 }, "right", msg._id);
             } else {
                 append({
                     name: msg.sender,
                     message: msg.message,
-                    time: msg.time
+                    time: msg.time,
+                    replyTo: msg.replyTo
                 }, "left", msg._id);
             }
         });
@@ -338,12 +340,6 @@ const append = (data, position, id) => {
         messageElement.appendChild(replyBox);
     }
 
-    // For Cancel Reply
-    document.getElementById("cancelReply").addEventListener("click", () => {
-        replyingTo = null;
-        document.getElementById("replyPreview").style.display = "none";
-    });
-
     // For message text div
     const textDiv = document.createElement('div');
     textDiv.classList.add('msg-text');
@@ -382,6 +378,12 @@ const append = (data, position, id) => {
     }
 };
 
+// For Cancel Reply
+document.getElementById("cancelReply").addEventListener("click", () => {
+    replyingTo = null;
+    document.getElementById("replyPreview").style.display = "none";
+});
+
 const anim = document.getElementById("sendAnim");
 
 form.addEventListener('submit', (e) =>{
@@ -406,9 +408,10 @@ form.addEventListener('submit', (e) =>{
                 message,
                 replyTo: replyingTo
             });
+        }
+
         replyingTo = null;
         document.getElementById("replyPreview").style.display = "none";
-        }
 
         anim.play();
     }
@@ -424,7 +427,8 @@ socket.on('receive', data => {
         append({
             name: 'You',
             message: data.message,
-            time: new Date()
+            time: data.time || new Date(),
+            replyTo: data.replyTo
         }, 'right', data.id);
 
         // Play sound only for msg send has interacted with the page
@@ -436,7 +440,8 @@ socket.on('receive', data => {
         append({
             name: data.name,
             message: data.message,
-            time: new Date()
+            time: data.time || new Date(),
+            replyTo: data.replyTo
         }, 'left', data.id);
 
         // Play sound only for incoming messages and if user has interacted with the page
@@ -462,7 +467,8 @@ socket.on("receive-private-message", (data) => {
         append({
             name: "You",
             message: data.message,
-            time: data.time
+            time: data.time,
+            replyTo: data.replyTo
         }, "right", data.id);
 
         // Play sound only for msg send has interacted with the page
@@ -473,7 +479,8 @@ socket.on("receive-private-message", (data) => {
         append({
             name: data.sender,
             message: data.message,
-            time: data.time
+            time: data.time,
+            replyTo: data.replyTo
         }, "left", data.id);
 
         // Play sound only for incoming messages and if user has interacted with the page
@@ -671,14 +678,16 @@ async function loadMessages(){
             append({
                 name: "You",
                 message: msg.message,
-                time: msg.time
+                time: msg.time,
+                replyTo: msg.replyTo
             }, 'right', msg._id);
         }
         else{
             append({
                 name: msg.name,
                 message: msg.message,
-                time: msg.time
+                time: msg.time,
+                replyTo: msg.replyTo
             }, 'left', msg._id);
         }
     });
