@@ -476,8 +476,7 @@ html, body {
 }
 
 .reaction-display span {
-    width: fit-content;
-    background: #2f2f2f;
+    background: transparent;
     border: 1px solid var(--border);
     border-radius: 999px;
     padding: 1px 6px;
@@ -504,6 +503,7 @@ html, body {
 .msg-actions {
     display: flex;
     flex-direction: column;
+    align-self: center;
     gap: 4px;
     opacity: 0;
     transition: 0.2s;
@@ -518,7 +518,7 @@ html, body {
 /* buttons */
 .reply-btn, .react-btn {
     border: none;
-    background: #2f2f2f;
+    background: transparent;
     color: white;
     cursor: pointer;
     border-radius: 50%;
@@ -544,7 +544,7 @@ html, body {
 #registerForm, #loginForm, #homeForm {
     width: min(420px, calc(100% - 24px));
     margin: 60px auto;
-    background: #171717;
+    background: var(--bg);
     border: 1px solid var(--border);
     padding: 1.5rem;
     border-radius: 20px;
