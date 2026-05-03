@@ -301,9 +301,6 @@ async function loadPrivateMessages(sender, receiver) {
 // Append msg
 const append = (data, position, id) => {
 
-    let touchStartX = 0;
-    let touchEndX = 0;
-    
     // Button Div
     const wrapper = document.createElement("div");
     wrapper.classList.add("message-wrapper", position);
@@ -316,9 +313,31 @@ const append = (data, position, id) => {
     const actions = document.createElement("div");
     actions.classList.add("msg-actions");
 
+    // Long Press Touch
+    let pressTimer;
+    wrapper.addEventListener("touchstart", () => {
+        pressTimer = setTimeout(() => {
+            // sab remove
+            document.querySelectorAll(".message-wrapper").forEach(w => {
+                w.classList.remove("active");
+            });
+
+            wrapper.classList.add("active");
+        }, 400); // hold time
+    });
+
+    wrapper.addEventListener("touchend", () => {
+        clearTimeout(pressTimer);
+    });
+
+    wrapper.addEventListener("touchmove", () => {
+        clearTimeout(pressTimer);
+    });
+    
+
     // Button
     const replyBtn = document.createElement("button");
-    replyBtn.innerText = <i class="ph ph-arrow-bend-up-left"></i>;
+    replyBtn.innerHTML = `<i class="ph ph-arrow-bend-up-left"></i>`;
     replyBtn.classList.add("reply-btn");
     replyBtn.onclick = () => {
         replyingTo = {
@@ -337,7 +356,7 @@ const append = (data, position, id) => {
     };
 
     const reactBtn = document.createElement("button");
-    reactBtn.innerText = <i class="ph ph-smiley"></i>;
+    reactBtn.innerHTML = `<i class="ph ph-smiley"></i>`;
     reactBtn.classList.add("react-btn");
     reactBtn.onclick = () => {
         showReactionPicker(messageElement, id);
@@ -345,7 +364,7 @@ const append = (data, position, id) => {
 
     // For delete button
     const deleteBtn = document.createElement("button");
-    deleteBtn.innerText = <i class="ph ph-trash"></i>;
+    deleteBtn.innerHTML = `<i class="ph ph-trash"></i>`;
     deleteBtn.classList.add("delete-btn");
 
     deleteBtn.onclick = () => {
@@ -382,6 +401,9 @@ const append = (data, position, id) => {
     nameDiv.innerText = data.name;
 
     // For Reply msg Div
+    let touchStartX = 0;
+    let touchEndX = 0;
+    
     if (data.replyTo) {
         const replyBox = document.createElement("div");
         replyBox.classList.add("reply-box");
@@ -471,6 +493,14 @@ const append = (data, position, id) => {
 
     renderReactions(messageElement, data.reactions);
 };
+
+document.addEventListener("click", (e) => {
+    if (!e.target.closest(".message-wrapper")) {
+        document.querySelectorAll(".message-wrapper").forEach(w => {
+            w.classList.remove("active");
+        });
+    }
+});
 
 // For Cancel Reply
 document.getElementById("cancelReply").addEventListener("click", () => {

@@ -475,6 +475,9 @@ html, body {
     border-radius: 50%;
     width: 26px;
     height: 20px;
+}
+
+.reply-btn i, .react-btn i, .delete-btn i {
     font-size: 12px;
 }
 
@@ -837,6 +840,17 @@ footer {
 
     .center {
         font-size: 0.7rem;
+    }
+
+    .msg-actions {
+        opacity: 0;
+        pointer-events: none;
+        transition: 0.2s;
+    }
+
+    .message-wrapper.active .msg-actions {
+        opacity: 1;
+        pointer-events: auto;
     }
 
     #typing-indicator {
