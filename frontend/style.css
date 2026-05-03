@@ -392,6 +392,59 @@ html, body {
     transform: translateY(-1px);
 }
 
+.reply-box {
+    background: var(--bg);
+    border-left: 3px solid var(--accent);
+    padding: 6px 8px;
+    border-radius: 8px;
+    font-size: 0.78rem;
+    opacity: 0.9;
+}
+
+.reply-box b {
+    display: block;
+    color: var(--accent);
+    font-size: 0.75rem;
+}
+
+.reply-box span {
+    color: var(--accent-hover);
+}
+
+#replyPreview {
+    width: min(900px, 100%);
+    margin: 0 auto 8px;
+    background: #2f2f2f;
+    border-left: 4px solid var(--accent);
+    padding: 8px 12px;
+    border-radius: 10px;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#cancelReply {
+    background: transparent;
+    color: white;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.reply-btn {
+    position: absolute;
+    top: 8px;
+    right: 32px;
+    display: none;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    color: var(--text);
+}
+
+.message:hover .reply-btn {
+    display: inline-flex;
+}
+
 /* ---------- FORMS ---------- */
 #registerForm, #loginForm, #homeForm {
     width: min(420px, calc(100% - 24px));

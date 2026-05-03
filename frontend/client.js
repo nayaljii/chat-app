@@ -22,6 +22,7 @@ const form = document.getElementById('send-container');
 const messageContainer = document.querySelector('.container');
 const messageInput = document.getElementById('messageInp');
 
+let replyingTo = null;
 let hasUserInteracted = false;
 
 // Send msg notification audio
@@ -304,10 +305,44 @@ const append = (data, position, id) => {
         messageElement.classList.add("system-message");
     }
 
+    // Reply msg
+    const replyBtn = document.createElement("button");
+    replyBtn.classList.add("reply-btn");
+    replyBtn.innerText = "↩";
+    replyBtn.onclick = () => {
+        replyingTo = {
+            id,
+            sender: data.name,
+            message: data.message
+        };
+
+        document.getElementById("replyPreview").style.display = "flex";
+        document.getElementById("replyText").innerText = `Replying to ${data.name}: ${data.message}`;
+    };
+
+    messageElement.appendChild(replyBtn);
+
     // For Name Div
     const nameDiv = document.createElement('div');
     nameDiv.classList.add('msg-name');
     nameDiv.innerText = data.name;
+
+    // For Reply msg Div
+    if (data.replyTo) {
+        const replyBox = document.createElement("div");
+        replyBox.classList.add("reply-box");
+        replyBox.innerHTML = `
+            <b>${data.replyTo.sender}</b>
+            <span>${data.replyTo.message}</span>
+        `;
+        messageElement.appendChild(replyBox);
+    }
+
+    // For Cancel Reply
+    document.getElementById("cancelReply").addEventListener("click", () => {
+        replyingTo = null;
+        document.getElementById("replyPreview").style.display = "none";
+    });
 
     // For message text div
     const textDiv = document.createElement('div');
@@ -363,10 +398,16 @@ form.addEventListener('submit', (e) =>{
             socket.emit("private-message", {
                 sender: name,
                 receiver: selectedUser,
-                message
+                message,
+                replyTo: replyingTo
             });
         } else {
-            socket.emit("send", message);
+            socket.emit("send", {
+                message,
+                replyTo: replyingTo
+            });
+        replyingTo = null;
+        document.getElementById("replyPreview").style.display = "none";
         }
 
         anim.play();

@@ -245,19 +245,21 @@ io.on('connection', socket => {
         socket.broadcast.emit('user-joined', name);
     });
     
-    socket.on('send', async (message) => {
+    socket.on('send', async (data) => {
         try {
             const newMsg = new Message({
                 name: users[socket.id],
-                message: message
+                message: data.message,
+                replyTo: data.replyTo || null
             });
             await newMsg.save();
             
             const msgData = {
-                message: message,
+                message: data.message,
                 name: users[socket.id],
                 id: newMsg._id,
-                time: newMsg.time
+                time: newMsg.time,
+                replyTo: newMsg.replyTo
             };
             
             socket.emit('receive', msgData);
@@ -330,7 +332,7 @@ io.on('connection', socket => {
         socket.join(roomId);
     });
     
-    socket.on("private-message", async ({ sender, receiver, message }) => {
+    socket.on("private-message", async ({ sender, receiver, message, replyTo }) => {
         try {
             const roomId = getPrivateRoom(sender, receiver);
             
@@ -339,6 +341,7 @@ io.on('connection', socket => {
                 sender,
                 receiver,
                 message,
+                replyTo: replyTo || null
             });
             
             io.to(roomId).emit("receive-private-message", {
@@ -348,6 +351,7 @@ io.on('connection', socket => {
                 receiver,
                 message,
                 time: savedMsg.time,
+                replyTo: savedMsg.replyTo
             });
             
         } catch (err) {

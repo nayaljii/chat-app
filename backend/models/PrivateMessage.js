@@ -20,6 +20,16 @@ const privateMessageSchema = new mongoose.Schema({
     time: {
         type: Date,
         default: Date.now,
+    },
+    replyTo: {
+        id: String,
+        sender: String,
+        message: String
+    },
+    reactions: {
+        type: Map,
+        of: [String],
+        default: {}
     }
 });
 
