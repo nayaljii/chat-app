@@ -448,17 +448,28 @@ html, body {
     cursor: pointer;
 }
 
+.reply-btn {
+    position: relative;
+    display: none;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    color: var(--text);
+}
+
+.message:hover .reply-btn {
+    display: inline-flex;
+}
+
 .reaction-picker {
     position: absolute;
     bottom: 100%;
     right: 10px;
     display: flex;
     gap: 6px;
-    background: #2f2f2f;
     border: 1px solid var(--border);
     border-radius: 999px;
     padding: 6px 8px;
-    box-shadow: var(--shadow);
     z-index: 10;
 }
 
@@ -476,7 +487,8 @@ html, body {
 }
 
 .reaction-display span {
-    background: transparent;
+    width: fit-content;
+    background: #2f2f2f;
     border: 1px solid var(--border);
     border-radius: 999px;
     padding: 1px 6px;
@@ -485,7 +497,8 @@ html, body {
 
 .message-wrapper {
     display: flex;
-    align-items: flex-end;
+    align-items: center;
+    background: transparent;
     gap: 6px;
     margin: 8px 0;
 }
@@ -503,7 +516,7 @@ html, body {
 .msg-actions {
     display: flex;
     flex-direction: column;
-    align-self: center;
+    align-items: center;
     gap: 4px;
     opacity: 0;
     transition: 0.2s;
@@ -535,16 +548,11 @@ html, body {
     order: 1; /* RIGHT side */
 }
 
-.swipe-reply-effect {
-    transform: translateX(12px);
-    transition: transform 0.2s ease;
-}
-
 /* ---------- FORMS ---------- */
 #registerForm, #loginForm, #homeForm {
     width: min(420px, calc(100% - 24px));
     margin: 60px auto;
-    background: var(--bg);
+    background: #171717;
     border: 1px solid var(--border);
     padding: 1.5rem;
     border-radius: 20px;
