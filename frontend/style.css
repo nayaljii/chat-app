@@ -444,11 +444,15 @@ html, body {
     max-width: 70%;
 }
 
+.message-wrapper .system {
+    margin: auto;
+}
+
 .msg-actions {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 4px;
+    gap: 2px;
     opacity: 0;
     transition: 0.2s;
     transform: translateY(5px);
@@ -470,7 +474,7 @@ html, body {
     cursor: pointer;
     border-radius: 50%;
     width: 26px;
-    height: 26px;
+    height: 20px;
     font-size: 12px;
 }
 
@@ -833,6 +837,10 @@ footer {
 
     .center {
         font-size: 0.7rem;
+    }
+
+    .msg-actions {
+        gap: 0;
     }
 
     #typing-indicator {

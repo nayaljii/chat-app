@@ -259,7 +259,8 @@ io.on('connection', socket => {
                 name: users[socket.id],
                 id: newMsg._id,
                 time: newMsg.time,
-                replyTo: newMsg.replyTo
+                replyTo: newMsg.replyTo,
+                reactions: newMsg.reactions
             };
             
             socket.emit('receive', msgData);
@@ -350,42 +351,13 @@ io.on('connection', socket => {
                 sender,
                 receiver,
                 message,
-                time: savedMsg.time,
+                time: savedMsfg.time,
                 replyTo: savedMsg.replyTo
             });
             
         } catch (err) {
             console.error("Private message error:", err);
         }
-
-        socket.on("react-message", async ({ id, emoji, username, chatMode }) => {
-            try {
-                const Model = chatMode === "private" ? PrivateMessage : Message;
-
-                const msg = await Model.findById(id);
-                if (!msg) return;
-
-                if (!msg.reactions) msg.reactions = new Map();
-
-                const users = msg.reactions.get(emoji) || [];
-
-                if (users.includes(username)) {
-                    msg.reactions.set(emoji, users.filter(u => u !== username));
-                } else {
-                    msg.reactions.set(emoji, [...users, username]);
-                }
-
-                await msg.save();
-
-                io.emit("message-reaction-updated", {
-                    id,
-                    reactions: Object.fromEntries(msg.reactions)
-                });
-
-            } catch (err) {
-                console.error("Reaction error:", err);
-            }
-        });
     });
     
     // Private chat delete msg
@@ -397,6 +369,35 @@ io.on('connection', socket => {
             io.emit("private-message-deleted", id);
         } catch (err) {
             console.error("Private message delete error:", err);
+        }
+    });
+
+    socket.on("react-message", async ({ id, emoji, username, chatMode }) => {
+        try {
+            const Model = chatMode === "private" ? PrivateMessage : Message;
+
+            const msg = await Model.findById(id);
+            if (!msg) return;
+
+            if (!msg.reactions) msg.reactions = new Map();
+
+            const users = msg.reactions.get(emoji) || [];
+
+            if (users.includes(username)) {
+                msg.reactions.set(emoji, users.filter(u => u !== username));
+            } else {
+                msg.reactions.set(emoji, [...users, username]);
+            }
+
+            await msg.save();
+
+            io.emit("message-reaction-updated", {
+                id,
+                reactions: Object.fromEntries(msg.reactions)
+            });
+
+        } catch (err) {
+                console.error("Reaction error:", err);
         }
     });
 });
