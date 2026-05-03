@@ -839,10 +839,6 @@ footer {
         font-size: 0.7rem;
     }
 
-    .msg-actions {
-        gap: 0;
-    }
-
     #typing-indicator {
         margin: 0 auto 90px;
     }

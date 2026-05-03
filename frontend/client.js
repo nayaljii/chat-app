@@ -318,7 +318,7 @@ const append = (data, position, id) => {
 
     // Button
     const replyBtn = document.createElement("button");
-    replyBtn.innerText = "↩";
+    replyBtn.innerText = <i class="ph ph-arrow-bend-up-left"></i>;
     replyBtn.classList.add("reply-btn");
     replyBtn.onclick = () => {
         replyingTo = {
@@ -337,7 +337,7 @@ const append = (data, position, id) => {
     };
 
     const reactBtn = document.createElement("button");
-    reactBtn.innerText = "😊";
+    reactBtn.innerText = <i class="ph ph-smiley"></i>;
     reactBtn.classList.add("react-btn");
     reactBtn.onclick = () => {
         showReactionPicker(messageElement, id);
@@ -345,7 +345,7 @@ const append = (data, position, id) => {
 
     // For delete button
     const deleteBtn = document.createElement("button");
-    deleteBtn.innerText = "🗑️";
+    deleteBtn.innerText = <i class="ph ph-trash"></i>;
     deleteBtn.classList.add("delete-btn");
 
     deleteBtn.onclick = () => {
