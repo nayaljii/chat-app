@@ -40,13 +40,13 @@ html, body {
 
 /* ---------- SIDEBAR ---------- */
 .sidebar-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.45);
-  z-index: 1250;
-  opacity: 0;
-  visibility: hidden;
-  transition: 0.3s ease;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    z-index: 1250;
+    opacity: 0;
+    visibility: hidden;
+    transition: 0.3s ease;
 }
 
 .sidebar {
@@ -393,22 +393,39 @@ html, body {
 }
 
 .reply-box {
+    width: 100%;
     background: var(--bg);
     border-left: 3px solid var(--accent);
-    padding: 6px 8px;
+    padding: 6px 10px;
     border-radius: 8px;
-    font-size: 0.78rem;
+    font-size: 0.75rem;
     opacity: 0.9;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    cursor: pointer;
+}
+
+.highlight-msg {
+    outline: 2px solid #10a37f;
+    box-shadow: 0 0 18px rgba(16, 163, 127, 0.45);
 }
 
 .reply-box b {
-    display: block;
-    color: var(--accent);
-    font-size: 0.75rem;
+    width: 100%;
+    text-align: left;
+    padding-left: 4px;
 }
 
 .reply-box span {
-    color: var(--accent-hover);
+    width: 100%;
+    text-align: left;
+    word-break: break-word;
+}
+
+.right .reply-box {
+    background: rgba(255,255,255,0.05);
 }
 
 #replyPreview {

@@ -319,7 +319,11 @@ const append = (data, position, id) => {
         };
 
         document.getElementById("replyPreview").style.display = "flex";
-        document.getElementById("replyText").innerText = `Replying to ${data.name}: ${data.message}`;
+        if (chatMode === "private") {
+            document.getElementById("replyText").innerText = data.message;
+        } else {
+            document.getElementById("replyText").innerText = `Replying to ${data.name}: ${data.message}`;
+        }
     };
 
     messageElement.appendChild(replyBtn);
@@ -333,10 +337,34 @@ const append = (data, position, id) => {
     if (data.replyTo) {
         const replyBox = document.createElement("div");
         replyBox.classList.add("reply-box");
-        replyBox.innerHTML = `
-            <b>${data.replyTo.sender}</b>
-            <span>${data.replyTo.message}</span>
-        `;
+        if (chatMode === "private") {
+            replyBox.innerHTML = `
+                <span>${data.replyTo.message}</span>
+            `;
+        } else {
+            replyBox.innerHTML = `
+                <b>${data.replyTo.sender}</b>
+                <span>${data.replyTo.message}</span>
+            `;
+        }
+
+        replyBox.addEventListener("click", () => {
+            const originalMsg = document.querySelector(`[data-id="${data.replyTo.id}"]`);
+
+            if (originalMsg) {
+                originalMsg.scrollIntoView({
+                    behavior: "smooth",
+                    block: "center"
+                });
+
+                originalMsg.classList.add("highlight-msg");
+
+                setTimeout(() => {
+                    originalMsg.classList.remove("highlight-msg");
+                }, 1500);
+            }
+        });
+
         messageElement.appendChild(replyBox);
     }
 
