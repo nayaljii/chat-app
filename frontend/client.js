@@ -279,14 +279,16 @@ async function loadPrivateMessages(sender, receiver) {
                     name: "You",
                     message: msg.message,
                     time: msg.time,
-                    replyTo: msg.replyTo
+                    replyTo: msg.replyTo,
+                    reactions: msg.reactions
                 }, "right", msg._id);
             } else {
                 append({
                     name: msg.sender,
                     message: msg.message,
                     time: msg.time,
-                    replyTo: msg.replyTo
+                    replyTo: msg.replyTo,
+                    reactions: msg.reactions
                 }, "left", msg._id);
             }
         });
@@ -298,19 +300,26 @@ async function loadPrivateMessages(sender, receiver) {
 
 // Append msg
 const append = (data, position, id) => {
-    const messageElement = document.createElement('div');
-    messageElement.classList.add('message', position);
-    if(id){
-        messageElement.dataset.id = id;
-    }
-    if (position === "system") {
-        messageElement.classList.add("system-message");
-    }
 
-    // Reply msg
+    let touchStartX = 0;
+    let touchEndX = 0;
+    
+    // Button Div
+    const wrapper = document.createElement("div");
+    wrapper.classList.add("message-wrapper", position);
+
+    const messageElement = document.createElement("div");
+    messageElement.classList.add("message", position);
+    messageElement.setAttribute("data-id", id);
+
+    // Button Container
+    const actions = document.createElement("div");
+    actions.classList.add("msg-actions");
+
+    // Button
     const replyBtn = document.createElement("button");
-    replyBtn.classList.add("reply-btn");
     replyBtn.innerText = "↩";
+    replyBtn.classList.add("reply-btn");
     replyBtn.onclick = () => {
         replyingTo = {
             id,
@@ -319,6 +328,7 @@ const append = (data, position, id) => {
         };
 
         document.getElementById("replyPreview").style.display = "flex";
+
         if (chatMode === "private") {
             document.getElementById("replyText").innerText = data.message;
         } else {
@@ -326,7 +336,28 @@ const append = (data, position, id) => {
         }
     };
 
-    messageElement.appendChild(replyBtn);
+    const reactBtn = document.createElement("button");
+    reactBtn.innerText = "😊";
+    reactBtn.classList.add("react-btn");
+    reactBtn.onclick = () => {
+        showReactionPicker(messageElement, id);
+    };
+
+    if (position !== "system" && id) {
+        actions.appendChild(replyBtn);
+        actions.appendChild(reactBtn);
+    }
+
+    // Logic
+    if (position === "right") {
+        wrapper.appendChild(actions);
+        wrapper.appendChild(messageElement);
+    } else {
+        wrapper.appendChild(messageElement);
+        wrapper.appendChild(actions);
+    }
+
+    messageContainer.appendChild(wrapper);
 
     // For Name Div
     const nameDiv = document.createElement('div');
@@ -380,7 +411,6 @@ const append = (data, position, id) => {
     
     messageElement.appendChild(nameDiv);
     messageElement.appendChild(textDiv);
-    messageContainer.append(messageElement);
     messageElement.appendChild(timeDiv);
     messageElement.setAttribute('data-id', id);
 
@@ -404,6 +434,41 @@ const append = (data, position, id) => {
     if(position=='right' || userAtBottom){
         messageContainer.scrollTop = messageContainer.scrollHeight;
     }
+
+    messageElement.addEventListener("touchstart", (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+    });
+
+    messageElement.addEventListener("touchend", (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+
+        const swipeDistance = touchEndX - touchStartX;
+
+        if (Math.abs(swipeDistance) > 70) {
+            replyingTo = {
+                id,
+                sender: data.name,
+                message: data.message
+            };
+
+            document.getElementById("replyPreview").style.display = "flex";
+
+            if (chatMode === "private") {
+                document.getElementById("replyText").innerText = data.message;
+            } else {
+                document.getElementById("replyText").innerText = `Replying to ${data.name}: ${data.message}`;
+            }
+
+            messageInput.focus();
+
+            messageElement.classList.add("swipe-reply-effect");
+            setTimeout(() => {
+                messageElement.classList.remove("swipe-reply-effect");
+            }, 250);
+        }
+    });
+
+    renderReactions(messageElement, data.reactions);
 };
 
 // For Cancel Reply
@@ -456,7 +521,8 @@ socket.on('receive', data => {
             name: 'You',
             message: data.message,
             time: data.time || new Date(),
-            replyTo: data.replyTo
+            replyTo: data.replyTo,
+            reactions: data.reactions
         }, 'right', data.id);
 
         // Play sound only for msg send has interacted with the page
@@ -469,7 +535,8 @@ socket.on('receive', data => {
             name: data.name,
             message: data.message,
             time: data.time || new Date(),
-            replyTo: data.replyTo
+            replyTo: data.replyTo,
+            reactions: data.reactions
         }, 'left', data.id);
 
         // Play sound only for incoming messages and if user has interacted with the page
@@ -496,7 +563,8 @@ socket.on("receive-private-message", (data) => {
             name: "You",
             message: data.message,
             time: data.time,
-            replyTo: data.replyTo
+            replyTo: data.replyTo,
+            reactions: data.reactions
         }, "right", data.id);
 
         // Play sound only for msg send has interacted with the page
@@ -508,7 +576,8 @@ socket.on("receive-private-message", (data) => {
             name: data.sender,
             message: data.message,
             time: data.time,
-            replyTo: data.replyTo
+            replyTo: data.replyTo,
+            reactions: data.reactions
         }, "left", data.id);
 
         // Play sound only for incoming messages and if user has interacted with the page
@@ -517,6 +586,14 @@ socket.on("receive-private-message", (data) => {
         }
     }
     loadChatUsers();
+});
+
+// Reaction Update
+socket.on("message-reaction-updated", ({ id, reactions }) => {
+    const msg = document.querySelector(`[data-id="${id}"]`);
+    if (msg) {
+        renderReactions(msg, reactions);
+    }
 });
 
 // Private msg delete
@@ -707,7 +784,8 @@ async function loadMessages(){
                 name: "You",
                 message: msg.message,
                 time: msg.time,
-                replyTo: msg.replyTo
+                replyTo: msg.replyTo,
+                reactions: msg.reactions
             }, 'right', msg._id);
         }
         else{
@@ -715,13 +793,63 @@ async function loadMessages(){
                 name: msg.name,
                 message: msg.message,
                 time: msg.time,
-                replyTo: msg.replyTo
+                replyTo: msg.replyTo,
+                reactions: msg.reactions
             }, 'left', msg._id);
         }
     });
     }catch(err){
         console.error("Error loading messages:", err);
     }
+}
+
+// Reaction Function
+function showReactionPicker(messageElement, id) {
+    const oldPicker = document.querySelector(".reaction-picker");
+    if (oldPicker) oldPicker.remove();
+
+    const picker = document.createElement("div");
+    picker.classList.add("reaction-picker");
+
+    ["👍", "❤️", "😂", "😮", "😢"].forEach(emoji => {
+        const btn = document.createElement("button");
+        btn.innerText = emoji;
+
+        btn.onclick = () => {
+            socket.emit("react-message", {
+                id,
+                emoji,
+                username: name,
+                chatMode
+            });
+
+            picker.remove();
+        };
+
+        picker.appendChild(btn);
+    });
+
+    messageElement.appendChild(picker);
+}
+
+function renderReactions(messageElement, reactions = {}) {
+    let reactionDiv = messageElement.querySelector(".reaction-display");
+
+    if (!reactionDiv) {
+        reactionDiv = document.createElement("div");
+        reactionDiv.classList.add("reaction-display");
+        messageElement.appendChild(reactionDiv);
+    }
+
+    reactionDiv.innerHTML = "";
+
+    Object.entries(reactions).forEach(([emoji, users]) => {
+        if (users.length > 0) {
+            const span = document.createElement("span");
+            span.innerText = `${emoji} ${users.length}`;
+            reactionDiv.appendChild(span);
+        }
+    });
 }
 
 window.addEventListener("DOMContentLoaded", () => {
