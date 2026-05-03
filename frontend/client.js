@@ -315,15 +315,16 @@ const append = (data, position, id) => {
 
     // Long Press Touch
     let pressTimer;
-    wrapper.addEventListener("touchstart", () => {
+    wrapper.addEventListener("touchstart", (e) => {
         pressTimer = setTimeout(() => {
-            // sab remove
             document.querySelectorAll(".message-wrapper").forEach(w => {
                 w.classList.remove("active");
             });
 
             wrapper.classList.add("active");
-        }, 400); // hold time
+
+            if (navigator.vibrate) navigator.vibrate(40);
+        }, 500);
     });
 
     wrapper.addEventListener("touchend", () => {
