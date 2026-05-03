@@ -461,16 +461,76 @@ html, body {
     display: inline-flex;
 }
 
+.message-wrapper {
+    display: flex;
+    align-items: center;
+    background: transparent;
+    gap: 6px;
+    margin: 8px 0;
+    width: 100%;
+}
+
+/* Right side (your message) */
+.message-wrapper.right {
+    justify-content: flex-end;
+}
+
+/* Left side */
+.message-wrapper.left {
+    justify-content: flex-start;
+}
+
+.message-wrapper .message {
+    min-width: 30%;
+    max-width: 70%;
+}
+
+.msg-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    opacity: 0;
+    transition: 0.2s;
+    transform: translateY(5px);
+}
+
+.message-wrapper:hover .msg-actions {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* buttons */
+.reply-btn, .react-btn, .delete-btn {
+    border: none;
+    background: transparent;
+    color: white;
+    cursor: pointer;
+    border-radius: 50%;
+    width: 26px;
+    height: 26px;
+    font-size: 12px;
+}
+
+/* positioning */
+.message-wrapper.right .msg-actions {
+    order: -1; /* LEFT side */
+}
+
+.message-wrapper.left .msg-actions {
+    order: 1; /* RIGHT side */
+}
+
 .reaction-picker {
-    position: absolute;
-    bottom: 100%;
-    right: 10px;
+    position: fixed;
     display: flex;
     gap: 6px;
+    background: #2f2f2f;
     border: 1px solid var(--border);
     border-radius: 999px;
     padding: 6px 8px;
-    z-index: 10;
+    box-shadow: var(--shadow);
+    z-index: 9999;
 }
 
 .reaction-picker button {
@@ -493,59 +553,6 @@ html, body {
     border-radius: 999px;
     padding: 1px 6px;
     font-size: 0.72rem;
-}
-
-.message-wrapper {
-    display: flex;
-    align-items: center;
-    background: transparent;
-    gap: 6px;
-    margin: 8px 0;
-}
-
-/* Right side (your message) */
-.message-wrapper.right {
-    justify-content: flex-end;
-}
-
-/* Left side */
-.message-wrapper.left {
-    justify-content: flex-start;
-}
-
-.msg-actions {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-    opacity: 0;
-    transition: 0.2s;
-    transform: translateY(5px);
-}
-
-.message-wrapper:hover .msg-actions {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-/* buttons */
-.reply-btn, .react-btn {
-    border: none;
-    background: transparent;
-    color: white;
-    cursor: pointer;
-    border-radius: 50%;
-    padding: 4px;
-    font-size: 12px;
-}
-
-/* positioning */
-.message-wrapper.right .msg-actions {
-    order: -1; /* LEFT side */
-}
-
-.message-wrapper.left .msg-actions {
-    order: 1; /* RIGHT side */
 }
 
 /* ---------- FORMS ---------- */

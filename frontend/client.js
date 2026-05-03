@@ -343,9 +343,26 @@ const append = (data, position, id) => {
         showReactionPicker(messageElement, id);
     };
 
+    // For delete button
+    const deleteBtn = document.createElement("button");
+    deleteBtn.innerText = "🗑️";
+    deleteBtn.classList.add("delete-btn");
+
+    deleteBtn.onclick = () => {
+        if (chatMode === "private") {
+            socket.emit("delete-private-message", id);
+        } else {
+            socket.emit("delete-message", id);
+        }
+    };
+
     if (position !== "system" && id) {
         actions.appendChild(replyBtn);
         actions.appendChild(reactBtn);
+
+        if (position === "right") {
+            actions.appendChild(deleteBtn);
+        }
     }
 
     // Logic
@@ -413,22 +430,6 @@ const append = (data, position, id) => {
     messageElement.appendChild(textDiv);
     messageElement.appendChild(timeDiv);
     messageElement.setAttribute('data-id', id);
-
-    // For delete button
-    const btn = document.createElement('button');
-    btn.classList.add('delete-btn');
-    btn.innerText = '🗑️';
-    btn.onclick = () => {
-        if (chatMode === "private") {
-            socket.emit("delete-private-message", id);
-        } else {
-            socket.emit("delete-message", id);
-        }
-    };
-    if(position === 'right' && id){
-        messageElement.appendChild(btn);
-    }
-
     
     // Auto scroll to bottom of container
     if(position=='right' || userAtBottom){
@@ -593,6 +594,35 @@ socket.on("message-reaction-updated", ({ id, reactions }) => {
     const msg = document.querySelector(`[data-id="${id}"]`);
     if (msg) {
         renderReactions(msg, reactions);
+    }
+});
+
+socket.on("react-message", async ({ id, emoji, username, chatMode }) => {
+    try {
+        const Model = chatMode === "private" ? PrivateMessage : Message;
+
+        const msg = await Model.findById(id);
+        if (!msg) return;
+
+        if (!msg.reactions) msg.reactions = new Map();
+
+        const users = msg.reactions.get(emoji) || [];
+
+        if (users.includes(username)) {
+            msg.reactions.set(emoji, users.filter(u => u !== username));
+        } else {
+            msg.reactions.set(emoji, [...users, username]);
+        }
+
+        await msg.save();
+
+        io.emit("message-reaction-updated", {
+            id,
+            reactions: Object.fromEntries(msg.reactions)
+        });
+
+    } catch (err) {
+        console.error("Reaction error:", err);
     }
 });
 
@@ -829,7 +859,21 @@ function showReactionPicker(messageElement, id) {
         picker.appendChild(btn);
     });
 
-    messageElement.appendChild(picker);
+    document.body.appendChild(picker);
+
+    const rect = messageElement.getBoundingClientRect();
+    picker.style.top = `${rect.top - 45}px`;
+
+    let left = rect.left;
+    if (chatMode === "private" || messageElement.classList.contains("right")) {
+        left = rect.right - 190;
+    }
+
+    picker.style.left = `${Math.max(10, left)}px`;
+
+    setTimeout(() => {
+        document.addEventListener("click", closeReactionPicker);
+    }, 0);
 }
 
 function renderReactions(messageElement, reactions = {}) {
@@ -850,6 +894,15 @@ function renderReactions(messageElement, reactions = {}) {
             reactionDiv.appendChild(span);
         }
     });
+}
+
+function closeReactionPicker(e) {
+    const picker = document.querySelector(".reaction-picker");
+
+    if (picker && !picker.contains(e.target) && !e.target.classList.contains("react-btn")) {
+        picker.remove();
+        document.removeEventListener("click", closeReactionPicker);
+    }
 }
 
 window.addEventListener("DOMContentLoaded", () => {
