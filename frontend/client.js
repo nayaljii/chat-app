@@ -597,40 +597,11 @@ socket.on("message-reaction-updated", ({ id, reactions }) => {
     }
 });
 
-socket.on("react-message", async ({ id, emoji, username, chatMode }) => {
-    try {
-        const Model = chatMode === "private" ? PrivateMessage : Message;
-
-        const msg = await Model.findById(id);
-        if (!msg) return;
-
-        if (!msg.reactions) msg.reactions = new Map();
-
-        const users = msg.reactions.get(emoji) || [];
-
-        if (users.includes(username)) {
-            msg.reactions.set(emoji, users.filter(u => u !== username));
-        } else {
-            msg.reactions.set(emoji, [...users, username]);
-        }
-
-        await msg.save();
-
-        io.emit("message-reaction-updated", {
-            id,
-            reactions: Object.fromEntries(msg.reactions)
-        });
-
-    } catch (err) {
-        console.error("Reaction error:", err);
-    }
-});
-
 // Private msg delete
 socket.on("private-message-deleted", id => {
     const msg = document.querySelector(`[data-id="${id}"]`);
     if (msg) {
-        msg.remove();
+        msg.closest(".message-wrapper")?.remove();
     }
 
     loadChatUsers();
@@ -766,7 +737,7 @@ function deleteMessage(id){
 socket.on('message-deleted', id => {
     const msg = document.querySelector(`[data-id="${id}"]`);
     if(msg){
-        msg.remove();
+        msg.closest(".message-wrapper")?.remove();
     }
 });
 

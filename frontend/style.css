@@ -298,34 +298,6 @@ html, body {
     opacity: 0.85;
 }
 
-/* delete button */
-.delete-btn {
-    position: absolute;
-    top: 8px;
-    right: 10px;
-    display: none;
-    width: 15px;
-    border: none;
-    background: transparent;
-    cursor: pointer;
-    font-size: 0.6rem;
-    transition: 0.2s ease;
-    padding: 0;
-    margin-left: auto;
-    opacity: 0.8;
-}
-
-.message:hover .delete-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.delete-btn:hover {
-    background: rgba(239,68,68,0.16);
-}
-
-
 /* ---------- TYPING ---------- */
 #typing-indicator {
     width: min(900px, calc(100% - 24px));
@@ -448,19 +420,6 @@ html, body {
     cursor: pointer;
 }
 
-.reply-btn {
-    position: relative;
-    display: none;
-    border: none;
-    background: transparent;
-    cursor: pointer;
-    color: var(--text);
-}
-
-.message:hover .reply-btn {
-    display: inline-flex;
-}
-
 .message-wrapper {
     display: flex;
     align-items: center;
@@ -502,6 +461,9 @@ html, body {
 
 /* buttons */
 .reply-btn, .react-btn, .delete-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     border: none;
     background: transparent;
     color: white;
@@ -871,10 +833,6 @@ footer {
 
     .center {
         font-size: 0.7rem;
-    }
-
-    .delete-btn {
-        font-size: .5rem;
     }
 
     #typing-indicator {
