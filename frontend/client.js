@@ -315,8 +315,10 @@ const append = (data, position, id) => {
 
     // Long Press Touch
     let pressTimer;
+    let longPressed = false;
     wrapper.addEventListener("touchstart", (e) => {
         pressTimer = setTimeout(() => {
+            longPressed = true;
             document.querySelectorAll(".message-wrapper").forEach(w => {
                 w.classList.remove("active");
             });
@@ -329,11 +331,23 @@ const append = (data, position, id) => {
 
     wrapper.addEventListener("touchend", () => {
         clearTimeout(pressTimer);
+        setTimeout(() => {
+            longPressed = false;
+        }, 100);
     });
 
     wrapper.addEventListener("touchmove", () => {
         clearTimeout(pressTimer);
+        longPressed = false;
     });
+
+    wrapper.addEventListener("click", (e) => {
+        if (longPressed) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+    });
+
     
 
     // Button
@@ -495,7 +509,7 @@ const append = (data, position, id) => {
     renderReactions(messageElement, data.reactions);
 };
 
-document.addEventListener("click", (e) => {
+document.addEventListener("pointerdown", (e) => {
     if (!e.target.closest(".message-wrapper")) {
         document.querySelectorAll(".message-wrapper").forEach(w => {
             w.classList.remove("active");
@@ -893,6 +907,19 @@ function renderReactions(messageElement, reactions = {}) {
         if (users.length > 0) {
             const span = document.createElement("span");
             span.innerText = `${emoji} ${users.length}`;
+            if (users.includes(name)) {
+                span.classList.add("my-reaction");
+            }
+
+            span.onclick = () => {
+                socket.emit("react-message", {
+                    id: messageElement.dataset.id,
+                    emoji,
+                    username: name,
+                    chatMode
+                });
+            };
+
             reactionDiv.appendChild(span);
         }
     });

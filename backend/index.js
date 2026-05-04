@@ -351,7 +351,7 @@ io.on('connection', socket => {
                 sender,
                 receiver,
                 message,
-                time: savedMsfg.time,
+                time: savedMsg.time,
                 replyTo: savedMsg.replyTo
             });
             
@@ -381,12 +381,18 @@ io.on('connection', socket => {
 
             if (!msg.reactions) msg.reactions = new Map();
 
-            const users = msg.reactions.get(emoji) || [];
+            const reactedUsers = msg.reactions.get(emoji) || [];
 
-            if (users.includes(username)) {
-                msg.reactions.set(emoji, users.filter(u => u !== username));
+            if (reactedUsers.includes(username)) {
+                const updatedUsers = reactedUsers.filter(u => u !== username);
+
+                if (updatedUsers.length === 0) {
+                    msg.reactions.delete(emoji);
+                } else {
+                    msg.reactions.set(emoji, updatedUsers);
+                }
             } else {
-                msg.reactions.set(emoji, [...users, username]);
+                msg.reactions.set(emoji, [...reactedUsers, username]);
             }
 
             await msg.save();

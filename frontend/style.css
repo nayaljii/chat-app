@@ -459,9 +459,10 @@ html, body {
 }
 
 /* Desktop */
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
     .message-wrapper:hover .msg-actions {
         opacity: 1;
+        pointer-events: auto;
         transform: translateY(0);
     }
 }
@@ -477,6 +478,7 @@ html, body {
 .message-wrapper.active .msg-actions {
     opacity: 1;
     pointer-events: auto;
+    transform: translateY(0);
 }
 
 /* buttons */
@@ -532,12 +534,22 @@ html, body {
 }
 
 .reaction-display span {
-    width: fit-content;
     background: #2f2f2f;
-    border: 1px solid var(--border);
     border-radius: 999px;
-    padding: 1px 6px;
-    font-size: 0.72rem;
+    padding: 2px 6px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.reaction-display span:hover {
+    transform: scale(1.1);
+}
+
+.my-reaction {
+    background: #10a37f;
+    color: white;
+    border: 1px solid #10a37f;
 }
 
 /* ---------- FORMS ---------- */
