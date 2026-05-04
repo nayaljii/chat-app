@@ -327,7 +327,7 @@ html, body {
     position: sticky;
     bottom: 0;
     padding: 16px 20px 22px;
-    background: linear-gradient(to top, #212121 70%, rgba(33,33,33,0.3));
+    background: linear-gradient(to top, var(--bg) 70%, rgba(33,33,33,0.3));
 }
 
 #send-container {
@@ -336,7 +336,7 @@ html, body {
     display: flex;
     align-items: center;
     gap: 12px;
-    background: #2f2f2f;
+    background: var(--panel-2);
     border: 1px solid var(--border);
     border-radius: 22px;
     padding: 10px;
@@ -394,7 +394,7 @@ html, body {
 }
 
 .highlight-msg {
-    outline: 2px solid #10a37f;
+    outline: 2px solid var(--accent);
     box-shadow: 0 0 18px rgba(16, 163, 127, 0.45);
 }
 
@@ -417,7 +417,7 @@ html, body {
 #replyPreview {
     width: min(900px, 100%);
     margin: 0 auto 8px;
-    background: #2f2f2f;
+    background: var(--panel-2);
     border-left: 4px solid var(--accent);
     padding: 8px 12px;
     border-radius: 10px;
@@ -438,7 +438,7 @@ html, body {
     align-items: center;
     background: transparent;
     gap: 6px;
-    margin: 12px 0 18px;
+    margin: 5px 0;
     width: 100%;
 }
 
@@ -455,6 +455,7 @@ html, body {
 .message-wrapper .message {
     min-width: 30%;
     max-width: 70%;
+
 }
 
 .message-wrapper .system {
@@ -501,7 +502,7 @@ html, body {
     justify-content: center;
     border: none;
     background: transparent;
-    color: white;
+    color: var(--text);
     cursor: pointer;
     border-radius: 50%;
     width: 26px;
@@ -525,11 +526,10 @@ html, body {
     position: fixed;
     display: flex;
     gap: 6px;
-    background: #2f2f2f;
+    background: var(--panel-2);
     border: 1px solid var(--border);
     border-radius: 999px;
     padding: 6px 8px;
-    box-shadow: var(--shadow);
     z-index: 9999;
 }
 
@@ -548,7 +548,6 @@ html, body {
     background: var(--panel-2);
     border-radius: 999px;
     padding: 1px 5px;
-    box-shadow: var(--shadow);
     z-index: 3;
 }
 
@@ -584,7 +583,7 @@ html, body {
 #registerForm, #loginForm, #homeForm {
     width: min(420px, calc(100% - 24px));
     margin: 60px auto;
-    background: #171717;
+    background: var(--panel);
     border: 1px solid var(--border);
     padding: 1.5rem;
     border-radius: 20px;
@@ -624,7 +623,7 @@ label {
 
 .inputopt {
     width: 100%;
-    background: #2f2f2f;
+    background: var(--panel-2);
     border: 1px solid var(--border);
     outline: none;
     font-size: 1rem;
@@ -837,7 +836,7 @@ footer {
         transform 0.34s cubic-bezier(.2,.8,.2,1),
         opacity 0.28s ease;
         box-shadow: 0 25px 60px rgba(0,0,0,0.45);
-        border: 1px solid rgba(255,255,255,0.08);
+        border: 1px solid var(--border);
         overflow: hidden;
     }
 

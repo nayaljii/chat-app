@@ -311,7 +311,7 @@ async function loadPrivateMessages(sender, receiver) {
         messages.forEach(msg => {
             if (msg.sender === name) {
                 append({
-                    name: "You",
+                    name: "",
                     message: msg.message,
                     time: msg.time,
                     replyTo: msg.replyTo,
@@ -513,7 +513,14 @@ const append = (data, position, id) => {
     timeDiv.classList.add('msg-time');
     timeDiv.innerText = formatTime(data.time);
     
-    messageElement.appendChild(nameDiv);
+    if (chatMode !== "private") {
+        const nameDiv = document.createElement('div');
+        nameDiv.classList.add('msg-name');
+        nameDiv.innerText = data.name;
+
+        messageElement.appendChild(nameDiv);
+    }
+
     messageElement.appendChild(textDiv);
     messageElement.appendChild(timeDiv);
     messageElement.setAttribute('data-id', id);
@@ -656,7 +663,7 @@ socket.on("receive-private-message", (data) => {
 
     if (data.sender === name) {
         append({
-            name: "You",
+            name: "",
             message: data.message,
             time: data.time,
             replyTo: data.replyTo,
