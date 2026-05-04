@@ -184,6 +184,29 @@ toggleChatsBtn.addEventListener("click", () => {
     }
 });
 
+// Emoji Div
+const emojiBtn = document.getElementById("emojiBtn");
+const emojiPicker = document.getElementById("emojiPicker");
+
+emojiBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    emojiPicker.style.display =
+        emojiPicker.style.display === "grid" ? "none" : "grid";
+});
+
+emojiPicker.querySelectorAll("span").forEach(emoji => {
+    emoji.addEventListener("click", () => {
+        messageInput.value += emoji.innerText;
+        messageInput.focus();
+    });
+});
+
+document.addEventListener("click", (e) => {
+    if (!emojiPicker.contains(e.target) && e.target !== emojiBtn) {
+        emojiPicker.style.display = "none";
+    }
+});
+
 // Private Chat  
 let chatMode = "group";
 let selectedUser = null;
