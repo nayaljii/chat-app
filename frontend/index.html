@@ -73,13 +73,9 @@
                     <span id="replyText"></span>
                     <button type="button" id="cancelReply">×</button>
                 </div>
-                <div id="emojiPicker" class="emoji-picker" style="display:none;">
-                    <span>😀</span><span>😂</span><span>😍</span><span>😎</span>
-                    <span>👍</span><span>❤️</span><span>🔥</span><span>🎉</span>
-                    <span>😢</span><span>😮</span><span>🙏</span><span>💯</span>
-                </div>
                 <form action="#" id="send-container">
-                    <button type="button" id="emojiBtn" class="emoji-btn">😊</button>
+                    <button type="button" id="emojiBtn" class="emoji-btn"><i class="ph ph-smiley-sticker"></i></button>
+                    <div id="emojiPickerContainer"></div>
                     <input type="text" name="messageInp" id="messageInp" placeholder="Type a message..." autocomplete="off">
                     <button class="okbtn" type="submit" aria-label="Send">
                         <lottie-player
@@ -94,6 +90,7 @@
             </div>
         </section>
     </main>
+    <script src="https://cdn.jsdelivr.net/npm/emoji-mart@latest/dist/browser.js"></script>
     <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
 </body>
 </html>

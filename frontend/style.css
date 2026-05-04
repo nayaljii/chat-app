@@ -579,33 +579,15 @@ html, body {
     outline: none
 }
 
-.emoji-btn {
-    width: 40px;
-    height: 40px;
-    border: none;
-    background: transparent;
-    color: white;
-    font-size: 22px;
-    cursor: pointer;
+#emojiPickerContainer {
+    position: absolute;
+    bottom: 60px;
+    left: 10px;
+    z-index: 1000;
 }
 
-.emoji-picker {
-    width: min(320px, 90%);
-    margin: 0 auto 8px;
-    background: var(--panel-2);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 10px;
-    display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    gap: 8px;
-    box-shadow: var(--shadow);
-}
-
-.emoji-picker span {
-    cursor: pointer;
-    font-size: 22px;
-    text-align: center;
+emoji-picker {
+    --background: #1e1e1e;
 }
 
 /* ---------- FORMS ---------- */

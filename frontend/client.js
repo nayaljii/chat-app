@@ -186,19 +186,37 @@ toggleChatsBtn.addEventListener("click", () => {
 
 // Emoji Div
 const emojiBtn = document.getElementById("emojiBtn");
-const emojiPicker = document.getElementById("emojiPicker");
+const pickerContainer = document.getElementById("emojiPickerContainer");
+
+let pickerOpen = false;
 
 emojiBtn.addEventListener("click", (e) => {
     e.stopPropagation();
-    emojiPicker.style.display =
-        emojiPicker.style.display === "grid" ? "none" : "grid";
+
+    if (!pickerOpen) {
+        const picker = new EmojiMart.Picker({
+            onEmojiSelect: (emoji) => {
+                messageInput.value += emoji.native;
+                messageInput.focus();
+            },
+            theme: "dark"
+        });
+
+        pickerContainer.innerHTML = "";
+        pickerContainer.appendChild(picker);
+
+        pickerContainer.style.display = "block";
+        pickerOpen = true;
+    } else {
+        pickerContainer.style.display = "none";
+        pickerOpen = false;
+    }
 });
 
-emojiPicker.querySelectorAll("span").forEach(emoji => {
-    emoji.addEventListener("click", () => {
-        messageInput.value += emoji.innerText;
-        messageInput.focus();
-    });
+// outside click close
+document.addEventListener("click", () => {
+    pickerContainer.style.display = "none";
+    pickerOpen = false;
 });
 
 document.addEventListener("click", (e) => {
