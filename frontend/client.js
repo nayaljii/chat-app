@@ -991,7 +991,7 @@ function renderReactions(messageElement, reactions = {}) {
     }
 }
 
-function showReactionUsers(reactions) {
+function showReactionUsers(reactions, messageId) {
     const old = document.querySelector(".reaction-users-popup");
     if (old) old.remove();
 
