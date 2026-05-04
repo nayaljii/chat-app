@@ -1011,6 +1011,7 @@ const pickerContainer = document.getElementById("emojiPickerContainer");
 const emojiPicker = document.getElementById("emojiPicker");
 
 let pickerOpen = false;
+let ignoreNextInputFocus = false;
 
 function closeEmojiPicker() {
     pickerContainer.style.display = "none";
@@ -1036,22 +1037,38 @@ emojiBtn.addEventListener("click", (e) => {
     }
 });
 
-// ✅ emoji select
 emojiPicker.addEventListener("emoji-click", (event) => {
-    messageInput.value += event.detail.unicode;
+    ignoreNextInputFocus = true;
+
+    const emoji = event.detail.unicode;
+    const start = messageInput.selectionStart ?? messageInput.value.length;
+    const end = messageInput.selectionEnd ?? messageInput.value.length;
+
+    messageInput.value =
+        messageInput.value.slice(0, start) +
+        emoji +
+        messageInput.value.slice(end);
+
+    const cursorPos = start + emoji.length;
     messageInput.focus();
+    messageInput.setSelectionRange(cursorPos, cursorPos);
+
+    setTimeout(() => {
+        ignoreNextInputFocus = false;
+    }, 100);
 });
 
-// input focus → close
 messageInput.addEventListener("focus", () => {
+    if (ignoreNextInputFocus) return;
     if (pickerOpen) closeEmojiPicker();
 });
 
-// outside click → close
 document.addEventListener("click", (e) => {
     const path = e.composedPath();
+
     if (path.includes(pickerContainer)) return;
     if (path.includes(emojiBtn)) return;
+
     if (pickerOpen) closeEmojiPicker();
 });
 
