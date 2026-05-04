@@ -215,6 +215,19 @@ html, body {
     background: transparent;
 }
 
+.date-separator {
+    text-align: center;
+    margin: 10px 0;
+    font-size: 0.75rem;
+    color: var(--muted);
+    background: var(--panel-2);
+    padding: 4px 10px;
+    border-radius: 10px;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 .message {
     min-width: 30%;
     max-width: 70%;

@@ -265,6 +265,40 @@ async function loadChatUsers() {
     }
 }
 
+async function loadMessages(){
+    try{
+        const res = await fetch(`${BASE_URL}/messages`);
+
+        const messages = await res.json();
+        messageContainer.innerHTML = ""; //clear old
+        
+        lastDateLabel = "";
+
+        messages.forEach(msg => {
+            if(msg.name == name){
+                append({
+                    name: "You",
+                    message: msg.message,
+                    time: msg.time,
+                    replyTo: msg.replyTo,
+                    reactions: msg.reactions
+                }, 'right', msg._id);
+            }
+            else{
+                append({
+                    name: msg.name,
+                    message: msg.message,
+                    time: msg.time,
+                    replyTo: msg.replyTo,
+                    reactions: msg.reactions
+                }, 'left', msg._id);
+            }
+        });
+    }catch(err){
+        console.error("Error loading messages:", err);
+    }
+}
+
 // Private Chat Load
 async function loadPrivateMessages(sender, receiver) {
     try {
@@ -272,6 +306,8 @@ async function loadPrivateMessages(sender, receiver) {
         const messages = await res.json();
 
         messageContainer.innerHTML = "";
+        
+        lastDateLabel = "";
 
         messages.forEach(msg => {
             if (msg.sender === name) {
@@ -292,7 +328,6 @@ async function loadPrivateMessages(sender, receiver) {
                 }, "left", msg._id);
             }
         });
-
     } catch (err) {
         console.error("Private messages load error:", err);
     }
@@ -300,6 +335,20 @@ async function loadPrivateMessages(sender, receiver) {
 
 // Append msg
 const append = (data, position, id) => {
+
+    // Date Format
+    let lastDateLabel = "";
+    const currentLabel = formatDateLabel(data.time);
+
+    if (currentLabel !== lastDateLabel) {
+        const dateDiv = document.createElement("div");
+        dateDiv.classList.add("date-separator");
+        dateDiv.innerText = currentLabel;
+
+        messageContainer.appendChild(dateDiv);
+
+        lastDateLabel = currentLabel;
+    }
 
     // Button Div
     const wrapper = document.createElement("div");
@@ -817,36 +866,36 @@ function formatTime(date) {
     return `${hours}:${minutes} ${ampm}`;
 }
 
-async function loadMessages(){
-    try{
-        const res = await fetch(`${BASE_URL}/messages`);
+// Date formate function
+function formatDateLabel(date) {
+    const d = new Date(date);
+    const today = new Date();
+    const yesterday = new Date();
 
-        const messages = await res.json();
-        messageContainer.innerHTML = ""; //clear old
+    yesterday.setDate(today.getDate() - 1);
 
-    messages.forEach(msg => {
-        if(msg.name == name){
-            append({
-                name: "You",
-                message: msg.message,
-                time: msg.time,
-                replyTo: msg.replyTo,
-                reactions: msg.reactions
-            }, 'right', msg._id);
-        }
-        else{
-            append({
-                name: msg.name,
-                message: msg.message,
-                time: msg.time,
-                replyTo: msg.replyTo,
-                reactions: msg.reactions
-            }, 'left', msg._id);
-        }
-    });
-    }catch(err){
-        console.error("Error loading messages:", err);
+    const isToday =
+        d.toDateString() === today.toDateString();
+
+    const isYesterday =
+        d.toDateString() === yesterday.toDateString();
+
+    if (isToday) return "Today";
+    if (isYesterday) return "Yesterday";
+
+    const diffDays = Math.floor(
+        (today - d) / (1000 * 60 * 60 * 24)
+    );
+
+    if (diffDays < 7) {
+        return d.toLocaleDateString("en-US", { weekday: "long" });
     }
+
+    return d.toLocaleDateString("en-IN", {
+        day: "numeric",
+        month: "short",
+        year: "numeric"
+    });
 }
 
 // Reaction Function
