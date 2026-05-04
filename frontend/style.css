@@ -580,26 +580,17 @@ html, body {
 }
 
 #emojiPickerContainer {
-    position: absolute;
-    bottom: 75px;
-    left: 0;
-    width: 100%;
+    width: min(900px, 100%);
+    margin: 0 auto 8px;
     display: none;
-    z-index: 999;
 }
 
 #emojiPickerContainer emoji-picker {
-    width: min(900px, 100%);
-    margin: auto;
-    display: block;
-    height: 260px;
-    border-radius: 16px;
-}
-
-.emoji-btn i {
-    background: transparent;
-    width: 50px;
-    height: 50px;
+    width: 100%;
+    height: 230px;
+    --background: #171717;
+    --border-color: rgba(255,255,255,0.08);
+    --input-border-color: rgba(255,255,255,0.08);
 }
 
 /* ---------- FORMS ---------- */
@@ -948,20 +939,13 @@ footer {
     }
 
     #emojiPickerContainer {
-        position: fixed;
-        bottom: 70px;
-        left: 0;
         width: 100%;
-        display: none;
-        z-index: 999;
-        padding: 0 5px;
-        border-radius: 16px;
+        margin: 0 auto 8px;
     }
 
     #emojiPickerContainer emoji-picker {
-        width: 100%;
-        height: 270px;
-        border-radius: 16px;
+        height: 220px !important;
+        max-height: 220px !important;
     }
 }
 
