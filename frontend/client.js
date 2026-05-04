@@ -1005,59 +1005,57 @@ function closeReactionPicker(e) {
     }
 }
 
-window.addEventListener("DOMContentLoaded", () => {
 
-    const emojiBtn = document.getElementById("emojiBtn");
-    const pickerContainer = document.getElementById("emojiPickerContainer");
-    const emojiPicker = document.getElementById("emojiPicker");
+const emojiBtn = document.getElementById("emojiBtn");
+const pickerContainer = document.getElementById("emojiPickerContainer");
+const emojiPicker = document.getElementById("emojiPicker");
 
-    let pickerOpen = false;
+let pickerOpen = false;
 
-    function closeEmojiPicker() {
-        pickerContainer.style.display = "none";
-        pickerOpen = false;
-        emojiBtn.innerHTML = `<i class="ph ph-smiley-sticker"></i>`;
-    }
+function closeEmojiPicker() {
+    pickerContainer.style.display = "none";
+    pickerOpen = false;
+    emojiBtn.innerHTML = `<i class="ph ph-smiley-sticker"></i>`;
+}
 
-    function openEmojiPicker() {
-        pickerContainer.style.display = "block";
-        pickerOpen = true;
-        emojiBtn.innerHTML = `<i class="ph ph-keyboard"></i>`;
-    }
+function openEmojiPicker() {
+    pickerContainer.style.display = "block";
+    pickerOpen = true;
+    emojiBtn.innerHTML = `<i class="ph ph-keyboard"></i>`;
+}
 
-    emojiBtn.addEventListener("click", (e) => {
-        e.preventDefault();
-        e.stopPropagation();
+emojiBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
 
-        if (pickerOpen) {
-            closeEmojiPicker();
-            messageInput.focus();
-        } else {
-            openEmojiPicker();
-        }
-    });
-
-    // ✅ emoji select
-    emojiPicker.addEventListener("emoji-click", (event) => {
-        messageInput.value += event.detail.unicode;
+    if (pickerOpen) {
+        closeEmojiPicker();
         messageInput.focus();
-    });
+    } else {
+        openEmojiPicker();
+    }
+});
 
-    // input focus → close
-    messageInput.addEventListener("focus", () => {
-        if (pickerOpen) closeEmojiPicker();
-    });
+// ✅ emoji select
+emojiPicker.addEventListener("emoji-click", (event) => {
+    messageInput.value += event.detail.unicode;
+    messageInput.focus();
+});
 
-    // outside click → close
-    document.addEventListener("click", (e) => {
-        const path = e.composedPath();
+// input focus → close
+messageInput.addEventListener("focus", () => {
+    if (pickerOpen) closeEmojiPicker();
+});
 
-        if (path.includes(pickerContainer)) return;
-        if (path.includes(emojiBtn)) return;
+// outside click → close
+document.addEventListener("click", (e) => {
+    const path = e.composedPath();
+    if (path.includes(pickerContainer)) return;
+    if (path.includes(emojiBtn)) return;
+    if (pickerOpen) closeEmojiPicker();
+});
 
-        if (pickerOpen) closeEmojiPicker();
-    });
-
+window.addEventListener("DOMContentLoaded", () => {
     loadMessages();
     loadRegisteredUsers();
     loadChatUsers();
