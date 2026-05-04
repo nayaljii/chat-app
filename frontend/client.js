@@ -1007,7 +1007,6 @@ function closeReactionPicker(e) {
 
 window.addEventListener("DOMContentLoaded", () => {
 
-    // Emoji Picker
     const emojiBtn = document.getElementById("emojiBtn");
     const pickerContainer = document.getElementById("emojiPickerContainer");
     const emojiPicker = document.getElementById("emojiPicker");
@@ -1026,8 +1025,7 @@ window.addEventListener("DOMContentLoaded", () => {
         emojiBtn.innerHTML = `<i class="ph ph-keyboard"></i>`;
     }
 
-    emojiPicker.addEventListener("emoji-click", (event) => {
-
+    emojiBtn.addEventListener("click", (e) => {
         e.preventDefault();
         e.stopPropagation();
 
@@ -1039,16 +1037,18 @@ window.addEventListener("DOMContentLoaded", () => {
         }
     });
 
+    // ✅ emoji select
     emojiPicker.addEventListener("emoji-click", (event) => {
         messageInput.value += event.detail.unicode;
         messageInput.focus();
-        openEmojiPicker();
     });
 
+    // input focus → close
     messageInput.addEventListener("focus", () => {
         if (pickerOpen) closeEmojiPicker();
     });
 
+    // outside click → close
     document.addEventListener("click", (e) => {
         const path = e.composedPath();
 
