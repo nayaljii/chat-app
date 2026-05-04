@@ -580,17 +580,14 @@ html, body {
 }
 
 #emojiPickerContainer {
-    position: absolute;
-    bottom: 0px;
-    left: 0;
-    width: 100%;
+    width: min(900px, 100%);
+    margin: 0 auto 8px;
     display: none;
-    z-index: 1000;
 }
 
 #emojiPickerContainer em-emoji-picker {
     width: 100% !important;
-    height: 250px !important; /* 👈 height control */
+    height: 250px !important;
     max-height: 250px;
 }
 
@@ -938,9 +935,19 @@ footer {
         width: 44px;
         height: 44px;
     }
+
+    #emojiPickerContainer {
+        width: 100%;
+        margin: 0 auto 8px;
     }
 
-    @media (min-width: 901px) {
+    #emojiPickerContainer em-emoji-picker {
+        height: 220px !important;
+        max-height: 220px !important;
+    }
+}
+
+@media (min-width: 901px) {
     .mobile-topbar {
         display: none;
     }
