@@ -189,39 +189,51 @@ const emojiBtn = document.getElementById("emojiBtn");
 const pickerContainer = document.getElementById("emojiPickerContainer");
 
 let pickerOpen = false;
+let pickerInstance = null;
 
+// open emoji picker
 emojiBtn.addEventListener("click", (e) => {
     e.stopPropagation();
 
     if (!pickerOpen) {
-        const picker = new EmojiMart.Picker({
-            onEmojiSelect: (emoji) => {
-                messageInput.value += emoji.native;
-                messageInput.focus();
-            },
-            theme: "dark"
-        });
+        if (!pickerInstance) {
+            pickerInstance = new EmojiMart.Picker({
+                onEmojiSelect: (emoji) => {
+                    messageInput.value += emoji.native; // ✔ multiple emoji add
+                    messageInput.focus();
+                },
+                theme: "dark"
+            });
 
-        pickerContainer.innerHTML = "";
-        pickerContainer.appendChild(picker);
+            pickerContainer.innerHTML = "";
+            pickerContainer.appendChild(pickerInstance);
+        }
 
         pickerContainer.style.display = "block";
         pickerOpen = true;
+
+        emojiBtn.innerHTML = `<i class="ph ph-keyboard"></i>`;
     } else {
         pickerContainer.style.display = "none";
         pickerOpen = false;
+
+        emojiBtn.innerHTML = `<i class="ph ph-smiley-sticker"></i>`;
+        messageInput.focus();
     }
 });
 
-// outside click close
-document.addEventListener("click", () => {
+messageInput.addEventListener("focus", () => {
     pickerContainer.style.display = "none";
     pickerOpen = false;
+    emojiBtn.innerHTML = `<i class="ph ph-smiley-sticker"></i>`;
 });
 
+// outside click close
 document.addEventListener("click", (e) => {
-    if (!emojiPicker.contains(e.target) && e.target !== emojiBtn) {
-        emojiPicker.style.display = "none";
+    if (!pickerContainer.contains(e.target) && e.target !== emojiBtn) {
+        pickerContainer.style.display = "none";
+        pickerOpen = false;
+        emojiBtn.innerHTML = `<i class="ph ph-smiley-sticker"></i>`;
     }
 });
 
@@ -628,6 +640,10 @@ form.addEventListener('submit', (e) =>{
     
     const message = messageInput.value.trim();  //remove extra spaces form start and end
     
+    pickerContainer.style.display = "none";
+    pickerOpen = false;
+    emojiBtn.innerHTML = `<i class="ph ph-smiley-sticker"></i>`;
+
     // msg empty check
     if(message === ""){
         return;

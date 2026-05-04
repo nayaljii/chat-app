@@ -581,13 +581,17 @@ html, body {
 
 #emojiPickerContainer {
     position: absolute;
-    bottom: 60px;
-    left: 10px;
+    bottom: 0px;
+    left: 0;
+    width: 100%;
+    display: none;
     z-index: 1000;
 }
 
-emoji-picker {
-    --background: #1e1e1e;
+#emojiPickerContainer em-emoji-picker {
+    width: 100% !important;
+    height: 250px !important; /* 👈 height control */
+    max-height: 250px;
 }
 
 /* ---------- FORMS ---------- */
