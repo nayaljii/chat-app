@@ -73,7 +73,9 @@
                     <span id="replyText"></span>
                     <button type="button" id="cancelReply">×</button>
                 </div>
-                <div id="emojiPickerContainer"></div>
+                <div id="emojiPickerContainer">
+                    <emoji-picker id="emojiPicker"></emoji-picker>
+                </div>
                 <form action="#" id="send-container">
                     <button type="button" id="emojiBtn" class="emoji-btn"><i class="ph ph-smiley-sticker"></i></button>
                     <input type="text" name="messageInp" id="messageInp" placeholder="Type a message..." autocomplete="off">
@@ -90,7 +92,7 @@
             </div>
         </section>
     </main>
-    <script src="https://cdn.jsdelivr.net/npm/emoji-mart@latest/dist/browser.js"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@latest/index.js"></script>
     <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
 </body>
 </html>

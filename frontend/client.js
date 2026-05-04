@@ -184,56 +184,52 @@ toggleChatsBtn.addEventListener("click", () => {
     }
 });
 
-// Emoji Div
+// Emoji Picker
 const emojiBtn = document.getElementById("emojiBtn");
 const pickerContainer = document.getElementById("emojiPickerContainer");
+const emojiPicker = document.getElementById("emojiPicker");
 
 let pickerOpen = false;
-let pickerInstance = null;
 
-// open emoji picker
-emojiBtn.addEventListener("click", (e) => {
-    e.stopPropagation();
-
-    if (!pickerOpen) {
-        if (!pickerInstance) {
-            pickerInstance = new EmojiMart.Picker({
-                onEmojiSelect: (emoji) => {
-                    messageInput.value += emoji.native; // ✔ multiple emoji add
-                    messageInput.focus();
-                },
-                theme: "dark"
-            });
-
-            pickerContainer.innerHTML = "";
-            pickerContainer.appendChild(pickerInstance);
-        }
-
-        pickerContainer.style.display = "block";
-        pickerOpen = true;
-
-        emojiBtn.innerHTML = `<i class="ph ph-keyboard"></i>`;
-    } else {
-        pickerContainer.style.display = "none";
-        pickerOpen = false;
-
-        emojiBtn.innerHTML = `<i class="ph ph-smiley-sticker"></i>`;
-        messageInput.focus();
-    }
-});
-
-messageInput.addEventListener("focus", () => {
+function closeEmojiPicker() {
     pickerContainer.style.display = "none";
     pickerOpen = false;
     emojiBtn.innerHTML = `<i class="ph ph-smiley-sticker"></i>`;
+}
+
+function openEmojiPicker() {
+    pickerContainer.style.display = "block";
+    pickerOpen = true;
+    emojiBtn.innerHTML = `<i class="ph ph-keyboard"></i>`;
+}
+
+emojiBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+
+    if (pickerOpen) {
+        closeEmojiPicker();
+        messageInput.focus();
+    } else {
+        openEmojiPicker();
+    }
 });
 
-// outside click close
+emojiPicker.addEventListener("emoji-click", (event) => {
+    messageInput.value += event.detail.unicode;
+    messageInput.focus();
+});
+
+messageInput.addEventListener("focus", () => {
+    closeEmojiPicker();
+});
+
 document.addEventListener("click", (e) => {
-    if (!pickerContainer.contains(e.target) && e.target !== emojiBtn) {
-        pickerContainer.style.display = "none";
-        pickerOpen = false;
-        emojiBtn.innerHTML = `<i class="ph ph-smiley-sticker"></i>`;
+    if (
+        pickerOpen &&
+        !pickerContainer.contains(e.target) &&
+        !e.target.closest("#emojiBtn")
+    ) {
+        closeEmojiPicker();
     }
 });
 
