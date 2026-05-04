@@ -601,6 +601,10 @@ html, body {
     height: 50px;
 }
 
+.emoji-btn i {
+    font-size: 24px;
+}
+
 /* ---------- FORMS ---------- */
 #registerForm, #loginForm, #homeForm {
     width: min(420px, calc(100% - 24px));
