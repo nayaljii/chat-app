@@ -595,6 +595,8 @@ html, body {
 
 .emoji-btn {
     background: transparent;
+    border: none;
+    color: var(--text);
 }
 
 /* ---------- FORMS ---------- */
