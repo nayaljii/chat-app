@@ -422,7 +422,8 @@ const append = (data, position, id) => {
     const reactBtn = document.createElement("button");
     reactBtn.innerHTML = `<i class="ph ph-smiley"></i>`;
     reactBtn.classList.add("react-btn");
-    reactBtn.onclick = () => {
+    reactBtn.onclick = (e) => {
+        e.stopPropagation();
         showReactionPicker(messageElement, id);
     };
 
@@ -937,7 +938,7 @@ function showReactionPicker(messageElement, id) {
     picker.style.left = `${Math.max(10, left)}px`;
 
     setTimeout(() => {
-        document.addEventListener("click", closeReactionPicker);
+        document.addEventListener("pointerdown", closeReactionPicker);
     }, 0);
 }
 
@@ -965,7 +966,8 @@ function renderReactions(messageElement, reactions = {}) {
                 span.classList.add("my-reaction");
             }
 
-            span.onclick = () => {
+            span.onclick = (e) => {
+                e.stopPropagation();
                 showReactionPicker(messageElement, messageElement.dataset.id);
             };
 
@@ -981,9 +983,14 @@ function renderReactions(messageElement, reactions = {}) {
 function closeReactionPicker(e) {
     const picker = document.querySelector(".reaction-picker");
 
-    if (picker && !picker.contains(e.target) && !e.target.classList.contains("react-btn")) {
+    if (
+        picker &&
+        !picker.contains(e.target) &&
+        !e.target.closest(".react-btn") &&
+        !e.target.closest(".reaction-display")
+    ) {
         picker.remove();
-        document.removeEventListener("click", closeReactionPicker);
+        document.removeEventListener("pointerdown", closeReactionPicker);
     }
 }
 

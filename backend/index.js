@@ -381,18 +381,27 @@ io.on('connection', socket => {
 
             if (!msg.reactions) msg.reactions = new Map();
 
-            const reactedUsers = msg.reactions.get(emoji) || [];
+            let alreadyReactedSameEmoji = false;
 
-            if (reactedUsers.includes(username)) {
-                const updatedUsers = reactedUsers.filter(u => u !== username);
+            for (const [oldEmoji, users] of msg.reactions.entries()) {
+                if (users.includes(username)) {
+                    if (oldEmoji === emoji) {
+                        alreadyReactedSameEmoji = true;
+                    }
 
-                if (updatedUsers.length === 0) {
-                    msg.reactions.delete(emoji);
-                } else {
-                    msg.reactions.set(emoji, updatedUsers);
+                    const updatedUsers = users.filter(u => u !== username);
+
+                    if (updatedUsers.length === 0) {
+                        msg.reactions.delete(oldEmoji);
+                    } else {
+                        msg.reactions.set(oldEmoji, updatedUsers);
+                    }
                 }
-            } else {
-                msg.reactions.set(emoji, [...reactedUsers, username]);
+            }
+
+            if (!alreadyReactedSameEmoji) {
+                const currentUsers = msg.reactions.get(emoji) || [];
+                msg.reactions.set(emoji, [...currentUsers, username]);
             }
 
             await msg.save();
@@ -403,7 +412,7 @@ io.on('connection', socket => {
             });
 
         } catch (err) {
-                console.error("Reaction error:", err);
+            console.error("Reaction error:", err);
         }
     });
 });
