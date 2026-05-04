@@ -1013,12 +1013,14 @@ function showReactionUsers(reactions) {
             if (user === name) {
                 row.classList.add("my-reaction-row");
 
-                row.onclick = () => {
+                row.onclick = (e) => {
+                    e.stopPropagation();
+
                     socket.emit("react-message", {
                         id: messageId,
-                        emoji,
+                        emoji: emoji,
                         username: name,
-                        chatMode
+                        chatMode: chatMode
                     });
 
                     popup.remove();
