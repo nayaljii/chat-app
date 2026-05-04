@@ -22,6 +22,7 @@ const form = document.getElementById('send-container');
 const messageContainer = document.querySelector('.container');
 const messageInput = document.getElementById('messageInp');
 
+let lastDateKey = "";
 let replyingTo = null;
 let hasUserInteracted = false;
 
@@ -271,8 +272,7 @@ async function loadMessages(){
 
         const messages = await res.json();
         messageContainer.innerHTML = ""; //clear old
-        
-        lastDateLabel = "";
+        lastDateKey = "";
 
         messages.forEach(msg => {
             if(msg.name == name){
@@ -306,8 +306,7 @@ async function loadPrivateMessages(sender, receiver) {
         const messages = await res.json();
 
         messageContainer.innerHTML = "";
-        
-        lastDateLabel = "";
+        lastDateKey = "";
 
         messages.forEach(msg => {
             if (msg.sender === name) {
@@ -337,17 +336,18 @@ async function loadPrivateMessages(sender, receiver) {
 const append = (data, position, id) => {
 
     // Date Format
-    let lastDateLabel = "";
-    const currentLabel = formatDateLabel(data.time);
+    if (position !== "system" && data.time) {
+        const msgDate = new Date(data.time);
+        const currentDateKey = msgDate.toDateString();
 
-    if (currentLabel !== lastDateLabel) {
-        const dateDiv = document.createElement("div");
-        dateDiv.classList.add("date-separator");
-        dateDiv.innerText = currentLabel;
+        if (currentDateKey !== lastDateKey) {
+            const dateDiv = document.createElement("div");
+            dateDiv.classList.add("date-separator");
+            dateDiv.innerText = formatDateLabel(data.time);
 
-        messageContainer.appendChild(dateDiv);
-
-        lastDateLabel = currentLabel;
+            messageContainer.appendChild(dateDiv);
+            lastDateKey = currentDateKey;
+        }
     }
 
     // Button Div
