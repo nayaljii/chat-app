@@ -203,14 +203,14 @@ function openEmojiPicker() {
     emojiBtn.innerHTML = `<i class="ph ph-keyboard"></i>`;
 }
 
-emojiBtn.addEventListener("click", (e) => {
-    e.stopPropagation();
+document.addEventListener("click", (e) => {
+
+    if (pickerContainer.contains(e.target)) return;
+
+    if (e.target.closest("#emojiBtn")) return;
 
     if (pickerOpen) {
         closeEmojiPicker();
-        messageInput.focus();
-    } else {
-        openEmojiPicker();
     }
 });
 
