@@ -979,7 +979,7 @@ function renderReactions(messageElement, reactions = {}) {
 
             span.onclick = (e) => {
                 e.stopPropagation();
-                showReactionPicker(messageElement, messageElement.dataset.id);
+                showReactionUsers(reactions, messageElement.dataset.id);
             };
 
             reactionDiv.appendChild(span);
@@ -988,6 +988,64 @@ function renderReactions(messageElement, reactions = {}) {
 
     if (reactionDiv.innerHTML === "") {
         reactionDiv.remove();
+    }
+}
+
+function showReactionUsers(reactions) {
+    const old = document.querySelector(".reaction-users-popup");
+    if (old) old.remove();
+
+    const popup = document.createElement("div");
+    popup.classList.add("reaction-users-popup");
+
+    Object.entries(reactions).forEach(([emoji, users]) => {
+        if (users.length === 0) return;
+
+        users.forEach(user => {
+            const row = document.createElement("div");
+            row.classList.add("reaction-user-row");
+
+            row.innerHTML = `
+                <span class="emoji">${emoji}</span>
+                <span class="users">${user === name ? "You" : user}</span>
+            `;
+
+            if (user === name) {
+                row.classList.add("my-reaction-row");
+
+                row.onclick = () => {
+                    socket.emit("react-message", {
+                        id: messageId,
+                        emoji,
+                        username: name,
+                        chatMode
+                    });
+
+                    popup.remove();
+                };
+            }
+            popup.appendChild(row);
+        });
+    });
+
+    document.body.appendChild(popup);
+
+    // center popup
+    popup.style.top = "50%";
+    popup.style.left = "50%";
+    popup.style.transform = "translate(-50%, -50%)";
+
+    setTimeout(() => {
+        document.addEventListener("click", closeReactionUsers);
+    }, 0);
+}
+
+function closeReactionUsers(e) {
+    const popup = document.querySelector(".reaction-users-popup");
+
+    if (popup && !popup.contains(e.target)) {
+        popup.remove();
+        document.removeEventListener("click", closeReactionUsers);
     }
 }
 
