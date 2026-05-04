@@ -546,7 +546,6 @@ html, body {
     display: flex;
     gap: 2px;
     background: var(--panel-2);
-    border: 1px solid var(--border);
     border-radius: 999px;
     padding: 1px 5px;
     box-shadow: var(--shadow);
@@ -554,11 +553,11 @@ html, body {
 }
 
 .right .reaction-display {
-    left: 10px;
+    right: 10px;
 }
 
 .left .reaction-display {
-    right: 10px;
+    left: 10px;
 }
 
 .reaction-display span {
@@ -573,8 +572,12 @@ html, body {
     transform: scale(1.1);
 }
 
+.reaction-display:empty {
+    display: none;
+}
+
 .my-reaction {
-    outline: 1px solid var(--accent);
+    outline: none
 }
 
 /* ---------- FORMS ---------- */

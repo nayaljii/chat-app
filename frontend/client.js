@@ -944,6 +944,11 @@ function showReactionPicker(messageElement, id) {
 function renderReactions(messageElement, reactions = {}) {
     let reactionDiv = messageElement.querySelector(".reaction-display");
 
+    if (!reactions || Object.keys(reactions).length === 0) {
+        if (reactionDiv) reactionDiv.remove();
+        return;
+    }
+
     if (!reactionDiv) {
         reactionDiv = document.createElement("div");
         reactionDiv.classList.add("reaction-display");
@@ -961,17 +966,16 @@ function renderReactions(messageElement, reactions = {}) {
             }
 
             span.onclick = () => {
-                socket.emit("react-message", {
-                    id: messageElement.dataset.id,
-                    emoji,
-                    username: name,
-                    chatMode
-                });
+                showReactionPicker(messageElement, messageElement.dataset.id);
             };
 
             reactionDiv.appendChild(span);
         }
     });
+
+    if (reactionDiv.innerHTML === "") {
+        reactionDiv.remove();
+    }
 }
 
 function closeReactionPicker(e) {
