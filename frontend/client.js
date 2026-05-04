@@ -203,34 +203,36 @@ function openEmojiPicker() {
     emojiBtn.innerHTML = `<i class="ph ph-keyboard"></i>`;
 }
 
-document.addEventListener("click", (e) => {
+emojiPicker.addEventListener("emoji-click", (event) => {
 
-    if (pickerContainer.contains(e.target)) return;
-
-    if (e.target.closest("#emojiBtn")) return;
+    e.preventDefault();
+    e.stopPropagation();
 
     if (pickerOpen) {
         closeEmojiPicker();
+        messageInput.focus();
+    } else {
+        openEmojiPicker();
     }
 });
 
 emojiPicker.addEventListener("emoji-click", (event) => {
     messageInput.value += event.detail.unicode;
     messageInput.focus();
+    openEmojiPicker();
 });
 
 messageInput.addEventListener("focus", () => {
-    closeEmojiPicker();
+    if (pickerOpen) closeEmojiPicker();
 });
 
 document.addEventListener("click", (e) => {
-    if (
-        pickerOpen &&
-        !pickerContainer.contains(e.target) &&
-        !e.target.closest("#emojiBtn")
-    ) {
-        closeEmojiPicker();
-    }
+    const path = e.composedPath();
+
+    if (path.includes(pickerContainer)) return;
+    if (path.includes(emojiBtn)) return;
+
+    if (pickerOpen) closeEmojiPicker();
 });
 
 // Private Chat  
