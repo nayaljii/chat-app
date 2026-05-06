@@ -37,7 +37,7 @@ app.use(cors({
 
 app.use(express.static(path.join(__dirname, "../frontend")));
 
-// Open App Chat button
+// Vish'sUp-style chat list API
 app.get("/chat-list/:username", async (req, res) => {
     try {
         const { username } = req.params;
@@ -216,39 +216,6 @@ function getPrivateRoom(user1, user2) {
     return [user1, user2].sort().join("_");
 }
 
-// Private Chat
-app.get("/private/chats/:username", async (req, res) => {
-    try {
-        const { username } = req.params;
-
-        const messages = await PrivateMessage.find({
-            $or: [
-                { sender: username },
-                { receiver: username }
-            ]
-        }).sort({ time: -1 });
-
-        const chatUsersMap = new Map();
-
-        messages.forEach(msg => {
-            const otherUser = msg.sender === username ? msg.receiver : msg.sender;
-
-            if (!chatUsersMap.has(otherUser)) {
-                chatUsersMap.set(otherUser, {
-                    username: otherUser,
-                    lastMessage: msg.message,
-                    time: msg.time
-                });
-            }
-        });
-
-        res.json(Array.from(chatUsersMap.values()));
-    } catch (err) {
-        console.error("Private chat users fetch error:", err);
-        res.status(500).json({ error: "Failed to fetch private chats" });
-    }
-});
-
 // Private Message API
 app.get("/private/messages/:user1/:user2", async (req, res) => {
     try {
@@ -264,6 +231,15 @@ app.get("/private/messages/:user1/:user2", async (req, res) => {
     }
 });
 
+function emitOnlineUsers() {
+    const usersList = Object.keys(onlineUsers).map(username => ({
+        name: username,
+        id: onlineUsers[username]
+    }));
+
+    io.emit('update-users', usersList);
+}
+
 // Socket.io
 const io = new Server(server, {
     cors: {
@@ -276,29 +252,27 @@ const io = new Server(server, {
 });
 
 // Socket.io logic
-const users = {};
 const onlineUsers = {};
 const disconnectTimers = {};
 
 io.on('connection', socket => {
     socket.on('new-user-joined', name => {
-        users[socket.id] = name;
-        onlineUsers[name] = socket.id; // overwrite
+        socket.data.username = name;
+        onlineUsers[name] = socket.id;
         
         // reconnect Timer delete
         if(disconnectTimers[name]){
             clearTimeout(disconnectTimers[name]);
             delete disconnectTimers[name];
         }
-        const usersList = Object.keys(onlineUsers).map(name => ({ name, id: onlineUsers[name] }));
-        io.emit('update-users', usersList);
+        emitOnlineUsers();
         socket.broadcast.emit('user-joined', name);
     });
     
     socket.on('send', async (data) => {
         try {
             const newMsg = new Message({
-                name: users[socket.id],
+                name: socket.data.username,
                 message: data.message,
                 replyTo: data.replyTo || null
             });
@@ -306,7 +280,7 @@ io.on('connection', socket => {
             
             const msgData = {
                 message: data.message,
-                name: users[socket.id],
+                name: socket.data.username,
                 id: newMsg._id,
                 time: newMsg.time,
                 replyTo: newMsg.replyTo,
@@ -331,7 +305,7 @@ io.on('connection', socket => {
     });
     
     socket.on('typing', () => {
-        socket.broadcast.emit('user-typing', users[socket.id]);
+        socket.broadcast.emit('user-typing', socket.data.username);
     });
     socket.on('stop-typing', () => {
         socket.broadcast.emit('user-stop-typing');
@@ -348,12 +322,12 @@ io.on('connection', socket => {
     });
 
     socket.on('disconnect', async (reason) => {
-        const name = users[socket.id];
+        const name = socket.data.username;
         
         if(!name) return;
         
         delete onlineUsers[name];
-        delete users[socket.id];
+        delete socket.data.username;
         
         try {
             await User.findOneAndUpdate(
@@ -364,12 +338,7 @@ io.on('connection', socket => {
             console.error("Last seen update error:", err);
         }
         
-        const usersList = Object.keys(onlineUsers).map(username => ({
-            name: username,
-            id: onlineUsers[username]
-        }));
-        
-        io.emit('update-users', usersList);
+        emitOnlineUsers();
         
         disconnectTimers[name] = setTimeout(() => {
             if (!onlineUsers[name]) {
