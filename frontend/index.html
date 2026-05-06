@@ -29,7 +29,6 @@
                     <!-- Registered users will show here -->
                 </div>
                 <button id="groupChatBtn" class="sidebar-btn" style="display: none;">Group</button>
-                <button id="toggle-chats" class="sidebar-btn">Chats</button>
                 <div id="chat-users">
                     <!-- Chat List showing here -->
                 </div>
@@ -44,10 +43,13 @@
         <section class="chat-layout">
             <div class="mobile-topbar">
                 <div class="mobile-topbar-title">
+                    <button id="backToChatsBtn" class="back-btn">
+                        <i class="ph ph-arrow-left"></i>
+                    </button>
                     <h2 id="mobileChatTitle">Vish'sUp</h2>
                     <p id="mobileChatStatus">Group Chat</p>
                 </div>
-
+                
                 <label for="menu-toggle" class="mobile-topbar-menu">
                     <i class="ph ph-list menu-open-icon"></i>
                     <i class="ph ph-x menu-close-icon"></i>
@@ -59,6 +61,11 @@
                     <h1 id="chatTitle">Vish'sUp</h1>
                     <p id="chatStatus">Group Chat</p>
                 </div>
+            </div>
+
+            <div id="welcomeScreen" class="welcome-screen">
+                <h1>Welcome to Vish'sUp</h1>
+                <p>Select a chat to start messaging</p>
             </div>
 
             <div class="container" id="message-container">

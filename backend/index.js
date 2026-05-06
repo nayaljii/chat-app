@@ -37,6 +37,56 @@ app.use(cors({
 
 app.use(express.static(path.join(__dirname, "../frontend")));
 
+// Open App Chat button
+app.get("/chat-list/:username", async (req, res) => {
+    try {
+        const { username } = req.params;
+
+        const groupLastMsg = await Message.findOne().sort({ time: -1 });
+
+        const privateMessages = await PrivateMessage.find({
+            $or: [
+                { sender: username },
+                { receiver: username }
+            ]
+        }).sort({ time: -1 });
+
+        const chatMap = new Map();
+
+        if (groupLastMsg) {
+            chatMap.set("GROUP_CHAT", {
+                type: "group",
+                username: "Group Chat",
+                lastMessage: groupLastMsg.message,
+                time: groupLastMsg.time
+            });
+        }
+
+        privateMessages.forEach(msg => {
+            const otherUser = msg.sender === username ? msg.receiver : msg.sender;
+
+            if (!chatMap.has(otherUser)) {
+                chatMap.set(otherUser, {
+                    type: "private",
+                    username: otherUser,
+                    lastMessage: msg.message,
+                    time: msg.time
+                });
+            }
+        });
+
+        const chats = Array.from(chatMap.values()).sort(
+            (a, b) => new Date(b.time) - new Date(a.time)
+        );
+
+        res.json(chats);
+
+    } catch (err) {
+        console.error("Chat list error:", err);
+        res.status(500).json({ error: "Failed to load chats" });
+    }
+});
+
 // Auth Routes
 app.use("/api/auth", authRoutes);
 

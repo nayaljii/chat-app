@@ -24,8 +24,6 @@ if(!token) {
     window.location.href = "/home.html";
 }
 
-
-
 // ================= State variables =================
 let chatMode = "group";
 let selectedUser = null;
@@ -168,13 +166,13 @@ async function loadRegisteredUsers() {
 // Load chat users
 async function loadChatUsers() {
     try {
-        const res = await fetch(`${BASE_URL}/private/chats/${name}`);
+        const res = await fetch(`${BASE_URL}/chat-list/${name}`);
         const chatUsers = await res.json();
 
         chatUsersDiv.innerHTML = "";
 
         if (chatUsers.length === 0) {
-            chatUsersDiv.innerHTML = `<small>No private chats yet</small>`;
+            chatUsersDiv.innerHTML = `<small>No chats yet</small>`;
             return;
         }
 
@@ -186,19 +184,23 @@ async function loadChatUsers() {
 
             userEl.innerHTML = `
                 <div style="display:flex; justify-content:space-between;">
-                    <b>${chat.username}</b>
+                    <b>${chat.type === "group" ? "Vish'sUp Group" : chat.username}</b>
                     ${unread > 0 ? `<span class="unread-badge">${unread}</span>` : ""}
                 </div>
-                <small>${chat.lastMessage}</small>
+                <small>${chat.lastMessage || "No messages yet"}</small>
             `;
 
-            userEl.addEventListener("click", async () => {
-                const fullUser = allUsers.find(u => u.username === chat.username);
+            userEl.addEventListener("click", () => {
+                if (chat.type === "group") {
+                    openGroupChat();
+                } else {
+                    const fullUser = allUsers.find(u => u.username === chat.username);
 
-                openPrivateChat({
-                    username: chat.username,
-                    lastSeen: fullUser?.lastSeen || null
-                });
+                    openPrivateChat({
+                        username: chat.username,
+                        lastSeen: fullUser?.lastSeen || null
+                    });
+                }
             });
 
             chatUsersDiv.appendChild(userEl);
@@ -989,28 +991,12 @@ toggleChatsBtn.addEventListener("click", () => {
 });
 
 // Group Chat Back btn
-document.getElementById("groupChatBtn").addEventListener("click", () => {
-    chatMode = "group";
-    selectedUser = null;
+document.getElementById("groupChatBtn").addEventListener("click", openGroupChat);
 
-    const menuToggle = document.getElementById("menu-toggle");
-    if (menuToggle) {
-        menuToggle.checked = false;
-        document.body.classList.remove("no-scroll");
-    }
-
-    typingIndicator.innerText = "";
-
-    document.getElementById("groupChatBtn").style.display = "none";
-
-    document.getElementById("chatTitle").innerText = "Vish'sUp";
-    document.getElementById("chatStatus").innerText = "Group Chat";
-
-    document.getElementById("mobileChatTitle").innerText = "Vish'sUp";
-    document.getElementById("mobileChatStatus").innerText = "Group Chat";
-
-    messageContainer.innerHTML = "";
-    loadMessages();
+// Back Button
+document.getElementById("backToChatsBtn").addEventListener("click", () => {
+    document.body.classList.remove("chat-open");
+    document.querySelector(".chat-layout").classList.remove("chat-selected");
 });
 
 // Cancel Reply
@@ -1064,7 +1050,14 @@ async function openPrivateChat(user) {
         document.body.classList.remove("no-scroll");
     }
     
+    document.body.classList.add("chat-open");
+    document.querySelector(".chat-layout").classList.add("chat-selected");
+
+    document.getElementById("backToChatsBtn").style.display = "block";
     document.getElementById("groupChatBtn").style.display = "block";
+    document.getElementById("backToChatsBtn").addEventListener("click", () => {
+        document.body.classList.remove("chat-open");
+    });
     
     const isOnline = currentOnlineUsers.includes(user.username);
     const statusText = isOnline ? "Online" : formatLastSeen(user.lastSeen);
@@ -1086,6 +1079,36 @@ async function openPrivateChat(user) {
     unreadCounts[user.username] = 0;
     loadChatUsers();
     await loadPrivateMessages(name, selectedUser);
+}
+
+// Open Group chat
+function openGroupChat() {
+    chatMode = "group";
+    selectedUser = null;
+
+    document.body.classList.add("chat-open");
+    document.querySelector(".chat-layout").classList.add("chat-selected");;
+
+    document.getElementById("backToChatsBtn").style.display = "none";
+    document.getElementById("groupChatBtn").style.display = "none";
+
+    document.getElementById("chatTitle").innerText = "Vish'sUp";
+    document.getElementById("chatStatus").innerText = "Group Chat";
+
+    document.getElementById("mobileChatTitle").innerText = "Vish'sUp";
+    document.getElementById("mobileChatStatus").innerText = "Group Chat";
+
+    messageContainer.innerHTML = "";
+    typingIndicator.innerText = "";
+    lastDateKey = "";
+
+    loadMessages();
+
+    const menuToggle = document.getElementById("menu-toggle");
+    if (menuToggle) {
+        menuToggle.checked = false;
+        document.body.classList.remove("no-scroll");
+    }
 }
 
 // User LastSeen
