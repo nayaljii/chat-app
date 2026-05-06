@@ -12,7 +12,6 @@ const typingIndicator = document.getElementById('typing-indicator');
 const form = document.getElementById('send-container');
 const toggle = document.getElementById('menu-toggle');
 const anim = document.getElementById("sendAnim");
-const toggleChatsBtn = document.getElementById("toggle-chats");
 const emojiBtn = document.getElementById("emojiBtn");
 const pickerContainer = document.getElementById("emojiPickerContainer");
 const emojiPicker = document.getElementById("emojiPicker");
@@ -35,7 +34,6 @@ let allUsers = [];
 let currentOnlineUsers = [];
 let unreadCounts = {};
 let registeredVisible = false;
-let chatsVisible = false;
 let typingTimeout;
 let pickerOpen = false;
 let ignoreNextInputFocus = false;
@@ -977,26 +975,9 @@ toggleRegisteredUsersBtn.addEventListener("click", () => {
     }
 });
 
-// Chat button
-toggleChatsBtn.addEventListener("click", () => {
-    chatsVisible = !chatsVisible;
-
-    if (chatsVisible) {
-        chatUsersDiv.style.display = "flex";
-        chatUsersDiv.style.flexDirection = "column";
-        loadChatUsers();
-    } else {
-        chatUsersDiv.style.display = "none";
-    }
-});
-
-// Group Chat Back btn
-document.getElementById("groupChatBtn").addEventListener("click", openGroupChat);
-
 // Back Button
 document.getElementById("backToChatsBtn").addEventListener("click", () => {
     document.body.classList.remove("chat-open");
-    document.querySelector(".chat-layout").classList.remove("chat-selected");
 });
 
 // Cancel Reply
@@ -1052,21 +1033,12 @@ async function openPrivateChat(user) {
     
     document.body.classList.add("chat-open");
     document.querySelector(".chat-layout").classList.add("chat-selected");
-
-    document.getElementById("backToChatsBtn").style.display = "block";
-    document.getElementById("groupChatBtn").style.display = "block";
-    document.getElementById("backToChatsBtn").addEventListener("click", () => {
-        document.body.classList.remove("chat-open");
-    });
     
     const isOnline = currentOnlineUsers.includes(user.username);
     const statusText = isOnline ? "Online" : formatLastSeen(user.lastSeen);
     
     document.getElementById("chatTitle").innerText = user.username;
     document.getElementById("chatStatus").innerText = statusText;
-    
-    document.getElementById("mobileChatTitle").innerText = user.username;
-    document.getElementById("mobileChatStatus").innerText = statusText;
     
     messageContainer.innerHTML = "";
     typingIndicator.innerText = "";
@@ -1087,16 +1059,10 @@ function openGroupChat() {
     selectedUser = null;
 
     document.body.classList.add("chat-open");
-    document.querySelector(".chat-layout").classList.add("chat-selected");;
-
-    document.getElementById("backToChatsBtn").style.display = "none";
-    document.getElementById("groupChatBtn").style.display = "none";
+    document.querySelector(".chat-layout").classList.add("chat-selected");
 
     document.getElementById("chatTitle").innerText = "Vish'sUp";
     document.getElementById("chatStatus").innerText = "Group Chat";
-
-    document.getElementById("mobileChatTitle").innerText = "Vish'sUp";
-    document.getElementById("mobileChatStatus").innerText = "Group Chat";
 
     messageContainer.innerHTML = "";
     typingIndicator.innerText = "";
